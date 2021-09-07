@@ -1,4 +1,4 @@
-# bwa_flutix
+# cick_movie_app
 
 A new Flutter project.
 

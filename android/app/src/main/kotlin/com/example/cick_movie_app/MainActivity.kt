@@ -1,4 +1,4 @@
-package com.example.bwa_flutix
+package com.example.cick_movie_app
 
 import io.flutter.embedding.android.FlutterActivity
 
