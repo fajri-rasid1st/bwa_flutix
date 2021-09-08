@@ -49,7 +49,10 @@ class GridViewItems extends StatelessWidget {
                     fadeOutDuration: const Duration(milliseconds: 500),
                     placeholder: (BuildContext context, String url) {
                       return Center(
-                        child: Text('Loading...'),
+                        child: Text(
+                          'Loading...',
+                          style: TextStyle(color: Colors.grey[400]),
+                        ),
                       );
                     },
                     errorWidget: (
@@ -58,7 +61,10 @@ class GridViewItems extends StatelessWidget {
                       dynamic error,
                     ) {
                       return Center(
-                        child: Icon(Icons.nearby_error),
+                        child: Icon(
+                          Icons.nearby_error,
+                          color: Colors.grey[400],
+                        ),
                       );
                     },
                   ),

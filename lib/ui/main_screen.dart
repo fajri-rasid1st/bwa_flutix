@@ -54,14 +54,6 @@ class _MainScreen extends State<MainScreen> {
                     ),
                     tooltip: 'Search',
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.translate,
-                      color: primaryTextColor,
-                    ),
-                    tooltip: 'Translate',
-                  ),
                 ],
               )
             ];
