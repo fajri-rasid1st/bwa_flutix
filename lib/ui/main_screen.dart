@@ -11,13 +11,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreen extends State<MainScreen> {
-  final List _pages = <Widget>[MoviePage(), TvShowPage()];
+  final List<Widget> _pages = [MoviePage(), TvShowPage()];
+
   int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.grey[50],
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
     ));
 
     return Scaffold(

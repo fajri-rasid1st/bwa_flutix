@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cick_movie_app/models/Movie.dart';
 import 'package:cick_movie_app/style/text_style.dart';
+import 'package:cick_movie_app/ui/movie_detail_screen.dart';
+import 'package:cick_movie_app/ui/tv_show_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class GridViewItems extends StatelessWidget {
   final List items;
-  final Widget routeScreen;
 
-  const GridViewItems({@required this.items, @required this.routeScreen});
+  const GridViewItems({@required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,11 @@ class GridViewItems extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) => routeScreen,
+                  builder: (BuildContext context) {
+                    return item is Movie
+                        ? MovieDetailScreen(movie: item)
+                        : TvShowDetailScreen(tvShow: item);
+                  },
                 ),
               );
             },
