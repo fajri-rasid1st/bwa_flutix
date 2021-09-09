@@ -6,7 +6,7 @@ import 'package:cick_movie_app/ui/tv_show_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class GridViewItems extends StatelessWidget {
-  final List items;
+  final List<dynamic> items;
 
   const GridViewItems({@required this.items});
 

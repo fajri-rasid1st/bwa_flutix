@@ -2,6 +2,7 @@ import 'package:cick_movie_app/pages/movie_page.dart';
 import 'package:cick_movie_app/pages/tv_show_page.dart';
 import 'package:cick_movie_app/style/color_scheme.dart';
 import 'package:cick_movie_app/style/text_style.dart';
+import 'package:cick_movie_app/ui/scroll_to_hide_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -13,7 +14,21 @@ class MainScreen extends StatefulWidget {
 class _MainScreen extends State<MainScreen> {
   final List<Widget> _pages = [MoviePage(), TvShowPage()];
 
+  ScrollController _controller;
+
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +40,7 @@ class _MainScreen extends State<MainScreen> {
     return Scaffold(
       body: SafeArea(
         child: NestedScrollView(
+          controller: _controller,
           floatHeaderSlivers: true,
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
@@ -72,30 +88,34 @@ class _MainScreen extends State<MainScreen> {
         ),
         tooltip: 'Play',
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        selectedFontSize: 12,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-        unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
-        type: BottomNavigationBarType.fixed,
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.movie_creation_outlined),
-            activeIcon: Icon(Icons.movie_creation),
-            label: 'Movies',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.smart_display_outlined),
-            activeIcon: Icon(Icons.smart_display),
-            label: 'TV Shows',
-          ),
-        ],
-        onTap: (int index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterFloat,
+      bottomNavigationBar: ScrollToHideWidget(
+        controller: _controller,
+        child: BottomNavigationBar(
+          currentIndex: _currentIndex,
+          selectedFontSize: 12,
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+          unselectedLabelStyle: TextStyle(fontWeight: FontWeight.w500),
+          type: BottomNavigationBarType.fixed,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.movie_creation_outlined),
+              activeIcon: Icon(Icons.movie_creation),
+              label: 'Movies',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.smart_display_outlined),
+              activeIcon: Icon(Icons.smart_display),
+              label: 'TV Shows',
+            ),
+          ],
+          onTap: (int index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+        ),
       ),
     );
   }
