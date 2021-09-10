@@ -17,7 +17,7 @@ class GridViewItems extends StatelessWidget {
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.55,
+        childAspectRatio: 0.57,
       ),
       itemBuilder: (BuildContext context, int index) {
         final item = items[index];
@@ -50,7 +50,8 @@ class GridViewItems extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: item.posterUrl,
                     fit: BoxFit.cover,
-                    height: 240,
+                    height: 250,
+                    width: double.infinity,
                     fadeInDuration: const Duration(milliseconds: 500),
                     fadeOutDuration: const Duration(milliseconds: 500),
                     placeholder: (BuildContext context, String url) {

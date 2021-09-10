@@ -81,15 +81,14 @@ class _MainScreen extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: secondaryTextColor,
+        backgroundColor: primarySwatch,
         child: Icon(
           Icons.play_arrow,
           color: accentColor,
         ),
         tooltip: 'Play',
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: ScrollToHideWidget(
         controller: _controller,
         child: BottomNavigationBar(

@@ -14,5 +14,5 @@ TextStyle titleTextStyle = TextStyle(
 
 TextStyle subtitleTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
-  color: secondaryTextColor,
+  color: primarySwatch,
 );

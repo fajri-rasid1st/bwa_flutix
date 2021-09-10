@@ -45,26 +45,9 @@ class TvShowDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        width: 2,
-                        color: accentColor,
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Detail',
-                    style: appBarTitleTextStyle,
-                  ),
-                ),
-              ),
             ];
           },
-          body: Center(),
+          body: Center(child: Text(tvShow.title)),
         ),
       ),
     );
