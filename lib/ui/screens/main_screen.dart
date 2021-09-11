@@ -1,8 +1,8 @@
-import 'package:cick_movie_app/pages/movie_page.dart';
-import 'package:cick_movie_app/pages/tv_show_page.dart';
-import 'package:cick_movie_app/style/color_scheme.dart';
-import 'package:cick_movie_app/style/text_style.dart';
-import 'package:cick_movie_app/ui/scroll_to_hide_widget.dart';
+import 'package:cick_movie_app/ui/pages/movie_page.dart';
+import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
+import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
+import 'package:cick_movie_app/ui/widgets/scroll_to_hide_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,9 +14,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreen extends State<MainScreen> {
   final List<Widget> _pages = [MoviePage(), TvShowPage()];
 
-  ScrollController _controller;
-
   int _currentIndex = 0;
+
+  ScrollController _controller;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _MainScreen extends State<MainScreen> {
               SliverAppBar(
                 floating: true,
                 snap: true,
-                backgroundColor: Colors.grey[50],
+                backgroundColor: backgroundColor,
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,7 +89,7 @@ class _MainScreen extends State<MainScreen> {
         tooltip: 'Play',
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: ScrollToHideWidget(
+      bottomNavigationBar: ScrollToHide(
         controller: _controller,
         child: BottomNavigationBar(
           currentIndex: _currentIndex,

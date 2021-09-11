@@ -1,4 +1,4 @@
-import 'package:cick_movie_app/style/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:flutter/material.dart';
 
 TextStyle appBarTitleTextStyle = TextStyle(
@@ -13,6 +13,6 @@ TextStyle titleTextStyle = TextStyle(
 );
 
 TextStyle subtitleTextStyle = TextStyle(
-  fontWeight: FontWeight.w600,
+  fontWeight: FontWeight.w500,
   color: primarySwatch,
 );

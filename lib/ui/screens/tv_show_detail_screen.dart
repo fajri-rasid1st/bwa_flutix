@@ -1,12 +1,12 @@
-import 'package:cick_movie_app/models/Movie.dart';
-import 'package:cick_movie_app/style/color_scheme.dart';
-import 'package:cick_movie_app/style/text_style.dart';
+import 'package:cick_movie_app/models/TvShow.dart';
+import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
-class MovieDetailScreen extends StatelessWidget {
-  final Movie movie;
+class TvShowDetailScreen extends StatelessWidget {
+  final TvShow tvShow;
 
-  const MovieDetailScreen({@required this.movie});
+  const TvShowDetailScreen({@required this.tvShow});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class MovieDetailScreen extends StatelessWidget {
                 snap: true,
                 backgroundColor: Colors.grey[50],
                 title: Text(
-                  movie.title,
+                  tvShow.title,
                   style: appBarTitleTextStyle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -47,33 +47,7 @@ class MovieDetailScreen extends StatelessWidget {
               ),
             ];
           },
-          body: Container(
-            color: Colors.blue[50],
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  child: Text(
-                    'Detail',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w500,
-                      color: primaryTextColor,
-                    ),
-                  ),
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(
-                        color: primarySwatch,
-                        width: 2,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          body: Center(child: Text(tvShow.title)),
         ),
       ),
     );

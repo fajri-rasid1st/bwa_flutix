@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/models/Movie.dart';
-import 'package:cick_movie_app/style/text_style.dart';
-import 'package:cick_movie_app/ui/movie_detail_screen.dart';
-import 'package:cick_movie_app/ui/tv_show_detail_screen.dart';
+import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
+import 'package:cick_movie_app/ui/screens/tv_show_detail_screen.dart';
+import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
 class GridViewItems extends StatelessWidget {
@@ -17,7 +18,6 @@ class GridViewItems extends StatelessWidget {
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.57,
       ),
       itemBuilder: (BuildContext context, int index) {
         final item = items[index];
@@ -56,9 +56,8 @@ class GridViewItems extends StatelessWidget {
                     fadeOutDuration: const Duration(milliseconds: 500),
                     placeholder: (BuildContext context, String url) {
                       return Center(
-                        child: Text(
-                          'Loading...',
-                          style: TextStyle(color: Colors.grey[400]),
+                        child: CircularProgressIndicator(
+                          color: accentColor,
                         ),
                       );
                     },
@@ -70,7 +69,7 @@ class GridViewItems extends StatelessWidget {
                       return Center(
                         child: Icon(
                           Icons.nearby_error,
-                          color: Colors.grey[400],
+                          color: secondaryTextColor,
                         ),
                       );
                     },
