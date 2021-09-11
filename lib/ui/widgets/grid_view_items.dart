@@ -18,12 +18,13 @@ class GridViewItems extends StatelessWidget {
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
+        childAspectRatio: 0.53,
       ),
       itemBuilder: (BuildContext context, int index) {
         final item = items[index];
 
         return Container(
-          margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -43,7 +44,7 @@ class GridViewItems extends StatelessWidget {
                 Card(
                   elevation: 4,
                   clipBehavior: Clip.antiAlias,
-                  margin: const EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

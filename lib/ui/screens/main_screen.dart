@@ -2,7 +2,7 @@ import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
-import 'package:cick_movie_app/ui/widgets/scroll_to_hide_widget.dart';
+import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -79,16 +79,6 @@ class _MainScreen extends State<MainScreen> {
           body: _pages[_currentIndex],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: primarySwatch,
-        child: Icon(
-          Icons.play_arrow,
-          color: accentColor,
-        ),
-        tooltip: 'Play',
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: ScrollToHide(
         controller: _controller,
         child: BottomNavigationBar(

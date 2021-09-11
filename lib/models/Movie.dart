@@ -1,5 +1,6 @@
 import 'package:cick_movie_app/const.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 
 class Movie {
   String title;
@@ -23,6 +24,10 @@ class Movie {
     @required this.runtime,
     @required this.genres,
   });
+
+  String get getReleaseDate {
+    return DateFormat('MMM, dd y').format(DateTime.parse(releaseDate));
+  }
 }
 
 var movies = [
