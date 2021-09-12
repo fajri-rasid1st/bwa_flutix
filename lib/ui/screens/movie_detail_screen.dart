@@ -12,9 +12,12 @@ class MovieDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: CustomAppBar(title: movie.title),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -44,10 +47,7 @@ class MovieDetailScreen extends StatelessWidget {
                       SizedBox(width: 4),
                       Text(
                         '${movie.runtime} mins',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: secondaryTextColor,
-                        ),
+                        style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
                   ),
@@ -67,10 +67,7 @@ class MovieDetailScreen extends StatelessWidget {
                       SizedBox(width: 4),
                       Text(
                         '${movie.voteCount} votes',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: secondaryTextColor,
-                        ),
+                        style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
                   ),
@@ -141,7 +138,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                   Positioned(
                     top: 100,
-                    width: MediaQuery.of(context).size.width,
+                    width: screenWidth,
                     child: Container(
                       margin: const EdgeInsets.only(left: 12, right: 16),
                       child: Row(
@@ -172,8 +169,7 @@ class MovieDetailScreen extends StatelessWidget {
                                 ) {
                                   return Center(
                                     child: CircularProgressIndicator(
-                                      color: accentColor,
-                                    ),
+                                        color: accentColor),
                                   );
                                 },
                                 errorWidget: (
@@ -198,25 +194,20 @@ class MovieDetailScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 SizedBox(height: 40),
-                                SizedBox(
-                                  child: Text(
-                                    movie.title,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                      color: backgroundColor,
-                                    ),
+                                Text(
+                                  movie.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: backgroundColor,
                                   ),
                                 ),
                                 SizedBox(height: 2),
                                 Text(
                                   movie.getReleaseDate,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: backgroundColor,
-                                  ),
+                                  style: TextStyle(color: backgroundColor),
                                 ),
                                 SizedBox(height: 4),
                                 Row(
@@ -239,10 +230,7 @@ class MovieDetailScreen extends StatelessWidget {
                                     SizedBox(width: 4),
                                     Text(
                                       movie.voteAverage.toString(),
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        color: backgroundColor,
-                                      ),
+                                      style: TextStyle(color: backgroundColor),
                                     ),
                                   ],
                                 ),
@@ -255,6 +243,85 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    'Genres',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primarySwatch,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 45,
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (BuildContext context, int index) {
+                      final genres = movie.genres;
+
+                      return Chip(
+                        label: Text(genres[index]),
+                        labelStyle: TextStyle(color: primaryTextColor),
+                      );
+                    },
+                    itemCount: movie.genres.length,
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(width: 4);
+                    },
+                  ),
+                )
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 16),
+              child: Divider(
+                height: 1,
+                thickness: 1,
+                color: dividerColor,
+              ),
+              decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    offset: Offset(0, 0.5),
+                    blurRadius: 1,
+                    color: dividerColor,
+                  ),
+                  BoxShadow(
+                    offset: Offset(0.5, 0),
+                    blurRadius: 1,
+                    color: dividerColor,
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.only(left: 16),
+                  child: Text(
+                    'Overview',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: primarySwatch,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(movie.overview),
+                ),
+              ],
             ),
           ],
         ),
