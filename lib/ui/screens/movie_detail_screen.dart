@@ -4,6 +4,7 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:readmore/readmore.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final Movie movie;
@@ -17,7 +18,7 @@ class MovieDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: movie.title),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.only(bottom: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -46,7 +47,7 @@ class MovieDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${movie.runtime} mins',
+                        '${movie.runtime ?? 0} mins',
                         style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
@@ -244,11 +245,33 @@ class MovieDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () {},
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.play_arrow),
+                    SizedBox(width: 2),
+                    Text(
+                      'Watch Trailer',
+                      style: TextStyle(fontSize: 16),
+                    )
+                  ],
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: primarySwatch),
+                ),
+              ),
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only(left: 16),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   child: Text(
                     'Genres',
                     style: TextStyle(
@@ -302,12 +325,12 @@ class MovieDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(left: 16),
-                  child: Text(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
                     'Overview',
                     style: TextStyle(
                       fontSize: 20,
@@ -315,13 +338,25 @@ class MovieDetailScreen extends StatelessWidget {
                       color: primarySwatch,
                     ),
                   ),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(movie.overview),
-                ),
-              ],
+                  SizedBox(height: 4),
+                  ReadMoreText(
+                    movie.overview.isEmpty ? 'None' : movie.overview,
+                    colorClickableText: primarySwatch,
+                    trimMode: TrimMode.Line,
+                    trimLines: 4,
+                    trimCollapsedText: 'Show More',
+                    trimExpandedText: 'Show Less',
+                    moreStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: primarySwatch,
+                    ),
+                    lessStyle: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: primarySwatch,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
