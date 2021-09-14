@@ -20,14 +20,14 @@ class _MainScreen extends State<MainScreen> {
 
   @override
   void initState() {
-    super.initState();
     _controller = ScrollController();
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,7 +42,7 @@ class _MainScreen extends State<MainScreen> {
         child: NestedScrollView(
           controller: _controller,
           floatHeaderSlivers: true,
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               SliverAppBar(
                 floating: true,
@@ -99,7 +99,7 @@ class _MainScreen extends State<MainScreen> {
               label: 'TV Shows',
             ),
           ],
-          onTap: (int index) {
+          onTap: (index) {
             setState(() {
               _currentIndex = index;
             });

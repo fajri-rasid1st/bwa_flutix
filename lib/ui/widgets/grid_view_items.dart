@@ -20,7 +20,7 @@ class GridViewItems extends StatelessWidget {
         crossAxisCount: 2,
         childAspectRatio: 0.53,
       ),
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (context, index) {
         final item = items[index];
 
         return Container(
@@ -30,7 +30,7 @@ class GridViewItems extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (BuildContext context) {
+                  builder: (context) {
                     return item is Movie
                         ? MovieDetailScreen(movie: item)
                         : TvShowDetailScreen(tvShow: item);
@@ -48,32 +48,60 @@ class GridViewItems extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: CachedNetworkImage(
-                    imageUrl: item.posterUrl,
-                    fit: BoxFit.cover,
-                    height: 250,
-                    width: double.infinity,
-                    fadeInDuration: const Duration(milliseconds: 500),
-                    fadeOutDuration: const Duration(milliseconds: 500),
-                    placeholder: (BuildContext context, String url) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: accentColor,
+                  child: Stack(
+                    children: <Widget>[
+                      CachedNetworkImage(
+                        imageUrl: item.posterUrl,
+                        fit: BoxFit.cover,
+                        height: 250,
+                        width: double.infinity,
+                        fadeInDuration: const Duration(milliseconds: 500),
+                        fadeOutDuration: const Duration(milliseconds: 500),
+                        placeholder: (context, url) {
+                          return Center(
+                            child:
+                                CircularProgressIndicator(color: accentColor),
+                          );
+                        },
+                        errorWidget: (context, url, error) {
+                          return Center(
+                            child: Icon(
+                              Icons.nearby_error,
+                              color: secondaryTextColor,
+                            ),
+                          );
+                        },
+                      ),
+                      Container(
+                        margin: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8,
                         ),
-                      );
-                    },
-                    errorWidget: (
-                      BuildContext context,
-                      String url,
-                      dynamic error,
-                    ) {
-                      return Center(
-                        child: Icon(
-                          Icons.nearby_error,
-                          color: secondaryTextColor,
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.star,
+                              color: accentColor,
+                              size: 22,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '${item.voteAverage}',
+                              style: TextStyle(
+                                color: backgroundColor,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
+                        decoration: BoxDecoration(
+                          color: primaryTextColor.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Text(

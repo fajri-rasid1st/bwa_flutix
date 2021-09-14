@@ -30,6 +30,7 @@ dependencies:
     cached_network_image: 2.5.1
     intl: 0.16.1
     flutter_rating_bar: 3.2.0+1
+    youtube_player_flutter: ^7.0.0+7
     readmore:
         git:
             url: git://github.com/epynic/readmore

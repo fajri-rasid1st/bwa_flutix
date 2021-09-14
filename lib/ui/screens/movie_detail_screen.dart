@@ -14,6 +14,7 @@ class MovieDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    var isOverviewExpanded = false;
 
     return Scaffold(
       appBar: CustomAppBar(title: movie.title),
@@ -92,18 +93,14 @@ class MovieDetailScreen extends StatelessWidget {
                           fadeOutDuration: const Duration(
                             milliseconds: 500,
                           ),
-                          placeholder: (BuildContext context, String url) {
+                          placeholder: (context, url) {
                             return Center(
                               child: CircularProgressIndicator(
                                 color: accentColor,
                               ),
                             );
                           },
-                          errorWidget: (
-                            BuildContext context,
-                            String url,
-                            dynamic error,
-                          ) {
+                          errorWidget: (context, url, error) {
                             return Center(
                               child: Icon(
                                 Icons.nearby_error,
@@ -164,20 +161,14 @@ class MovieDetailScreen extends StatelessWidget {
                                 fadeOutDuration: const Duration(
                                   milliseconds: 500,
                                 ),
-                                placeholder: (
-                                  BuildContext context,
-                                  String url,
-                                ) {
+                                placeholder: (context, url) {
                                   return Center(
                                     child: CircularProgressIndicator(
-                                        color: accentColor),
+                                      color: accentColor,
+                                    ),
                                   );
                                 },
-                                errorWidget: (
-                                  BuildContext context,
-                                  String url,
-                                  dynamic error,
-                                ) {
+                                errorWidget: (context, url, error) {
                                   return Center(
                                     child: Icon(
                                       Icons.nearby_error,
@@ -216,10 +207,7 @@ class MovieDetailScreen extends StatelessWidget {
                                   children: <Widget>[
                                     RatingBarIndicator(
                                       rating: movie.voteAverage / 2,
-                                      itemBuilder: (
-                                        BuildContext context,
-                                        int index,
-                                      ) {
+                                      itemBuilder: (context, index) {
                                         return Icon(
                                           Icons.star,
                                           color: accentColor,
@@ -263,7 +251,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ],
                 ),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: primarySwatch),
+                  side: BorderSide(color: primaryColor),
                 ),
               ),
             ),
@@ -277,17 +265,17 @@ class MovieDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: primarySwatch,
+                      color: primaryColor,
                     ),
                   ),
                 ),
                 Container(
                   height: 45,
                   child: ListView.separated(
-                    shrinkWrap: true,
                     padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
+                    itemBuilder: (context, index) {
                       final genres = movie.genres;
 
                       return Chip(
@@ -296,9 +284,7 @@ class MovieDetailScreen extends StatelessWidget {
                       );
                     },
                     itemCount: movie.genres.length,
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 4);
-                    },
+                    separatorBuilder: (context, index) => SizedBox(width: 4),
                   ),
                 )
               ],
@@ -335,24 +321,23 @@ class MovieDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: primarySwatch,
+                      color: primaryColor,
                     ),
                   ),
                   SizedBox(height: 4),
                   ReadMoreText(
                     movie.overview.isEmpty ? 'None' : movie.overview,
-                    colorClickableText: primarySwatch,
+                    colorClickableText: primaryColor,
                     trimMode: TrimMode.Line,
-                    trimLines: 4,
-                    trimCollapsedText: 'Show More',
-                    trimExpandedText: 'Show Less',
+                    trimCollapsedText: 'Show more',
+                    trimExpandedText: 'Show less',
                     moreStyle: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: primarySwatch,
+                      color: primaryColor,
                     ),
                     lessStyle: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: primarySwatch,
+                      color: primaryColor,
                     ),
                   ),
                 ],
