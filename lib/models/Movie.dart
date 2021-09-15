@@ -8,6 +8,7 @@ class Movie {
   String releaseDate;
   String posterUrl;
   String backdropUrl;
+  String videoId;
   double voteAverage;
   int voteCount;
   int runtime;
@@ -19,6 +20,7 @@ class Movie {
     @required this.releaseDate,
     @required this.posterUrl,
     @required this.backdropUrl,
+    @required this.videoId,
     @required this.voteAverage,
     @required this.voteCount,
     @required this.runtime,
@@ -38,6 +40,7 @@ var movies = [
     releaseDate: '2021-07-28',
     posterUrl: '${Const.IMG_URL_300}/iXbWpCkIauBMStSTUT9v4GXvdgH.jpg',
     backdropUrl: '${Const.IMG_URL_500}/jlGmlFOcfo8n5tURmhC7YVd4Iyy.jpg',
+    videoId: 'RFZG_IG9EqA',
     voteAverage: 8,
     voteCount: 3322,
     runtime: 132,
@@ -50,6 +53,7 @@ var movies = [
     releaseDate: '2021-07-28',
     posterUrl: '${Const.IMG_URL_300}/9dKCd55IuTT5QRs989m9Qlb7d2B.jpg',
     backdropUrl: '${Const.IMG_URL_500}/7WJjFviFBffEJvkAms4uWwbcVUk.jpg',
+    videoId: 'aYSy8guUUV0',
     voteAverage: 7.9,
     voteCount: 2297,
     runtime: 127,
@@ -62,6 +66,7 @@ var movies = [
     releaseDate: '2021-08-18',
     posterUrl: '${Const.IMG_URL_300}/cP7odDzzFBD9ycxj2laTeFWGLjD.jpg',
     backdropUrl: '${Const.IMG_URL_500}/nprqOIEfiMMQx16lgKeLf3rmPrR.jpg',
+    videoId: 'PLmylZFcAB0',
     voteAverage: 6.9,
     voteCount: 408,
     runtime: 110,
@@ -74,6 +79,7 @@ var movies = [
     releaseDate: '2021-08-09',
     posterUrl: '${Const.IMG_URL_300}/ic0intvXZSfBlYPIvWXpU1ivUCO.jpg',
     backdropUrl: '${Const.IMG_URL_500}/mtRW6eAwOO27h3zrfU2foQFW7Hg.jpg',
+    videoId: 'LRMTr2VZcr8',
     voteAverage: 8.1,
     voteCount: 319,
     runtime: 90,
@@ -86,6 +92,7 @@ var movies = [
     releaseDate: '2021-07-07',
     posterUrl: '${Const.IMG_URL_300}/qAZ0pzat24kLdO3o8ejmbLxyOac.jpg',
     backdropUrl: '${Const.IMG_URL_500}/dq18nCTTLpy9PmtzZI6Y2yAgdw5.jpg',
+    videoId: 'pBVPlyM2T3Q',
     voteAverage: 7.8,
     voteCount: 4680,
     runtime: 134,
@@ -98,6 +105,7 @@ var movies = [
     releaseDate: '2021-09-03',
     posterUrl: '${Const.IMG_URL_300}/34nDCQZwaEvsy4CFO5hkGRFDCVU.jpg',
     backdropUrl: '${Const.IMG_URL_500}/yizL4cEKsVvl17Wc1mGEIrQtM2F.jpg',
+    videoId: '6nqKBKw7bDA',
     voteAverage: 8.1,
     voteCount: 137,
     runtime: 138,
@@ -105,22 +113,25 @@ var movies = [
   ),
   Movie(
     title: 'Sinaliento',
-    overview: '',
+    overview:
+        'In the DR, hardened cop Manolo tries to take down an infamous drug cartel; meanwhile, his daughter has fallen in love with Lorenzo, a construction worker who\'s unwittingly gotten embroiled in the drug cartel\'s dealings.',
     releaseDate: '2021-08-11',
     posterUrl: '${Const.IMG_URL_300}/oxNoVgbu2v9ETL93Kri1pw8osYf.jpg',
     backdropUrl: '${Const.IMG_URL_500}/1Txzm4bY5ZDqvgMl7MmHeBMl7HH.jpg',
+    videoId: '',
     voteAverage: 7.7,
     voteCount: 15,
     runtime: 106,
     genres: ['Crime', 'Drama', 'Thriller'],
   ),
   Movie(
-    title: 'Un rescate de huevitos',
+    title: 'Jurassic Hunt',
     overview:
-        'A rooster and his fowl partner embark on a dangerous trip to the Congo to recover their stolen eggs from a group of Russian goons.',
+        'Female adventurer Parker joins a crew of male trophy hunters in a remote wilderness park. Their goal: slaughter genetically recreated dinosaurs for sport using rifles, arrows, and grenades. After their guide is killed by raptors, the team tries to escape the park – but the hunters quickly become the hunted. Even worse, the park’s manager suspects Parker of being a spy and sends a hit squad after her. This battle’s about to become primitive!',
     releaseDate: '2021-08-12',
-    posterUrl: '${Const.IMG_URL_300}/wrlQnKHLCBheXMNWotyr5cVDqNM.jpg',
-    backdropUrl: '${Const.IMG_URL_500}/uHmvk8FnoxpgujDU0RIXLkv2fNt.jpg',
+    posterUrl: '${Const.IMG_URL_300}/CGJAj5kNWQZypNgUSTTQrFlnG.jpg',
+    backdropUrl: '${Const.IMG_URL_500}/vs63P2xYUGn3QmQ4JnkX1MY4BrO.jpg',
+    videoId: 'H9gpZqn-TtU',
     voteAverage: 8.3,
     voteCount: 198,
     runtime: 0,
@@ -133,6 +144,7 @@ var movies = [
     releaseDate: '2021-07-08',
     posterUrl: '${Const.IMG_URL_300}/5bFK5d3mVTAvBCXi5NPWH0tYjKl.jpg',
     backdropUrl: '${Const.IMG_URL_500}/8s4h9friP6Ci3adRGahHARVd76E.jpg',
+    videoId: '40jEPV-3-Lg',
     voteAverage: 7.4,
     voteCount: 2049,
     runtime: 115,
@@ -145,6 +157,7 @@ var movies = [
     releaseDate: '2021-07-22',
     posterUrl: '${Const.IMG_URL_300}/7p0O4mKYLIhU2E5Zcq9Z3vOZ4e9.jpg',
     backdropUrl: '${Const.IMG_URL_500}/AjQgFtfXTmmMVuaH2VfQDdGbeQH.jpg',
+    videoId: '',
     voteAverage: 7.1,
     voteCount: 42,
     runtime: 93,

@@ -73,18 +73,15 @@ class GridViewItems extends StatelessWidget {
                         },
                       ),
                       Container(
-                        margin: const EdgeInsets.all(12),
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
+                        margin: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(4),
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
                             Icon(
                               Icons.star,
                               color: accentColor,
-                              size: 22,
+                              size: 20,
                             ),
                             SizedBox(width: 4),
                             Text(

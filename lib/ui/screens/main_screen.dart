@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   @override
-  _MainScreen createState() => _MainScreen();
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreen extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [MoviePage(), TvShowPage()];
 
   int _currentIndex = 0;

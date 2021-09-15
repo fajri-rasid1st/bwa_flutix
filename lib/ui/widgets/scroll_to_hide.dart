@@ -22,14 +22,14 @@ class _ScrollToHideState extends State<ScrollToHide> {
 
   @override
   void initState() {
-    super.initState();
     widget.controller.addListener(listen);
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     widget.controller.removeListener(listen);
+    super.dispose();
   }
 
   void listen() {

@@ -9,6 +9,7 @@ class TvShow {
   String lastAirDate;
   String posterUrl;
   String backdropUrl;
+  String videoId;
   double voteAverage;
   int voteCount;
   int runtime;
@@ -23,6 +24,7 @@ class TvShow {
     @required this.lastAirDate,
     @required this.posterUrl,
     @required this.backdropUrl,
+    @required this.videoId,
     @required this.voteAverage,
     @required this.voteCount,
     @required this.runtime,
@@ -45,6 +47,7 @@ var tvShows = [
     lastAirDate: '2021-09-01',
     posterUrl: '${Const.IMG_URL_300}/lztz5XBMG1x6Y5ubz7CxfPFsAcW.jpg',
     backdropUrl: '${Const.IMG_URL_500}/4N6zEMfZ57zNEQcM8gWeERFupMv.jpg',
+    videoId: 'IPjjbhAJyZM',
     voteAverage: 8.5,
     voteCount: 1218,
     runtime: 34,
@@ -53,12 +56,14 @@ var tvShows = [
     genres: ['Animation', 'Action & Adventure', 'Sci-Fi & Fantasy'],
   ),
   TvShow(
-    title: 'The Bond',
-    overview: '',
+    title: 'Familie',
+    overview:
+        'Famile is a Flemish television series, which is broadcast on VTM since December 30th, 1991. It\'s the longest running Belgian soap opera. The storylines take place mostly in and around the city of Mechelen, where the family Van Den Bossche longstanding operates its family business. The soap has a diverse cast where Jef De Smedt, Jacky Lafon and Annie Geeraerts all continuous part of it since the very beginning. Several times the series was subjected to a thorough facelift in order to stay fresh and innovative. Familie is from Monday to Friday to see about 19:45 on VTM, except from late June to late August.',
     releaseDate: '2021-08-17',
     lastAirDate: '2021-09-04',
     posterUrl: '${Const.IMG_URL_300}/dLUJGSrFWA1h3pnAqygAHK7ShVb.jpg',
     backdropUrl: '${Const.IMG_URL_500}/zN8vBX1jDRxIDqFQ2ARcodTHhdt.jpg',
+    videoId: '',
     voteAverage: 5.5,
     voteCount: 2,
     runtime: 45,
@@ -67,18 +72,19 @@ var tvShows = [
     genres: ['Drama', 'Family'],
   ),
   TvShow(
-    title: 'Ilha Record',
+    title: 'La Casa de Papel',
     overview:
-        'Ilha Record is a Brazilian reality television competition format originally created and aired by RecordTV. The series is hosted by Sabrina Sato and premiered on Monday, July 26, 2021 at 10:30 p.m. / 9:30 p.m.  www.youtube.com/channel/UCW3Ve61iGOQQoE8UrPMOZcQ',
+        'To carry out the biggest heist in history, a mysterious man called The Professor recruits a band of eight robbers who have a single characteristic: none of them has anything to lose. Five months of seclusion - memorizing every step, every detail, every probability - culminate in eleven days locked up in the National Coinage and Stamp Factory of Spain, surrounded by police forces and with dozens of hostages in their power, to find out whether their suicide wager will lead to everything or nothing.',
     releaseDate: '2021-07-26',
     lastAirDate: '2021-09-04',
     posterUrl: '${Const.IMG_URL_300}/43pX5G2eL4H6EppxVcirMxdkcGN.jpg',
     backdropUrl: '${Const.IMG_URL_500}/bjsoOPkViI5WIREQb94XDeXrZlF.jpg',
-    voteAverage: 3.4,
-    voteCount: 9,
-    runtime: null,
+    videoId: 'htqXL94Rza4',
+    voteAverage: 8.3,
+    voteCount: 14323,
+    runtime: 40,
     episodes: 40,
-    seasons: 1,
+    seasons: 3,
     genres: ['Reality'],
   ),
   TvShow(
@@ -89,6 +95,7 @@ var tvShows = [
     lastAirDate: '2021-06-07',
     posterUrl: '${Const.IMG_URL_300}/6tfT03sGp9k4c0J3dypjrI8TSAI.jpg',
     backdropUrl: '${Const.IMG_URL_500}/Al1NiPYGzKddngu8L5NNtsoANYU.jpg',
+    videoId: 'fYlZDTru55g',
     voteAverage: 8.6,
     voteCount: 9263,
     runtime: 43,
@@ -104,6 +111,7 @@ var tvShows = [
     lastAirDate: '2021-09-03',
     posterUrl: '${Const.IMG_URL_300}/5h58tbqpUhpdiQR1i4FawKWOidh.jpg',
     backdropUrl: '${Const.IMG_URL_500}/9abMIArcm95q0CtTOTZnLdUIoSm.jpg',
+    videoId: '',
     voteAverage: 6.4,
     voteCount: 92,
     runtime: 30,
@@ -119,6 +127,7 @@ var tvShows = [
     lastAirDate: '2021-07-14',
     posterUrl: '${Const.IMG_URL_300}/kEl2t3OhXc3Zb9FBh1AuYzRTgZp.jpg',
     backdropUrl: '${Const.IMG_URL_500}/kXja7L9cRlsRmINMpxyWEdp9r3u.jpg',
+    videoId: 'gL9EP2QabdQ',
     voteAverage: 8.2,
     voteCount: 7526,
     runtime: 52,
@@ -134,6 +143,7 @@ var tvShows = [
     lastAirDate: '2021-08-31',
     posterUrl: '${Const.IMG_URL_300}/rbkGgrEHOPyAEZqPk609QN1Ird6.jpg',
     backdropUrl: '${Const.IMG_URL_500}/pXjpqrx65mlQskf9mfTWSszYODn.jpg',
+    videoId: 'akb9hhmOoW4',
     voteAverage: 7.9,
     voteCount: 811,
     runtime: 43,
@@ -149,6 +159,7 @@ var tvShows = [
     lastAirDate: '2021-09-01',
     posterUrl: '${Const.IMG_URL_300}/wRbjVBdDo5qHAEOVYoMWpM58FSA.jpg',
     backdropUrl: '${Const.IMG_URL_500}/qZtAf4Z1lazGQoYVXiHOrvLr5lI.jpg',
+    videoId: 'HxtLlByaYTc',
     voteAverage: 8.6,
     voteCount: 11851,
     runtime: 45,
@@ -164,6 +175,7 @@ var tvShows = [
     lastAirDate: '2021-08-29',
     posterUrl: '${Const.IMG_URL_300}/ekZobS8isE6mA53RAiGDG93hBxL.jpg',
     backdropUrl: '${Const.IMG_URL_500}/ktDJ21QQscbMNQfPpZBsNORxdDx.jpg',
+    videoId: 'X4bF_quwNtw',
     voteAverage: 8.1,
     voteCount: 11509,
     runtime: 42,
@@ -173,11 +185,13 @@ var tvShows = [
   ),
   TvShow(
     title: 'Demi-Gods and Semi-Devils',
-    overview: '',
+    overview:
+        'Sheriff\'s deputy Rick Grimes awakens from a coma to find a post-apocalyptic world dominated by flesh-eating zombies. He sets out to find his family and encounters many other survivors along the way.',
     releaseDate: '2021-08-14',
     lastAirDate: '2021-09-03',
     posterUrl: '${Const.IMG_URL_300}/gyk1nHbz7EKoYagNWDCg4pIy4Et.jpg',
     backdropUrl: '${Const.IMG_URL_500}/aSFDMJGik0vLzUoyl9uQPWstmup.jpg',
+    videoId: '',
     voteAverage: 7.7,
     voteCount: 3,
     runtime: 45,

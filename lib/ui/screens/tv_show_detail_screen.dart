@@ -5,15 +5,52 @@ import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:readmore/readmore.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class TvShowDetailScreen extends StatelessWidget {
+class TvShowDetailScreen extends StatefulWidget {
   final TvShow tvShow;
 
   const TvShowDetailScreen({@required this.tvShow});
 
   @override
+  _TvShowDetailScreenState createState() => _TvShowDetailScreenState();
+}
+
+class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
+  YoutubePlayerController _controller;
+  bool _isChanged;
+  String _buttonText;
+  Icon _buttonIcon;
+
+  @override
+  void initState() {
+    _controller = YoutubePlayerController(
+      initialVideoId: widget.tvShow.videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+        controlsVisibleAtStart: true,
+        disableDragSeek: true,
+        enableCaption: false,
+      ),
+    );
+
+    _isChanged = false;
+    _buttonText = 'Watch Trailer';
+    _buttonIcon = Icon(Icons.play_arrow_outlined);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final tvShow = widget.tvShow;
 
     return Scaffold(
       appBar: CustomAppBar(title: tvShow.title),
@@ -23,7 +60,7 @@ class TvShowDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
-              margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: Text(
                 tvShow.title,
                 style: TextStyle(
@@ -47,7 +84,7 @@ class TvShowDetailScreen extends StatelessWidget {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        '${tvShow.runtime ?? 0} mins',
+                        '${tvShow.runtime} mins',
                         style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
@@ -75,176 +112,38 @@ class TvShowDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
-              height: 300,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    child: Stack(
-                      children: <Widget>[
-                        CachedNetworkImage(
-                          imageUrl: tvShow.backdropUrl,
-                          fit: BoxFit.cover,
-                          height: 240,
-                          fadeInDuration: const Duration(
-                            milliseconds: 500,
-                          ),
-                          fadeOutDuration: const Duration(
-                            milliseconds: 500,
-                          ),
-                          placeholder: (context, url) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                color: accentColor,
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) {
-                            return Center(
-                              child: Icon(
-                                Icons.nearby_error,
-                                color: secondaryTextColor,
-                              ),
-                            );
-                          },
-                        ),
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
-                                colors: [Colors.black87, Colors.transparent],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Colors.black45, Colors.transparent],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 100,
-                    width: screenWidth,
-                    child: Container(
-                      margin: const EdgeInsets.only(left: 12, right: 16),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 4,
-                            child: Card(
-                              elevation: 4,
-                              clipBehavior: Clip.antiAlias,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: CachedNetworkImage(
-                                imageUrl: tvShow.posterUrl,
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 175,
-                                fadeInDuration: const Duration(
-                                  milliseconds: 500,
-                                ),
-                                fadeOutDuration: const Duration(
-                                  milliseconds: 500,
-                                ),
-                                placeholder: (context, url) {
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      color: accentColor,
-                                    ),
-                                  );
-                                },
-                                errorWidget: (context, url, error) {
-                                  return Center(
-                                    child: Icon(
-                                      Icons.nearby_error,
-                                      color: secondaryTextColor,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 8),
-                          Expanded(
-                            flex: 6,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(height: 40),
-                                Text(
-                                  tvShow.title,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w700,
-                                    color: backgroundColor,
-                                  ),
-                                ),
-                                SizedBox(height: 2),
-                                Text(
-                                  tvShow.getReleaseDate,
-                                  style: TextStyle(color: backgroundColor),
-                                ),
-                                SizedBox(height: 4),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    RatingBarIndicator(
-                                      rating: tvShow.voteAverage / 2,
-                                      itemBuilder: (context, index) {
-                                        return Icon(
-                                          Icons.star,
-                                          color: accentColor,
-                                        );
-                                      },
-                                      itemSize: 18,
-                                      unratedColor: secondaryTextColor,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      tvShow.voteAverage.toString(),
-                                      style: TextStyle(color: backgroundColor),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            AnimatedSwitcher(
+                duration: const Duration(milliseconds: 500),
+                switchInCurve: Curves.easeIn,
+                switchOutCurve: Curves.easeOut,
+                child: _isChanged
+                    ? buildTvShowTeaser(screenWidth)
+                    : buildTvShowDetail(screenWidth, tvShow)),
             Container(
               margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: () {
+                  setState(() {
+                    _isChanged = !_isChanged;
+
+                    if (_isChanged) {
+                      _buttonText = 'Show Details';
+                      _buttonIcon = Icon(Icons.info_outline);
+                    } else {
+                      _buttonText = 'Watch Trailer';
+                      _buttonIcon = Icon(Icons.play_arrow_outlined);
+                    }
+                  });
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.play_arrow),
+                    _buttonIcon,
                     SizedBox(width: 2),
                     Text(
-                      'Watch Trailer',
+                      _buttonText,
                       style: TextStyle(fontSize: 16),
                     )
                   ],
@@ -325,11 +224,9 @@ class TvShowDetailScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 4),
                   ReadMoreText(
-                    tvShow.overview.isEmpty ? 'None' : tvShow.overview,
+                    tvShow.overview,
                     colorClickableText: primaryColor,
                     trimMode: TrimMode.Line,
-                    trimLength: 200,
-                    trimLines: 4,
                     trimCollapsedText: 'Show more',
                     trimExpandedText: 'Show less',
                     moreStyle: TextStyle(
@@ -346,6 +243,188 @@ class TvShowDetailScreen extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildTvShowDetail(double screenWidth, TvShow tvShow) {
+    return SizedBox(
+      height: 280,
+      child: Stack(
+        children: <Widget>[
+          SizedBox(
+            child: Stack(
+              children: <Widget>[
+                CachedNetworkImage(
+                  imageUrl: tvShow.backdropUrl,
+                  fit: BoxFit.cover,
+                  height: 240,
+                  fadeInDuration: const Duration(
+                    milliseconds: 500,
+                  ),
+                  fadeOutDuration: const Duration(
+                    milliseconds: 500,
+                  ),
+                  placeholder: (context, url) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: accentColor,
+                      ),
+                    );
+                  },
+                  errorWidget: (context, url, error) {
+                    return Center(
+                      child: Icon(
+                        Icons.nearby_error,
+                        color: secondaryTextColor,
+                      ),
+                    );
+                  },
+                ),
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [Colors.black87, Colors.transparent],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.black45, Colors.transparent],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 90,
+            width: screenWidth,
+            child: Container(
+              margin: const EdgeInsets.only(left: 12, right: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 4,
+                    child: Card(
+                      elevation: 4,
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: tvShow.posterUrl,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 170,
+                        fadeInDuration: const Duration(
+                          milliseconds: 500,
+                        ),
+                        fadeOutDuration: const Duration(
+                          milliseconds: 500,
+                        ),
+                        placeholder: (context, url) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: accentColor,
+                            ),
+                          );
+                        },
+                        errorWidget: (context, url, error) {
+                          return Center(
+                            child: Icon(
+                              Icons.nearby_error,
+                              color: secondaryTextColor,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 8),
+                  Expanded(
+                    flex: 6,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 40),
+                        Text(
+                          tvShow.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            color: backgroundColor,
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                        Text(
+                          tvShow.getReleaseDate,
+                          style: TextStyle(color: backgroundColor),
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            RatingBarIndicator(
+                              rating: tvShow.voteAverage / 2,
+                              itemBuilder: (context, index) {
+                                return Icon(
+                                  Icons.star,
+                                  color: accentColor,
+                                );
+                              },
+                              itemSize: 18,
+                              unratedColor: secondaryTextColor,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              tvShow.voteAverage.toString(),
+                              style: TextStyle(color: backgroundColor),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTvShowTeaser(double screenWidth) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 40),
+      height: 240,
+      child: YoutubePlayer(
+        controller: _controller,
+        width: screenWidth,
+        bottomActions: [
+          const SizedBox(width: 12.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(isExpanded: true),
+          const SizedBox(width: 8.0),
+          RemainingDuration(),
+          const SizedBox(width: 4.0),
+          PlaybackSpeedButton(),
+          const SizedBox(width: 12.0),
+        ],
       ),
     );
   }
