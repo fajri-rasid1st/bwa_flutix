@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
                       'assets/images/cickmovie_sm.png',
                       width: 32,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'CickMovie',
                       style: appBarTitleTextStyle,

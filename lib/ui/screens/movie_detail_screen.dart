@@ -27,7 +27,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     _controller = YoutubePlayerController(
       initialVideoId: widget.movie.videoId,
       flags: YoutubePlayerFlags(
-        autoPlay: false,
         controlsVisibleAtStart: true,
         disableDragSeek: true,
         enableCaption: false,
@@ -82,19 +81,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         size: 20,
                         color: secondaryTextColor,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(
                         '${movie.runtime} mins',
                         style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   CircleAvatar(
                     radius: 2.5,
                     backgroundColor: secondaryTextColor,
                   ),
-                  SizedBox(width: 12),
+                  const SizedBox(width: 12),
                   Row(
                     children: <Widget>[
                       Icon(
@@ -102,7 +101,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         size: 20,
                         color: secondaryTextColor,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(
                         '${movie.voteCount} votes',
                         style: TextStyle(color: secondaryTextColor),
@@ -129,9 +128,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     _isChanged = !_isChanged;
 
                     if (_isChanged) {
+                      _controller.play();
                       _buttonText = 'Show Details';
                       _buttonIcon = Icon(Icons.info_outline);
                     } else {
+                      _controller.reset();
                       _buttonText = 'Watch Trailer';
                       _buttonIcon = Icon(Icons.play_arrow_outlined);
                     }
@@ -142,7 +143,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _buttonIcon,
-                    SizedBox(width: 2),
+                    const SizedBox(width: 2),
                     Text(
                       _buttonText,
                       style: TextStyle(fontSize: 16),
@@ -183,7 +184,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       );
                     },
                     itemCount: movie.genres.length,
-                    separatorBuilder: (context, index) => SizedBox(width: 4),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 4),
                   ),
                 )
               ],
@@ -223,7 +225,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       color: primaryColor,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   ReadMoreText(
                     movie.overview,
                     colorClickableText: primaryColor,
@@ -250,7 +252,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildMovieDetail(double screenWidth, Movie movie) {
     return SizedBox(
-      height: 280,
+      height: 285,
       child: Stack(
         children: <Widget>[
           SizedBox(
@@ -308,7 +310,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             ),
           ),
           Positioned(
-            top: 90,
+            top: 95,
             width: screenWidth,
             child: Container(
               margin: const EdgeInsets.only(left: 12, right: 16),
@@ -352,13 +354,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                     flex: 6,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         Text(
                           movie.title,
                           maxLines: 2,
@@ -369,12 +371,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             color: backgroundColor,
                           ),
                         ),
-                        SizedBox(height: 2),
+                        const SizedBox(height: 2),
                         Text(
                           movie.getReleaseDate,
                           style: TextStyle(color: backgroundColor),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -389,7 +391,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                               itemSize: 18,
                               unratedColor: secondaryTextColor,
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
                               movie.voteAverage.toString(),
                               style: TextStyle(color: backgroundColor),
@@ -410,7 +412,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildMovieTeaser(double screenWidth) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 40),
+      margin: const EdgeInsets.only(bottom: 45),
       height: 240,
       child: YoutubePlayer(
         controller: _controller,
