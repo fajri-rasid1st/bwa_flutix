@@ -17,22 +17,24 @@ class TvShowDetailScreen extends StatefulWidget {
 }
 
 class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
-  YoutubePlayerController _controller;
+  YoutubePlayerController _youtubePlayerController;
+  ScrollController _scrollController;
   bool _isChanged;
   String _buttonText;
   Icon _buttonIcon;
 
   @override
   void initState() {
-    _controller = YoutubePlayerController(
+    _youtubePlayerController = YoutubePlayerController(
       initialVideoId: widget.tvShow.videoId,
       flags: YoutubePlayerFlags(
+        autoPlay: false,
         controlsVisibleAtStart: true,
         disableDragSeek: true,
         enableCaption: false,
       ),
     );
-
+    _scrollController = ScrollController();
     _isChanged = false;
     _buttonText = 'Watch Trailer';
     _buttonIcon = Icon(Icons.play_arrow_outlined);
@@ -42,7 +44,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _youtubePlayerController.dispose();
     super.dispose();
   }
 
@@ -54,6 +56,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: tvShow.title),
       body: SingleChildScrollView(
+        controller: _scrollController,
         padding: const EdgeInsets.only(bottom: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,26 +115,42 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               ),
             ),
             AnimatedSwitcher(
-                duration: const Duration(milliseconds: 500),
-                switchInCurve: Curves.easeIn,
-                switchOutCurve: Curves.easeOut,
-                child: _isChanged
-                    ? buildTvShowTeaser(screenWidth)
-                    : buildTvShowDetail(screenWidth, tvShow)),
+              duration: const Duration(milliseconds: 1000),
+              switchInCurve: Curves.easeIn,
+              switchOutCurve: Curves.easeOut,
+              child: _isChanged
+                  ? buildTvShowTeaser(screenWidth)
+                  : buildTvShowDetail(screenWidth, tvShow),
+            ),
             Container(
-              margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+              margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
+                  _scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.elasticInOut,
+                  );
+
                   setState(() {
-                    _isChanged = !_isChanged;
+                    if (tvShow.videoId.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: const Text('This tv show has no trailer.'),
+                          duration: const Duration(milliseconds: 1500),
+                        ),
+                      );
+                    } else {
+                      _isChanged = !_isChanged;
+                    }
 
                     if (_isChanged) {
-                      _controller.play();
+                      _youtubePlayerController.play();
                       _buttonText = 'Show Details';
                       _buttonIcon = Icon(Icons.info_outline);
                     } else {
-                      _controller.reset();
+                      _youtubePlayerController.pause();
                       _buttonText = 'Watch Trailer';
                       _buttonIcon = Icon(Icons.play_arrow_outlined);
                     }
@@ -183,8 +202,9 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       );
                     },
                     itemCount: tvShow.genres.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 4),
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(width: 4);
+                    },
                   ),
                 )
               ],
@@ -251,7 +271,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   Widget buildTvShowDetail(double screenWidth, TvShow tvShow) {
     return SizedBox(
-      height: 285,
+      height: 290,
       child: Stack(
         children: <Widget>[
           SizedBox(
@@ -309,7 +329,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
             ),
           ),
           Positioned(
-            top: 95,
+            top: 90,
             width: screenWidth,
             child: Container(
               margin: const EdgeInsets.only(left: 12, right: 16),
@@ -328,7 +348,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         imageUrl: tvShow.posterUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 170,
+                        height: 180,
                         fadeInDuration: const Duration(
                           milliseconds: 500,
                         ),
@@ -359,7 +379,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 46),
                         Text(
                           tvShow.title,
                           maxLines: 2,
@@ -411,10 +431,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   Widget buildTvShowTeaser(double screenWidth) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 45),
+      margin: const EdgeInsets.only(bottom: 50),
       height: 240,
       child: YoutubePlayer(
-        controller: _controller,
+        controller: _youtubePlayerController,
         width: screenWidth,
         bottomActions: [
           const SizedBox(width: 12.0),

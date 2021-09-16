@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
-  final Size preferredSize = Size.fromHeight(90); // default is 56.0
+  final Size preferredSize = Size.fromHeight(96); // default is 56.0
   final String title;
 
   CustomAppBar({Key key, @required this.title}) : super(key: key);
@@ -17,7 +17,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 270,
+      height: 288,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

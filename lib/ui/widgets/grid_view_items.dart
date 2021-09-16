@@ -81,14 +81,15 @@ class GridViewItems extends StatelessWidget {
                             Icon(
                               Icons.star,
                               color: accentColor,
-                              size: 20,
+                              size: 18,
                             ),
                             SizedBox(width: 4),
                             Text(
                               '${item.voteAverage}',
                               style: TextStyle(
-                                color: backgroundColor,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w700,
+                                color: backgroundColor,
                               ),
                             ),
                           ],

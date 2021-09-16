@@ -17,22 +17,24 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  YoutubePlayerController _controller;
+  YoutubePlayerController _youtubePlayerController;
+  ScrollController _scrollController;
   bool _isChanged;
   String _buttonText;
   Icon _buttonIcon;
 
   @override
   void initState() {
-    _controller = YoutubePlayerController(
+    _youtubePlayerController = YoutubePlayerController(
       initialVideoId: widget.movie.videoId,
       flags: YoutubePlayerFlags(
+        autoPlay: false,
         controlsVisibleAtStart: true,
         disableDragSeek: true,
         enableCaption: false,
       ),
     );
-
+    _scrollController = ScrollController();
     _isChanged = false;
     _buttonText = 'Watch Trailer';
     _buttonIcon = Icon(Icons.play_arrow_outlined);
@@ -42,7 +44,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _youtubePlayerController.dispose();
     super.dispose();
   }
 
@@ -54,6 +56,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: movie.title),
       body: SingleChildScrollView(
+        controller: _scrollController,
         padding: const EdgeInsets.only(bottom: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               ),
             ),
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 1000),
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
               child: _isChanged
@@ -120,19 +123,34 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   : buildMovieDetail(screenWidth, movie),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+              margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
+                  _scrollController.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.elasticInOut,
+                  );
+
                   setState(() {
-                    _isChanged = !_isChanged;
+                    if (movie.videoId.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: const Text('This movie has no trailer.'),
+                          duration: const Duration(milliseconds: 1500),
+                        ),
+                      );
+                    } else {
+                      _isChanged = !_isChanged;
+                    }
 
                     if (_isChanged) {
-                      _controller.play();
+                      _youtubePlayerController.play();
                       _buttonText = 'Show Details';
                       _buttonIcon = Icon(Icons.info_outline);
                     } else {
-                      _controller.reset();
+                      _youtubePlayerController.pause();
                       _buttonText = 'Watch Trailer';
                       _buttonIcon = Icon(Icons.play_arrow_outlined);
                     }
@@ -184,8 +202,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       );
                     },
                     itemCount: movie.genres.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(width: 4),
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(width: 4);
+                    },
                   ),
                 )
               ],
@@ -252,7 +271,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildMovieDetail(double screenWidth, Movie movie) {
     return SizedBox(
-      height: 285,
+      height: 290,
       child: Stack(
         children: <Widget>[
           SizedBox(
@@ -310,7 +329,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             ),
           ),
           Positioned(
-            top: 95,
+            top: 90,
             width: screenWidth,
             child: Container(
               margin: const EdgeInsets.only(left: 12, right: 16),
@@ -329,7 +348,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         imageUrl: movie.posterUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        height: 170,
+                        height: 180,
                         fadeInDuration: const Duration(
                           milliseconds: 500,
                         ),
@@ -360,7 +379,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 46),
                         Text(
                           movie.title,
                           maxLines: 2,
@@ -412,10 +431,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   Widget buildMovieTeaser(double screenWidth) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 45),
+      margin: const EdgeInsets.only(bottom: 50),
       height: 240,
       child: YoutubePlayer(
-        controller: _controller,
+        controller: _youtubePlayerController,
         width: screenWidth,
         bottomActions: [
           const SizedBox(width: 12.0),

@@ -133,9 +133,9 @@ var movies = [
     backdropUrl: '${Const.IMG_URL_500}/vs63P2xYUGn3QmQ4JnkX1MY4BrO.jpg',
     videoId: 'H9gpZqn-TtU',
     voteAverage: 8.3,
-    voteCount: 198,
-    runtime: 0,
-    genres: ['Animation', 'Comedy'],
+    voteCount: 289,
+    runtime: 134,
+    genres: ['Animation', 'Comedy', 'Thriller', 'Adventure', 'Drama', 'Horror'],
   ),
   Movie(
     title: 'Space Jam: A New Legacy',
