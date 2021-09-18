@@ -1,7 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cick_movie_app/models/Movie.dart';
-import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
-import 'package:cick_movie_app/ui/screens/tv_show_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -27,16 +24,16 @@ class GridViewItems extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 8),
           child: GestureDetector(
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return item is Movie
-                        ? MovieDetailScreen(movie: item)
-                        : TvShowDetailScreen(tvShow: item);
-                  },
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) {
+              //       return item is Movie
+              //           ? MovieDetailScreen(movie: item)
+              //           : TvShowDetailScreen(tvShow: item);
+              //     },
+              //   ),
+              // );
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,4 +1,4 @@
-import 'package:cick_movie_app/models/TvShow.dart';
+import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/ui/widgets/grid_view_items.dart';
 import 'package:flutter/material.dart';
 
