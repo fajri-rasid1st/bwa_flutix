@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +12,11 @@ class GridViewItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      padding: const EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 8),
+      padding: const EdgeInsets.all(8),
       shrinkWrap: true,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.53,
+        childAspectRatio: 0.54,
       ),
       itemBuilder: (context, index) {
         final item = items[index];
@@ -39,7 +40,7 @@ class GridViewItems extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Card(
-                  elevation: 4,
+                  elevation: 2,
                   clipBehavior: Clip.antiAlias,
                   margin: const EdgeInsets.only(bottom: 8),
                   shape: RoundedRectangleBorder(
@@ -48,16 +49,17 @@ class GridViewItems extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       CachedNetworkImage(
-                        imageUrl: item.posterUrl,
+                        imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
                         fit: BoxFit.cover,
-                        height: 250,
+                        height: 240,
                         width: double.infinity,
                         fadeInDuration: const Duration(milliseconds: 500),
                         fadeOutDuration: const Duration(milliseconds: 500),
                         placeholder: (context, url) {
                           return Center(
-                            child:
-                                CircularProgressIndicator(color: accentColor),
+                            child: CircularProgressIndicator(
+                              color: accentColor,
+                            ),
                           );
                         },
                         errorWidget: (context, url, error) {
@@ -75,11 +77,7 @@ class GridViewItems extends StatelessWidget {
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              Icons.star,
-                              color: accentColor,
-                              size: 18,
-                            ),
+                            Icon(Icons.star, color: accentColor, size: 18),
                             SizedBox(width: 4),
                             Text(
                               '${item.voteAverage}',
@@ -92,7 +90,7 @@ class GridViewItems extends StatelessWidget {
                           ],
                         ),
                         decoration: BoxDecoration(
-                          color: primaryTextColor.withOpacity(0.5),
+                          color: primaryTextColor.withOpacity(0.75),
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),

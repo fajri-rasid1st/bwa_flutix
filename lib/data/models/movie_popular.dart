@@ -4,7 +4,7 @@ class MoviePopular {
   int id;
   String title;
   String releaseDate;
-  double voteAverage;
+  num voteAverage;
   String posterPath;
 
   MoviePopular({
