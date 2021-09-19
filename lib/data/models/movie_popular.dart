@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MoviePopular {
   int id;
@@ -8,11 +8,11 @@ class MoviePopular {
   String posterPath;
 
   MoviePopular({
-    @required this.id,
-    @required this.title,
-    @required this.releaseDate,
-    @required this.voteAverage,
-    @required this.posterPath,
+    this.id,
+    this.title,
+    this.releaseDate,
+    this.voteAverage,
+    this.posterPath
   });
 
   factory MoviePopular.fromMap(Map<String, dynamic> moviePopular) {
@@ -24,4 +24,7 @@ class MoviePopular {
       posterPath: moviePopular['poster_path'],
     );
   }
+
+  get releaseDateParse =>
+      DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
 }

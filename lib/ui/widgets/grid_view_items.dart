@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 class GridViewItems extends StatelessWidget {
   final List<dynamic> items;
 
-  const GridViewItems({@required this.items});
+  const GridViewItems({Key key, @required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +25,12 @@ class GridViewItems extends StatelessWidget {
           margin: const EdgeInsets.symmetric(horizontal: 8),
           child: GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) {
-              //       return item is Movie
-              //           ? MovieDetailScreen(movie: item)
-              //           : TvShowDetailScreen(tvShow: item);
-              //     },
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MovieDetailScreen(movieId: item.id),
+                ),
+              );
             },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +54,8 @@ class GridViewItems extends StatelessWidget {
                         placeholder: (context, url) {
                           return Center(
                             child: CircularProgressIndicator(
-                              color: accentColor,
+                              strokeWidth: 2,
+                              color: tertiaryTextColor,
                             ),
                           );
                         },
@@ -103,7 +101,7 @@ class GridViewItems extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  item.releaseDate.split('-')[0],
+                  item.releaseDateParse,
                   style: subtitleTextStyle,
                 ),
               ],
