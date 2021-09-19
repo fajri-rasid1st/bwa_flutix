@@ -1,6 +1,6 @@
 import 'package:cick_movie_app/data/models/movie_popular.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
-import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:cick_movie_app/ui/widgets/grid_view_items.dart';
 import 'package:flutter/material.dart';
 
@@ -17,19 +17,18 @@ class _MoviePageState extends State<MoviePage> {
     return FutureBuilder<List<MoviePopular>>(
       future: MovieServices.getPopularMovies(1),
       builder: (context, snapshot) {
-        final movies = snapshot.data;
-
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: SizedBox(
-              child: CircularProgressIndicator(color: tertiaryTextColor),
-              width: 75,
-              height: 75,
-            ),
-          );
+          return FutureOnLoad(text: 'Fetching data...');
         } else {
-          if (snapshot.hasError) Center(child: Text('Request failed.'));
+          if (snapshot.hasError) {
+            return FutureOnLoad(
+              text: 'Request failed.',
+              isError: true,
+            );
+          }
 
+          final movies = snapshot.data;
+          
           return GridViewItems(items: movies);
         }
       },

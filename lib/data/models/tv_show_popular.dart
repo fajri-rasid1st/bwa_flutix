@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 class TvShowPopular {
   int id;
   String title;
@@ -6,11 +9,11 @@ class TvShowPopular {
   String posterPath;
 
   TvShowPopular({
-    this.id,
-    this.title,
-    this.releaseDate,
-    this.voteAverage,
-    this.posterPath,
+    @required this.id,
+    @required this.title,
+    @required this.releaseDate,
+    @required this.voteAverage,
+    @required this.posterPath,
   });
 
   factory TvShowPopular.fromMap(Map<String, dynamic> tvShowPopular) {
@@ -22,4 +25,7 @@ class TvShowPopular {
       posterPath: tvShowPopular['poster_path'],
     );
   }
+
+  get releaseDateParse =>
+      DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
 }

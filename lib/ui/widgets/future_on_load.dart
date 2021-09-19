@@ -1,0 +1,46 @@
+import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+class FutureOnLoad extends StatelessWidget {
+  final String text;
+  final bool isError;
+
+  const FutureOnLoad({
+    Key key,
+    @required this.text,
+    this.isError = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            isError
+                ? Icon(
+                    Icons.nearby_error,
+                    size: 75,
+                    color: secondaryColor,
+                  )
+                : SpinKitPulse(
+                    size: 75,
+                    color: secondaryColor,
+                  ),
+            const SizedBox(height: 8),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w600,
+                color: secondaryColor,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

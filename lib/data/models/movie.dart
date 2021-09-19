@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class Movie {
@@ -12,15 +13,15 @@ class Movie {
   List<Genre> genres;
 
   Movie({
-    this.title,
-    this.releaseDate,
-    this.posterPath,
-    this.backdropPath,
-    this.overview,
-    this.runtime,
-    this.voteCount,
-    this.voteAverage,
-    this.genres,
+    @required this.title,
+    @required this.releaseDate,
+    @required this.posterPath,
+    @required this.backdropPath,
+    @required this.overview,
+    @required this.runtime,
+    @required this.voteCount,
+    @required this.voteAverage,
+    @required this.genres,
   });
 
   factory Movie.fromMap(Map<String, dynamic> movie) {
@@ -39,18 +40,16 @@ class Movie {
     );
   }
 
-    get releaseDateParse =>
+  get releaseDateParse =>
       DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
 }
 
 class Genre {
   String name;
 
-  Genre({this.name});
+  Genre({@required this.name});
 
   factory Genre.fromMap(Map<String, dynamic> genre) {
-    return Genre(
-      name: genre['name'],
-    );
+    return Genre(name: genre['name']);
   }
 }

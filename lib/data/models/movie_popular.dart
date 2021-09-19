@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MoviePopular {
@@ -8,11 +9,11 @@ class MoviePopular {
   String posterPath;
 
   MoviePopular({
-    this.id,
-    this.title,
-    this.releaseDate,
-    this.voteAverage,
-    this.posterPath
+    @required this.id,
+    @required this.title,
+    @required this.releaseDate,
+    @required this.voteAverage,
+    @required this.posterPath
   });
 
   factory MoviePopular.fromMap(Map<String, dynamic> moviePopular) {

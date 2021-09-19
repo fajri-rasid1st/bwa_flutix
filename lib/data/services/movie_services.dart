@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/movie_popular.dart';
+import 'package:cick_movie_app/data/models/video.dart';
 import 'package:http/http.dart' as http;
 
 class MovieServices {
@@ -34,12 +35,10 @@ class MovieServices {
         // return MoviePopular list
         return movies;
       } else {
-        return <MoviePopular>[];
+        throw Exception('Request failed.');
       }
     } catch (e) {
-      print(e.toString());
-
-      return <MoviePopular>[];
+      throw Exception(e.toString());
     }
   }
 
@@ -66,12 +65,38 @@ class MovieServices {
         // return Movie
         return movie;
       } else {
-        return Movie();
+        throw Exception('Request failed.');
       }
     } catch (e) {
-      print(e.toString());
+      throw Exception(e.toString());
+    }
+  }
 
-      return Movie();
+  // function to get movie video from API
+  static Future<Video> getMovieVideo(int movieId) async {
+    // define URL target
+    final url =
+        '${Const.BASE_URL}/movie/$movieId/videos?api_key=${Const.API_KEY}';
+
+    try {
+      // send HTTP GET request
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // parse the string and returns the resulting json object
+        final movieVideoResponse = json.decode(response.body);
+
+        // casting response to Map <string, dynamic> and get results value
+        final List<dynamic> results =
+            (movieVideoResponse as Map<String, dynamic>)['results'];
+
+        // return video from results at index 0
+        return Video.fromMap(results[0]);
+      } else {
+        throw Exception('Request failed.');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

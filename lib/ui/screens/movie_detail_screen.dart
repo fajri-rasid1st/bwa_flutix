@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
+import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
+import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readmore/readmore.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -27,16 +30,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   void initState() {
-    _youtubePlayerController = YoutubePlayerController(
-      initialVideoId: 'Ibn3SVTkZEg',
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
-        controlsVisibleAtStart: true,
-        disableDragSeek: true,
-        enableCaption: false,
-      ),
-    );
-    
     _isChanged = false;
     _buttonText = 'Watch Trailer';
     _buttonIcon = Icon(Icons.play_arrow_outlined);
@@ -46,7 +39,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   void dispose() {
-    _youtubePlayerController.dispose();
+    if (_youtubePlayerController != null) {
+      _youtubePlayerController.dispose();
+    }
+
     super.dispose();
   }
 
@@ -54,31 +50,42 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return FutureBuilder<Movie>(
-      future: MovieServices.getMovie(widget.movieId),
+    return FutureBuilder(
+      future: Future.wait([
+        MovieServices.getMovie(widget.movieId),
+        MovieServices.getMovieVideo(widget.movieId),
+      ]),
       builder: (context, snapshot) {
-        final movie = snapshot.data;
-
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(
-              child: SizedBox(
-                child: CircularProgressIndicator(color: tertiaryTextColor),
-                width: 75,
-                height: 75,
-              ),
+          return FutureOnLoad(text: 'Fetching data...');
+        } else {
+          if (snapshot.hasError) {
+            return FutureOnLoad(
+              text: 'Request failed.',
+              isError: true,
+            );
+          }
+
+          final Movie movie = snapshot.data[0];
+          final Video video = snapshot.data[1];
+
+          _youtubePlayerController = YoutubePlayerController(
+            initialVideoId: video.videoId,
+            flags: YoutubePlayerFlags(
+              autoPlay: false,
+              controlsVisibleAtStart: true,
+              disableDragSeek: true,
+              enableCaption: false,
             ),
           );
-        } else {
-          if (snapshot.hasError) Center(child: Text('Request failed.'));
 
-          return buildScreen(screenWidth, movie);
+          return buildScreen(screenWidth, movie, video);
         }
       },
     );
   }
 
-  Widget buildScreen(double screenWidth, Movie movie) {
+  Widget buildScreen(double screenWidth, Movie movie, Video video) {
     return Scaffold(
       appBar: CustomAppBar(title: movie.title),
       body: SingleChildScrollView(
@@ -152,28 +159,28 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
-                  // setState(() {
-                  //   if (movie.videoId.isEmpty) {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       const SnackBar(
-                  //         content: const Text('This movie has no trailer.'),
-                  //         duration: const Duration(milliseconds: 1500),
-                  //       ),
-                  //     );
-                  //   } else {
-                  //     _isChanged = !_isChanged;
-                  //   }
+                  setState(() {
+                    if (video.videoId.isEmpty || video.site != 'YouTube') {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: const Text('This movie has no trailer.'),
+                          duration: const Duration(milliseconds: 1500),
+                        ),
+                      );
+                    } else {
+                      _isChanged = !_isChanged;
 
-                  //   if (_isChanged) {
-                  //     _youtubePlayerController.play();
-                  //     _buttonText = 'Show Details';
-                  //     _buttonIcon = Icon(Icons.info_outline);
-                  //   } else {
-                  //     _youtubePlayerController.pause();
-                  //     _buttonText = 'Watch Trailer';
-                  //     _buttonIcon = Icon(Icons.play_arrow_outlined);
-                  //   }
-                  // });
+                      if (_isChanged) {
+                        _youtubePlayerController.play();
+                        _buttonText = 'Show Details';
+                        _buttonIcon = Icon(Icons.info_outline);
+                      } else {
+                        _youtubePlayerController.pause();
+                        _buttonText = 'Watch Trailer';
+                        _buttonIcon = Icon(Icons.play_arrow_outlined);
+                      }
+                    }
+                  });
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -308,10 +315,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                   placeholder: (context, url) {
                     return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: tertiaryTextColor,
-                      ),
+                      child: SpinKitPulse(color: secondaryColor),
                     );
                   },
                   errorWidget: (context, url, error) {
@@ -377,10 +381,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         ),
                         placeholder: (context, url) {
                           return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: tertiaryTextColor,
-                            ),
+                            child: SpinKitPulse(color: secondaryColor),
                           );
                         },
                         errorWidget: (context, url, error) {

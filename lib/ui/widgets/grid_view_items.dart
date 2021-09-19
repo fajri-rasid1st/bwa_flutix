@@ -4,6 +4,7 @@ import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GridViewItems extends StatelessWidget {
@@ -53,10 +54,7 @@ class GridViewItems extends StatelessWidget {
                         fadeOutDuration: const Duration(milliseconds: 500),
                         placeholder: (context, url) {
                           return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: tertiaryTextColor,
-                            ),
+                            child: SpinKitPulse(color: secondaryColor),
                           );
                         },
                         errorWidget: (context, url, error) {

@@ -32,12 +32,10 @@ class TvShowServices {
         // return TvShowPopular list
         return tvShows;
       } else {
-        return <TvShowPopular>[];
+        throw Exception('Request failed.');
       }
     } catch (e) {
-      print(e.toString());
-
-      return <TvShowPopular>[];
+      throw Exception(e.toString());
     }
   }
 }
