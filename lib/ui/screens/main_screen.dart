@@ -18,17 +18,17 @@ class _MainScreenState extends State<MainScreen> {
 
   int _currentIndex = 0;
 
-  ScrollController _controller;
+  ScrollController _scrollController;
 
   @override
   void initState() {
-    _controller = ScrollController();
+    _scrollController = ScrollController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -40,49 +40,47 @@ class _MainScreenState extends State<MainScreen> {
     ));
 
     return Scaffold(
-      body: SafeArea(
-        child: NestedScrollView(
-          controller: _controller,
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                backgroundColor: backgroundColor,
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'assets/images/cickmovie_sm.png',
-                      width: 32,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'CickMovie',
-                      style: appBarTitleTextStyle,
-                    )
-                  ],
-                ),
-                actions: <Widget>[
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.search,
-                      color: primaryTextColor,
-                    ),
-                    tooltip: 'Search',
+      body: NestedScrollView(
+        controller: _scrollController,
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              floating: true,
+              snap: true,
+              backgroundColor: backgroundColor,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/images/cickmovie_sm.png',
+                    width: 32,
                   ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'CickMovie',
+                    style: appBarTitleTextStyle,
+                  )
                 ],
-              )
-            ];
-          },
-          body: _pages[_currentIndex],
-        ),
+              ),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.search,
+                    color: primaryTextColor,
+                  ),
+                  tooltip: 'Search',
+                ),
+              ],
+            )
+          ];
+        },
+        body: _pages[_currentIndex],
       ),
       bottomNavigationBar: ScrollToHide(
-        controller: _controller,
+        controller: _scrollController,
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
           selectedFontSize: 12,

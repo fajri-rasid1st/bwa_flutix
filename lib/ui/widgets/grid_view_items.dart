@@ -3,6 +3,7 @@ import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class GridViewItems extends StatelessWidget {
   final List<dynamic> items;
@@ -11,13 +12,11 @@ class GridViewItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
+    return StaggeredGridView.extentBuilder(
       padding: const EdgeInsets.all(8),
       shrinkWrap: true,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.54,
-      ),
+      maxCrossAxisExtent: 200,
+      staggeredTileBuilder: (index) => const StaggeredTile.extent(1, 320),
       itemBuilder: (context, index) {
         final item = items[index];
 
@@ -102,7 +101,6 @@ class GridViewItems extends StatelessWidget {
                   style: titleTextStyle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  // textWidthBasis: TextWidthBasis.longestLine,
                 ),
                 Text(
                   item.releaseDate.split('-')[0],
