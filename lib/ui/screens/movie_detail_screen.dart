@@ -22,17 +22,54 @@ class MovieDetailScreen extends StatefulWidget {
 }
 
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  YoutubePlayerController _youtubePlayerController;
+  // initialize atribute
+  bool _isLoading = true;
 
-  bool _isChanged;
-  String _buttonText;
+  // declaration attribute
   Icon _buttonIcon;
+  String _buttonText;
+  bool _isChanged;
+
+  // this attribute will be filled in the future
+  Movie _movie;
+  Video _video;
+  YoutubePlayerController _youtubePlayerController;
+  String _failureMessage;
 
   @override
   void initState() {
-    _isChanged = false;
-    _buttonText = 'Watch Trailer';
+    Future.wait([
+      MovieServices.getMovie(
+        movieId: widget.movieId,
+        onSuccess: (movie) => _movie = movie,
+        onFailure: (message) => _failureMessage = message,
+      ),
+      MovieServices.getMovieVideo(
+        movieId: widget.movieId,
+        onSuccess: (video) => _video = video,
+        onFailure: (_) {},
+      ),
+    ]).then((_) {
+      setState(() {
+        if (_video != null) {
+          _youtubePlayerController = YoutubePlayerController(
+            initialVideoId: _video.videoId,
+            flags: YoutubePlayerFlags(
+              autoPlay: false,
+              controlsVisibleAtStart: true,
+              disableDragSeek: true,
+              enableCaption: false,
+            ),
+          );
+        }
+
+        _isLoading = false;
+      });
+    });
+
     _buttonIcon = Icon(Icons.play_arrow_outlined);
+    _buttonText = 'Watch Trailer';
+    _isChanged = false;
 
     super.initState();
   }
@@ -50,39 +87,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return FutureBuilder(
-      future: Future.wait([
-        MovieServices.getMovie(widget.movieId),
-        MovieServices.getMovieVideo(widget.movieId),
-      ]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return FutureOnLoad(text: 'Fetching data...');
-        } else {
-          if (snapshot.hasError) {
-            return FutureOnLoad(
-              text: 'Request failed.',
-              isError: true,
-            );
-          }
-
-          final Movie movie = snapshot.data[0];
-          final Video video = snapshot.data[1];
-
-          _youtubePlayerController = YoutubePlayerController(
-            initialVideoId: video.videoId,
-            flags: YoutubePlayerFlags(
-              autoPlay: false,
-              controlsVisibleAtStart: true,
-              disableDragSeek: true,
-              enableCaption: false,
-            ),
-          );
-
-          return buildScreen(screenWidth, movie, video);
-        }
-      },
-    );
+    if (_isLoading) {
+      return FutureOnLoad(text: 'Fetching data...');
+    } else {
+      if (_movie == null) {
+        return FutureOnLoad(text: _failureMessage, isError: true);
+      } else {
+        return buildScreen(screenWidth, _movie, _video);
+      }
+    }
   }
 
   Widget buildScreen(double screenWidth, Movie movie, Video video) {
@@ -147,7 +160,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               ),
             ),
             AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 750),
               switchInCurve: Curves.easeIn,
               switchOutCurve: Curves.easeOut,
               child: _isChanged
@@ -160,25 +173,24 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               child: OutlinedButton(
                 onPressed: () {
                   setState(() {
-                    if (video.videoId.isEmpty || video.site != 'YouTube') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: const Text('This movie has no trailer.'),
-                          duration: const Duration(milliseconds: 1500),
-                        ),
-                      );
-                    } else {
-                      _isChanged = !_isChanged;
+                    if (video != null) {
+                      if (video.site == 'YouTube') {
+                        _isChanged = !_isChanged;
 
-                      if (_isChanged) {
-                        _youtubePlayerController.play();
-                        _buttonText = 'Show Details';
-                        _buttonIcon = Icon(Icons.info_outline);
+                        if (_isChanged) {
+                          _youtubePlayerController.play();
+                          _buttonText = 'Show Details';
+                          _buttonIcon = Icon(Icons.info_outline);
+                        } else {
+                          _youtubePlayerController.pause();
+                          _buttonText = 'Watch Trailer';
+                          _buttonIcon = Icon(Icons.play_arrow_outlined);
+                        }
                       } else {
-                        _youtubePlayerController.pause();
-                        _buttonText = 'Watch Trailer';
-                        _buttonIcon = Icon(Icons.play_arrow_outlined);
+                        showSnackBarMessage(text: 'This movie has no trailer.');
                       }
+                    } else {
+                      showSnackBarMessage(text: 'This movie has no trailer.');
                     }
                   });
                 },
@@ -469,6 +481,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           PlaybackSpeedButton(),
           const SizedBox(width: 12.0),
         ],
+      ),
+    );
+  }
+
+  void showSnackBarMessage({@required String text, int duration = 1500}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text),
+        duration: Duration(milliseconds: duration),
       ),
     );
   }

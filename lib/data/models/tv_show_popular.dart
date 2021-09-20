@@ -26,6 +26,12 @@ class TvShowPopular {
     );
   }
 
-  get releaseDateParse =>
-      DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+  String get releaseDateParse {
+    return DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+  }
+
+  @override
+  String toString() {
+    return 'TvShowPopular(id: $id, title: $title, releaseDate: $releaseDate, voteAverage: $voteAverage, posterPath: $posterPath)';
+  }
 }

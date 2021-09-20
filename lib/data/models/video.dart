@@ -12,4 +12,7 @@ class Video {
       site: map['site'],
     );
   }
+
+  @override
+  String toString() => 'Video(videoId: $videoId, site: $site)';
 }

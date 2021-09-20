@@ -8,13 +8,12 @@ class MoviePopular {
   num voteAverage;
   String posterPath;
 
-  MoviePopular({
-    @required this.id,
-    @required this.title,
-    @required this.releaseDate,
-    @required this.voteAverage,
-    @required this.posterPath
-  });
+  MoviePopular(
+      {@required this.id,
+      @required this.title,
+      @required this.releaseDate,
+      @required this.voteAverage,
+      @required this.posterPath});
 
   factory MoviePopular.fromMap(Map<String, dynamic> moviePopular) {
     return MoviePopular(
@@ -26,6 +25,12 @@ class MoviePopular {
     );
   }
 
-  get releaseDateParse =>
-      DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+  String get releaseDateParse {
+    return DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+  }
+
+  @override
+  String toString() {
+    return 'MoviePopular(id: $id, title: $title, releaseDate: $releaseDate, voteAverage: $voteAverage, posterPath: $posterPath)';
+  }
 }

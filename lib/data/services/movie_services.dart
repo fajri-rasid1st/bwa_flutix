@@ -20,14 +20,14 @@ class MovieServices {
         // parse the string and returns the resulting json object
         final popularMoviesResponse = json.decode(response.body);
 
-        // casting response to Map <string, dynamic> and get results value
+        // casting response to Map<string, dynamic> and get results value
         final List<dynamic> results =
             (popularMoviesResponse as Map<String, dynamic>)['results'];
 
         // initialize empty MoviePopular list
         final List<MoviePopular> movies = [];
 
-        // add movie to MoviePopular list
+        // add every movie on results to MoviePopular list
         for (var movie in results) {
           movies.add(MoviePopular.fromMap(movie));
         }
@@ -43,7 +43,11 @@ class MovieServices {
   }
 
   // function to get movie detail from API
-  static Future<Movie> getMovie(int movieId) async {
+  static Future<void> getMovie({
+    int movieId,
+    void Function(Movie) onSuccess,
+    void Function(String) onFailure,
+  }) async {
     // define URL target
     final url = '${Const.BASE_URL}/movie/$movieId?api_key=${Const.API_KEY}';
 
@@ -55,25 +59,29 @@ class MovieServices {
         // parse the string and returns the resulting json object
         final movieResponse = json.decode(response.body);
 
-        // casting response to Map <string, dynamic>
+        // casting response to Map<string, dynamic>
         final Map<String, dynamic> results =
             (movieResponse as Map<String, dynamic>);
 
-        // get Movie from Map <string, dynamic>
+        // get Movie from Map<string, dynamic> results
         final Movie movie = Movie.fromMap(results);
 
-        // return Movie
-        return movie;
+        // get Movie
+        onSuccess(movie);
       } else {
-        throw Exception('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      onFailure(e.toString());
     }
   }
 
   // function to get movie video from API
-  static Future<Video> getMovieVideo(int movieId) async {
+  static Future<void> getMovieVideo({
+    int movieId,
+    void Function(Video) onSuccess,
+    void Function(String) onFailure,
+  }) async {
     // define URL target
     final url =
         '${Const.BASE_URL}/movie/$movieId/videos?api_key=${Const.API_KEY}';
@@ -86,17 +94,22 @@ class MovieServices {
         // parse the string and returns the resulting json object
         final movieVideoResponse = json.decode(response.body);
 
-        // casting response to Map <string, dynamic> and get results value
+        // casting response to Map<string, dynamic> and get results value
         final List<dynamic> results =
             (movieVideoResponse as Map<String, dynamic>)['results'];
 
-        // return video from results at index 0
-        return Video.fromMap(results[0]);
+        if (results.isEmpty) {
+          // failure if results is empty
+          onFailure('This video has no trailer');
+        } else {
+          // else, get video from results at index 0
+          onSuccess(Video.fromMap(results[0]));
+        }
       } else {
-        throw Exception('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      onFailure(e.toString());
     }
   }
 }

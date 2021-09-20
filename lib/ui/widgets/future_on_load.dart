@@ -32,8 +32,9 @@ class FutureOnLoad extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               text,
+              textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: secondaryColor,
               ),

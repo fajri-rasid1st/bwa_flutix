@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'package:cick_movie_app/data/models/genre.dart';
+
 class Movie {
   String title;
   String releaseDate;
@@ -40,16 +42,12 @@ class Movie {
     );
   }
 
-  get releaseDateParse =>
-      DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
-}
+  String get releaseDateParse {
+    return DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+  }
 
-class Genre {
-  String name;
-
-  Genre({@required this.name});
-
-  factory Genre.fromMap(Map<String, dynamic> genre) {
-    return Genre(name: genre['name']);
+  @override
+  String toString() {
+    return 'Movie(title: $title, releaseDate: $releaseDate, posterPath: $posterPath, backdropPath: $backdropPath, overview: $overview, runtime: $runtime, voteCount: $voteCount, voteAverage: $voteAverage, genres: $genres)';
   }
 }

@@ -21,14 +21,11 @@ class _MoviePageState extends State<MoviePage> {
           return FutureOnLoad(text: 'Fetching data...');
         } else {
           if (snapshot.hasError) {
-            return FutureOnLoad(
-              text: 'Request failed.',
-              isError: true,
-            );
+            return FutureOnLoad(text: 'Request failed.', isError: true);
           }
 
           final movies = snapshot.data;
-          
+
           return GridViewItems(items: movies);
         }
       },
