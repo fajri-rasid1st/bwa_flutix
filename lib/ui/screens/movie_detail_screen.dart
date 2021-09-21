@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/data/models/cast.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +35,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // this attribute will be filled in the future
   Movie _movie;
   Video _video;
+  List<Cast> _casts;
   YoutubePlayerController _youtubePlayerController;
   String _failureMessage;
 
@@ -49,6 +52,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         onSuccess: (video) => _video = video,
         onFailure: (message) => _failureMessage = message,
       ),
+      MovieServices.getMovieCasts(
+        movieId: widget.movieId,
+        onSuccess: (casts) => _casts = casts,
+        onFailure: (message) => _failureMessage = message,
+      )
     ]).then((_) {
       setState(() {
         if (_video != null) {
@@ -200,7 +208,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     _buttonIcon,
-                    const SizedBox(width: 2),
+                    const SizedBox(width: 4),
                     Text(
                       _buttonText,
                       style: TextStyle(fontSize: 16),
@@ -227,7 +235,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                 ),
                 Container(
-                  height: 45,
+                  height: 46,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     shrinkWrap: true,
@@ -248,28 +256,97 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 )
               ],
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 16),
-              child: Divider(
-                height: 1,
-                thickness: 1,
-                color: dividerColor,
-              ),
-              decoration: BoxDecoration(
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    offset: Offset(0, 0.5),
-                    blurRadius: 1,
-                    color: dividerColor,
+            buildDivider(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Text(
+                    'Casts',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      color: primaryColor,
+                    ),
                   ),
-                  BoxShadow(
-                    offset: Offset(0.5, 0),
-                    blurRadius: 1,
-                    color: dividerColor,
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  height: 228,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        width: 112,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Card(
+                              margin: const EdgeInsets.symmetric(vertical: 4),
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: CachedNetworkImage(
+                                imageUrl:
+                                    '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                width: 112,
+                                height: 165,
+                                fit: BoxFit.cover,
+                                fadeInDuration: const Duration(
+                                  milliseconds: 500,
+                                ),
+                                fadeOutDuration: const Duration(
+                                  milliseconds: 500,
+                                ),
+                                placeholder: (context, url) {
+                                  return Center(
+                                    child: SpinKitPulse(color: secondaryColor),
+                                  );
+                                },
+                                errorWidget: (context, url, error) {
+                                  return Center(
+                                    child: Icon(
+                                      Icons.nearby_error,
+                                      color: secondaryTextColor,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              _casts[index].name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: appBarTitleTextStyle,
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              _casts[index].character,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: secondaryTextColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    itemCount: _casts.length,
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(width: 16);
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
+            buildDivider(),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -382,7 +459,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: CachedNetworkImage(
-                        imageUrl: '${Const.IMG_URL_200}/${movie.posterPath}',
+                        imageUrl: '${Const.IMG_URL_300}/${movie.posterPath}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180,
@@ -481,6 +558,31 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           const SizedBox(width: 4.0),
           PlaybackSpeedButton(),
           const SizedBox(width: 12.0),
+        ],
+      ),
+    );
+  }
+
+  Widget buildDivider() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      child: Divider(
+        height: 1,
+        thickness: 1,
+        color: dividerColor,
+      ),
+      decoration: BoxDecoration(
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: Offset(0, 0.5),
+            blurRadius: 1,
+            color: dividerColor,
+          ),
+          BoxShadow(
+            offset: Offset(0.5, 0),
+            blurRadius: 1,
+            color: dividerColor,
+          ),
         ],
       ),
     );

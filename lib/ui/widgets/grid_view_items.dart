@@ -100,9 +100,9 @@ class GridViewItems extends StatelessWidget {
                 ),
                 Text(
                   item.title,
-                  style: titleTextStyle,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  style: titleTextStyle,
                 ),
                 Text(
                   item.releaseDateParse,

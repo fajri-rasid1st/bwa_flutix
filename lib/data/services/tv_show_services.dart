@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/data/models/cast.dart';
 import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/models/video.dart';
@@ -112,6 +113,48 @@ class TvShowServices {
         }
       } else {
         onFailure('Request failed');
+      }
+    } catch (e) {
+      onFailure(e.toString());
+    }
+  }
+
+  // function to get tv show casts from API
+  static Future<void> getTvShowCasts({
+    @required int tvShowId,
+    @required void Function(List<Cast> casts) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
+    // define URL target
+    final url =
+        '${Const.BASE_URL}/tv/$tvShowId/credits?api_key=${Const.API_KEY}';
+
+    try {
+      // send HTTP GET request
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // parse the string and returns the resulting json object
+        final tvShowCastsResponse = json.decode(response.body);
+
+        // casting response to Map<string, dynamic> and get cast value
+        final List<dynamic> results =
+            (tvShowCastsResponse as Map<String, dynamic>)['cast'];
+
+        // initialize empty Cast list
+        final List<Cast> casts = [];
+
+        for (var cast in results) {
+          // if casts are already 16 have items, break the loop
+          if (casts.length == 16) break;
+          // add every cast on results to Cast list
+          casts.add(Cast.fromMap(cast));
+        }
+
+        // return Cast list
+        onSuccess(casts);
+      } else {
+        onFailure('Request failed.');
       }
     } catch (e) {
       onFailure(e.toString());
