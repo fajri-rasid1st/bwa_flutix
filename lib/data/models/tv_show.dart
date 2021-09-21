@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:cick_movie_app/data/models/genre.dart';
 
 class TvShow {
@@ -34,29 +33,31 @@ class TvShow {
 
   factory TvShow.fromMap(Map<String, dynamic> tvShow) {
     return TvShow(
-      title: tvShow['title'],
-      firstAirDate: tvShow['firstAirDate'],
-      lastAirDate: tvShow['lastAirDate'],
-      posterPath: tvShow['posterPath'],
-      backdropPath: tvShow['backdropPath'],
+      title: tvShow['name'],
+      firstAirDate: tvShow['first_air_date'],
+      lastAirDate: tvShow['last_air_date'],
+      posterPath: tvShow['poster_path'],
+      backdropPath: tvShow['backdrop_path'],
       overview: tvShow['overview'],
-      numberOfEpisodes: tvShow['numberOfEpisodes'],
-      numberOfSeasons: tvShow['numberOfSeasons'],
-      episodeRuntime: tvShow['episodeRuntime'],
-      voteCount: tvShow['voteCount'],
-      voteAverage: tvShow['voteAverage'],
+      numberOfEpisodes: tvShow['number_of_episodes'],
+      numberOfSeasons: tvShow['number_of_seasons'],
+      episodeRuntime: tvShow['episode_run_time'][0],
+      voteCount: tvShow['vote_count'],
+      voteAverage: tvShow['vote_average'],
       genres: List<Genre>.from(tvShow['genres'].map((genre) {
         return Genre.fromMap(genre);
       })),
     );
   }
 
-  String get firstandLastAirDate {
-    var firstAirDateParse =
-        DateFormat('MMM dd, y').format(DateTime.parse(firstAirDate));
+  String get firstandLastAirDateParse {
+    var firstAirDateParse = firstAirDate == null
+        ? 'None'
+        : DateFormat('MMM dd, y').format(DateTime.parse(firstAirDate));
 
-    var lastAirDateParse =
-        DateFormat('MMM dd, y').format(DateTime.parse(lastAirDate));
+    var lastAirDateParse = lastAirDate == null
+        ? 'None'
+        : DateFormat('MMM dd, y').format(DateTime.parse(lastAirDate));
 
     return '$firstAirDateParse to $lastAirDateParse';
   }

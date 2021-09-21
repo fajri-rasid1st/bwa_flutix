@@ -59,6 +59,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               controlsVisibleAtStart: true,
               disableDragSeek: true,
               enableCaption: false,
+              loop: true,
             ),
           );
         }
@@ -220,7 +221,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     'Genres',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: primaryColor,
                     ),
                   ),
@@ -278,7 +279,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     'Overview',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: primaryColor,
                     ),
                   ),

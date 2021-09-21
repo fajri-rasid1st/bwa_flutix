@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:cick_movie_app/data/models/genre.dart';
 
 class Movie {
@@ -43,7 +42,9 @@ class Movie {
   }
 
   String get releaseDateParse {
-    return DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+    return releaseDate == null
+        ? 'None'
+        : DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
   }
 
   @override

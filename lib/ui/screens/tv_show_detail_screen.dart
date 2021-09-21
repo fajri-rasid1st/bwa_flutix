@@ -59,6 +59,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               controlsVisibleAtStart: true,
               disableDragSeek: true,
               enableCaption: false,
+              loop: true,
             ),
           );
         }
@@ -131,7 +132,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${tvShow.episodeRuntime} mins',
+                        '${tvShow.episodeRuntime} mins per episode',
                         style: TextStyle(color: secondaryTextColor),
                       ),
                     ],
@@ -166,6 +167,69 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               child: _isChanged
                   ? buildTvShowTeaser(screenWidth)
                   : buildTvShowDetail(screenWidth, tvShow),
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '${tvShow.numberOfSeasons}',
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                      Text(
+                        'Total Seasons',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    width: 1,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: dividerColor,
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          offset: Offset(0.25, 0),
+                          blurRadius: 0.5,
+                          color: secondaryColor,
+                        ),
+                        BoxShadow(
+                          offset: Offset(-0.25, 0),
+                          blurRadius: 0.5,
+                          color: secondaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        '${tvShow.numberOfEpisodes}',
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: primaryTextColor,
+                        ),
+                      ),
+                      Text(
+                        'Total Episodes',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
@@ -222,7 +286,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     'Genres',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: primaryColor,
                     ),
                   ),
@@ -252,20 +316,19 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
             Container(
               margin: const EdgeInsets.symmetric(vertical: 16),
               child: Divider(
-                height: 1,
-                thickness: 1,
+                height: 2,
                 color: dividerColor,
               ),
               decoration: BoxDecoration(
                 boxShadow: <BoxShadow>[
                   BoxShadow(
                     offset: Offset(0, 0.5),
-                    blurRadius: 1,
+                    blurRadius: 0.25,
                     color: dividerColor,
                   ),
                   BoxShadow(
                     offset: Offset(0.5, 0),
-                    blurRadius: 1,
+                    blurRadius: 0.25,
                     color: dividerColor,
                   ),
                 ],
@@ -280,7 +343,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     'Overview',
                     style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       color: primaryColor,
                     ),
                   ),
@@ -428,7 +491,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          tvShow.firstandLastAirDate,
+                          tvShow.firstandLastAirDateParse,
                           style: TextStyle(color: backgroundColor),
                         ),
                         const SizedBox(height: 4),

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/data/models/movie_popular.dart';
 import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
+import 'package:cick_movie_app/ui/screens/tv_show_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,11 @@ class GridViewItems extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MovieDetailScreen(movieId: item.id),
+                  builder: (context) {
+                    return item is MoviePopular
+                        ? MovieDetailScreen(movieId: item.id)
+                        : TvShowDetailScreen(tvShowId: item.id);
+                  },
                 ),
               );
             },

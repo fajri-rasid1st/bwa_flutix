@@ -26,7 +26,9 @@ class MoviePopular {
   }
 
   String get releaseDateParse {
-    return DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
+    return releaseDate.isEmpty
+        ? 'None'
+        : DateFormat('MMM dd, y').format(DateTime.parse(releaseDate));
   }
 
   @override
