@@ -47,7 +47,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       MovieServices.getMovieVideo(
         movieId: widget.movieId,
         onSuccess: (video) => _video = video,
-        onFailure: (_) {},
+        onFailure: (message) => _failureMessage = message,
       ),
     ]).then((_) {
       setState(() {
@@ -88,7 +88,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     if (_isLoading) {
-      return FutureOnLoad(text: 'Fetching data...');
+      return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_movie == null) {
         return FutureOnLoad(text: _failureMessage, isError: true);

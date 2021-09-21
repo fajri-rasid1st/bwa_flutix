@@ -12,23 +12,35 @@ class TvShowPage extends StatefulWidget {
 }
 
 class _TvShowPageState extends State<TvShowPage> {
+  // initialize atribute
+  bool _isLoading = true;
+
+  // this attribute will be filled in the future
+  List<TvShowPopular> _tvShows;
+  String _failureMessage;
+
+  @override
+  void initState() {
+    TvShowServices.getPopularTvShows(
+      onSuccess: (tvShow) => _tvShows = tvShow,
+      onFailure: (message) => _failureMessage = message,
+    ).then((_) {
+      setState(() => _isLoading = false);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<TvShowPopular>>(
-      future: TvShowServices.getPopularTvShows(1),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return FutureOnLoad(text: 'Fetching data...');
-        } else {
-          if (snapshot.hasError) {
-            return FutureOnLoad(text: 'Request failed.', isError: true);
-          }
-
-          final tvShows = snapshot.data;
-
-          return GridViewItems(items: tvShows);
-        }
-      },
-    );
+    if (_isLoading) {
+      return const FutureOnLoad(text: 'Fetching data...');
+    } else {
+      if (_tvShows == null) {
+        return FutureOnLoad(text: _failureMessage, isError: true);
+      } else {
+        return GridViewItems(items: _tvShows);
+      }
+    }
   }
 }

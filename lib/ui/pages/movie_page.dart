@@ -12,23 +12,35 @@ class MoviePage extends StatefulWidget {
 }
 
 class _MoviePageState extends State<MoviePage> {
+  // initialize atribute
+  bool _isLoading = true;
+
+  // this attribute will be filled in the future
+  List<MoviePopular> _movies;
+  String _failureMessage;
+
+  @override
+  void initState() {
+    MovieServices.getPopularMovies(
+      onSuccess: (movies) => _movies = movies,
+      onFailure: (message) => _failureMessage = message,
+    ).then((_) {
+      setState(() => _isLoading = false);
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<MoviePopular>>(
-      future: MovieServices.getPopularMovies(1),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return FutureOnLoad(text: 'Fetching data...');
-        } else {
-          if (snapshot.hasError) {
-            return FutureOnLoad(text: 'Request failed.', isError: true);
-          }
-
-          final movies = snapshot.data;
-
-          return GridViewItems(items: movies);
-        }
-      },
-    );
+    if (_isLoading) {
+      return const FutureOnLoad(text: 'Fetching data...');
+    } else {
+      if (_movies == null) {
+        return FutureOnLoad(text: _failureMessage, isError: true);
+      } else {
+        return GridViewItems(items: _movies);
+      }
+    }
   }
 }

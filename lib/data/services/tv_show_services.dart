@@ -3,11 +3,16 @@ import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/models/video.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class TvShowServices {
-  // function to get list of popular tv shows from API
-  static Future<List<TvShowPopular>> getPopularTvShows([int page = 1]) async {
+  // function to get list of popular tv show from API
+  static Future<void> getPopularTvShows({
+    int page = 1,
+    @required void Function(List<TvShowPopular> tvShow) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
     // define URL target
     final url =
         '${Const.BASE_URL}/tv/popular?api_key=${Const.API_KEY}&page=$page';
@@ -33,17 +38,21 @@ class TvShowServices {
         }
 
         // return TvShowPopular list
-        return tvShows;
+        onSuccess(tvShows);
       } else {
-        throw Exception('Request failed.');
+        onFailure('Request failed.');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      onFailure(e.toString());
     }
   }
 
   // function to get tv show detail from API
-  static Future<TvShow> getTvShow(int tvShowId) async {
+  static Future<void> getTvShow({
+    @required int tvShowId,
+    @required void Function(TvShow tvShow) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
     // define URL target
     final url = '${Const.BASE_URL}/tv/$tvShowId?api_key=${Const.API_KEY}';
 
@@ -62,18 +71,22 @@ class TvShowServices {
         // get TvShow from Map<string, dynamic> results
         final TvShow tvShow = TvShow.fromMap(results);
 
-        // return TvShow
-        return tvShow;
+        // return TvShow when request success
+        onSuccess(tvShow);
       } else {
-        throw Exception('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      onFailure(e.toString());
     }
   }
 
   // function to get tv show video from API
-  static Future<Video> getTvShowVideo(int tvShowId) async {
+  static Future<void> getTvShowVideo({
+    @required int tvShowId,
+    @required void Function(Video video) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
     // define URL target
     final url =
         '${Const.BASE_URL}/tv/$tvShowId/videos?api_key=${Const.API_KEY}';
@@ -90,18 +103,18 @@ class TvShowServices {
         final List<dynamic> results =
             (tvShowVideoResponse as Map<String, dynamic>)['results'];
 
-        // return exception if results is empty
         if (results.isEmpty) {
-          throw Exception('This tv show has no trailer.');
+          // failure if results is empty
+          onFailure('This tv show has no trailer');
+        } else {
+          // else, get video from results at index 0
+          onSuccess(Video.fromMap(results[0]));
         }
-
-        // return video from results at index 0 if exist
-        return Video.fromMap(results[0]);
       } else {
-        throw Exception('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
-      throw Exception(e.toString());
+      onFailure(e.toString());
     }
   }
 }
