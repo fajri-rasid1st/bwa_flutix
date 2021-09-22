@@ -30,13 +30,12 @@ class TvShowServices {
         final List<dynamic> results =
             (popularTvShowsResponse as Map<String, dynamic>)['results'];
 
-        // initialize empty TvShowPopular list
-        final List<TvShowPopular> tvShows = [];
-
-        // add every tv show on results to TvShowPopular list
-        for (var tvShow in results) {
-          tvShows.add(TvShowPopular.fromMap(tvShow));
-        }
+        // get each tv show inside results
+        final List<TvShowPopular> tvShows = List<TvShowPopular>.from(
+          results.map((tvShowPopular) {
+            return TvShowPopular.fromMap(tvShowPopular);
+          }),
+        );
 
         // return TvShowPopular list
         onSuccess(tvShows);

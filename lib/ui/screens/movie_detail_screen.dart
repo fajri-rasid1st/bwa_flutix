@@ -127,7 +127,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -177,7 +177,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   : buildMovieDetail(screenWidth, movie),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {
@@ -235,7 +235,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                 ),
                 Container(
-                  height: 46,
+                  height: 45,
                   child: ListView.separated(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     shrinkWrap: true,

@@ -78,8 +78,12 @@ class GridViewItems extends StatelessWidget {
                         child: Wrap(
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.star, color: accentColor, size: 18),
-                            SizedBox(width: 4),
+                            Icon(
+                              Icons.star,
+                              size: 18,
+                              color: accentColor,
+                            ),
+                            const SizedBox(width: 4),
                             Text(
                               '${item.voteAverage}',
                               style: TextStyle(
@@ -91,8 +95,8 @@ class GridViewItems extends StatelessWidget {
                           ],
                         ),
                         decoration: BoxDecoration(
-                          color: primaryTextColor.withOpacity(0.75),
                           borderRadius: BorderRadius.circular(8),
+                          color: primaryTextColor.withOpacity(0.75),
                         ),
                       ),
                     ],

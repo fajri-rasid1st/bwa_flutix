@@ -62,8 +62,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: primaryColor,
                   width: 2,
+                  color: primaryColor,
                 ),
               ),
             ),

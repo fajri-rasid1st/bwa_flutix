@@ -127,7 +127,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -241,7 +241,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(bottom: 12, left: 16, right: 16),
+              margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
               width: double.infinity,
               child: OutlinedButton(
                 onPressed: () {

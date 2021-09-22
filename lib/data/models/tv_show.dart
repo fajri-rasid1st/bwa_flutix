@@ -44,9 +44,11 @@ class TvShow {
       episodeRuntime: tvShow['episode_run_time'][0],
       voteCount: tvShow['vote_count'],
       voteAverage: tvShow['vote_average'],
-      genres: List<Genre>.from(tvShow['genres'].map((genre) {
-        return Genre.fromMap(genre);
-      })),
+      genres: List<Genre>.from(
+        tvShow['genres'].map((genre) {
+          return Genre.fromMap(genre);
+        }),
+      ),
     );
   }
 

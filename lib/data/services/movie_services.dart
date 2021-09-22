@@ -30,13 +30,12 @@ class MovieServices {
         final List<dynamic> results =
             (popularMoviesResponse as Map<String, dynamic>)['results'];
 
-        // initialize empty MoviePopular list
-        final List<MoviePopular> movies = [];
-
-        // add every movie on results to MoviePopular list
-        for (var movie in results) {
-          movies.add(MoviePopular.fromMap(movie));
-        }
+        // get each movie inside results
+        final List<MoviePopular> movies = List<MoviePopular>.from(
+          results.map((moviePopular) {
+            return MoviePopular.fromMap(moviePopular);
+          }),
+        );
 
         // return MoviePopular list
         onSuccess(movies);

@@ -35,9 +35,11 @@ class Movie {
       runtime: movie['runtime'],
       voteCount: movie['vote_count'],
       voteAverage: movie['vote_average'],
-      genres: List<Genre>.from(movie['genres'].map((genre) {
-        return Genre.fromMap(genre);
-      })),
+      genres: List<Genre>.from(
+        movie['genres'].map((genre) {
+          return Genre.fromMap(genre);
+        }),
+      ),
     );
   }
 
