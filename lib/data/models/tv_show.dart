@@ -41,14 +41,18 @@ class TvShow {
       overview: tvShow['overview'],
       numberOfEpisodes: tvShow['number_of_episodes'],
       numberOfSeasons: tvShow['number_of_seasons'],
-      episodeRuntime: tvShow['episode_run_time'][0],
+      episodeRuntime: tvShow['episode_run_time'].isEmpty
+          ? 0
+          : tvShow['episode_run_time'][0],
       voteCount: tvShow['vote_count'],
       voteAverage: tvShow['vote_average'],
-      genres: List<Genre>.from(
-        tvShow['genres'].map((genre) {
-          return Genre.fromMap(genre);
-        }),
-      ),
+      genres: tvShow['genres'].isEmpty
+          ? [Genre(name: 'None')]
+          : List<Genre>.from(
+              tvShow['genres'].map((genre) {
+                return Genre.fromMap(genre);
+              }),
+            ),
     );
   }
 
