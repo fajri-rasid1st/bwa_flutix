@@ -38,7 +38,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   Video _video;
   List<Cast> _casts;
   YoutubePlayerController _youtubePlayerController;
-  String _failureMessage;
+  String _tvShowFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
   @override
   void initState() {
@@ -46,17 +46,17 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
       TvShowServices.getTvShow(
         tvShowId: widget.tvShowId,
         onSuccess: (tvShow) => _tvShow = tvShow,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _tvShowFailureMessage = message,
       ),
       TvShowServices.getTvShowVideo(
         tvShowId: widget.tvShowId,
         onSuccess: (video) => _video = video,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _videoFailureMessage = message,
       ),
       TvShowServices.getTvShowCasts(
         tvShowId: widget.tvShowId,
         onSuccess: (casts) => _casts = casts,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _castsFailureMessage = message,
       ),
     ]).then((_) {
       setState(() {
@@ -91,6 +91,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
       _youtubePlayerController.dispose();
     }
 
+    _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -102,14 +104,15 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_tvShow == null) {
-        return FutureOnLoad(text: _failureMessage, isError: true);
+        return FutureOnLoad(text: _tvShowFailureMessage, isError: true);
       } else {
-        return buildScreen(screenWidth, _tvShow, _video);
+        return buildMainScreen(screenWidth, _tvShow, _video);
       }
     }
   }
 
-  Widget buildScreen(double screenWidth, TvShow tvShow, Video video) {
+  // function to build main screen
+  Widget buildMainScreen(double screenWidth, TvShow tvShow, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -122,6 +125,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Tv Show Title
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -134,6 +138,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ),
                 ),
               ),
+              // Tv Show Runtime and Vote Average
               Container(
                 margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
                 child: Row(
@@ -176,14 +181,16 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ],
                 ),
               ),
+              // Tv Show Detail or Video
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 750),
                 switchInCurve: Curves.easeIn,
                 switchOutCurve: Curves.easeOut,
                 child: _isChanged
-                    ? buildTvShowTeaser(screenWidth)
+                    ? buildTvShowVideo(screenWidth)
                     : buildTvShowDetail(screenWidth, tvShow),
               ),
+              // Tv Show Total Episodes and Seasons
               Container(
                 margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
                 child: Row(
@@ -248,6 +255,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ],
                 ),
               ),
+              // Tv Show Button For Switch Between Detail and Video
               Container(
                 margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 width: double.infinity,
@@ -268,13 +276,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                             _buttonIcon = Icon(Icons.play_arrow_outlined);
                           }
                         } else {
-                          showSnackBarMessage(
-                            text: 'This tv show has no trailer.',
-                          );
+                          showSnackBarMessage(text: _videoFailureMessage);
                         }
                       } else {
-                        showSnackBarMessage(
-                            text: 'This tv show has no trailer.');
+                        showSnackBarMessage(text: _videoFailureMessage);
                       }
                     });
                   },
@@ -295,6 +300,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ),
                 ),
               ),
+              // Tv Show Genres
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -331,7 +337,9 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   )
                 ],
               ),
+              // Divider
               buildDivider(),
+              // Tv Show Casts
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -347,82 +355,87 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Container(
-                    height: 228,
-                    child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 112,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Card(
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      '${Const.IMG_URL_200}/${_casts[index].profilePath}',
-                                  width: 112,
-                                  height: 165,
-                                  fit: BoxFit.cover,
-                                  fadeInDuration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                  fadeOutDuration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                  placeholder: (context, url) {
-                                    return Center(
-                                      child:
-                                          SpinKitPulse(color: secondaryColor),
-                                    );
-                                  },
-                                  errorWidget: (context, url, error) {
-                                    return Center(
-                                      child: Icon(
-                                        Icons.nearby_error,
+                  _casts == null
+                      ? Text(_castsFailureMessage)
+                      : Container(
+                          height: 228,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: 112,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Card(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                        width: 112,
+                                        height: 165,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        fadeOutDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        placeholder: (context, url) {
+                                          return Center(
+                                            child: SpinKitPulse(
+                                                color: secondaryColor),
+                                          );
+                                        },
+                                        errorWidget: (context, url, error) {
+                                          return Center(
+                                            child: Icon(
+                                              Icons.motion_photos_off_outlined,
+                                              color: secondaryTextColor,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: appBarTitleTextStyle,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].character,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
                                         color: secondaryTextColor,
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _casts[index].name,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: appBarTitleTextStyle,
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _casts[index].character,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                            ],
+                              );
+                            },
+                            itemCount: _casts.length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(width: 16);
+                            },
                           ),
-                        );
-                      },
-                      itemCount: _casts.length,
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: 16);
-                      },
-                    ),
-                  ),
+                        ),
                 ],
               ),
+              // Divider
               buildDivider(),
+              // Tv Show Overview
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -462,6 +475,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     );
   }
 
+  // function to build tv show detail
   Widget buildTvShowDetail(double screenWidth, TvShow tvShow) {
     return SizedBox(
       height: 290,
@@ -488,7 +502,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   errorWidget: (context, url, error) {
                     return Center(
                       child: Icon(
-                        Icons.nearby_error,
+                        Icons.motion_photos_off_outlined,
                         color: secondaryTextColor,
                       ),
                     );
@@ -554,7 +568,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         errorWidget: (context, url, error) {
                           return Center(
                             child: Icon(
-                              Icons.nearby_error,
+                              Icons.motion_photos_off_outlined,
                               color: secondaryTextColor,
                             ),
                           );
@@ -618,7 +632,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     );
   }
 
-  Widget buildTvShowTeaser(double screenWidth) {
+  // function to build tv show vidoe
+  Widget buildTvShowVideo(double screenWidth) {
     return Container(
       margin: const EdgeInsets.only(bottom: 50),
       height: 240,
@@ -640,6 +655,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     );
   }
 
+  // function to create divider
   Widget buildDivider() {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),
@@ -665,6 +681,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     );
   }
 
+  // function to show snackbar with message
   void showSnackBarMessage({@required String text, int duration = 1500}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

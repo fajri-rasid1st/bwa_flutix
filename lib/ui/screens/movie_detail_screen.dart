@@ -38,7 +38,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   Video _video;
   List<Cast> _casts;
   YoutubePlayerController _youtubePlayerController;
-  String _failureMessage;
+  String _movieFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
   @override
   void initState() {
@@ -46,17 +46,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       MovieServices.getMovie(
         movieId: widget.movieId,
         onSuccess: (movie) => _movie = movie,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _movieFailureMessage = message,
       ),
       MovieServices.getMovieVideo(
         movieId: widget.movieId,
         onSuccess: (video) => _video = video,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _videoFailureMessage = message,
       ),
       MovieServices.getMovieCasts(
         movieId: widget.movieId,
         onSuccess: (casts) => _casts = casts,
-        onFailure: (message) => _failureMessage = message,
+        onFailure: (message) => _castsFailureMessage = message,
       )
     ]).then((_) {
       setState(() {
@@ -104,14 +104,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_movie == null) {
-        return FutureOnLoad(text: _failureMessage, isError: true);
+        return FutureOnLoad(text: _movieFailureMessage, isError: true);
       } else {
-        return buildScreen(screenWidth, _movie, _video);
+        return buildMainScreen(screenWidth, _movie, _video);
       }
     }
   }
 
-  Widget buildScreen(double screenWidth, Movie movie, Video video) {
+  // function to build main screen
+  Widget buildMainScreen(double screenWidth, Movie movie, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -124,6 +125,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              // Movie Title
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -136,6 +138,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                 ),
               ),
+              // Movie Runtime and Vote Average
               Container(
                 margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
                 child: Row(
@@ -178,14 +181,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ],
                 ),
               ),
+              // Movie Detail or Video
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 750),
                 switchInCurve: Curves.easeIn,
                 switchOutCurve: Curves.easeOut,
                 child: _isChanged
-                    ? buildMovieTeaser(screenWidth)
+                    ? buildMovieVideo(screenWidth)
                     : buildMovieDetail(screenWidth, movie),
               ),
+              // Movie Button For Switch Between Detail and Video
               Container(
                 margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
                 width: double.infinity,
@@ -206,11 +211,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             _buttonIcon = Icon(Icons.play_arrow_outlined);
                           }
                         } else {
-                          showSnackBarMessage(
-                              text: 'This movie has no trailer.');
+                          showSnackBarMessage(text: _videoFailureMessage);
                         }
                       } else {
-                        showSnackBarMessage(text: 'This movie has no trailer.');
+                        showSnackBarMessage(text: _videoFailureMessage);
                       }
                     });
                   },
@@ -231,6 +235,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                 ),
               ),
+              // Movie Genres
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -267,7 +272,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   )
                 ],
               ),
+              // Divider
               buildDivider(),
+              // Movie Casts
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -283,82 +290,87 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ),
                   ),
                   const SizedBox(height: 4),
-                  Container(
-                    height: 228,
-                    child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      shrinkWrap: true,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          width: 112,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Card(
-                                margin: const EdgeInsets.symmetric(vertical: 4),
-                                clipBehavior: Clip.antiAlias,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: CachedNetworkImage(
-                                  imageUrl:
-                                      '${Const.IMG_URL_200}/${_casts[index].profilePath}',
-                                  width: 112,
-                                  height: 165,
-                                  fit: BoxFit.cover,
-                                  fadeInDuration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                  fadeOutDuration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                  placeholder: (context, url) {
-                                    return Center(
-                                      child:
-                                          SpinKitPulse(color: secondaryColor),
-                                    );
-                                  },
-                                  errorWidget: (context, url, error) {
-                                    return Center(
-                                      child: Icon(
-                                        Icons.nearby_error,
+                  _casts == null
+                      ? Text(_castsFailureMessage)
+                      : Container(
+                          height: 228,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: 112,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Card(
+                                      margin: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                        width: 112,
+                                        height: 165,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        fadeOutDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        placeholder: (context, url) {
+                                          return Center(
+                                            child: SpinKitPulse(
+                                                color: secondaryColor),
+                                          );
+                                        },
+                                        errorWidget: (context, url, error) {
+                                          return Center(
+                                            child: Icon(
+                                              Icons.motion_photos_off_outlined,
+                                              color: secondaryTextColor,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: appBarTitleTextStyle,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].character,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
                                         color: secondaryTextColor,
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _casts[index].name,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: appBarTitleTextStyle,
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                _casts[index].character,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: secondaryTextColor,
-                                ),
-                              ),
-                            ],
+                              );
+                            },
+                            itemCount: _casts.length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(width: 16);
+                            },
                           ),
-                        );
-                      },
-                      itemCount: _casts.length,
-                      separatorBuilder: (context, index) {
-                        return const SizedBox(width: 16);
-                      },
-                    ),
-                  ),
+                        ),
                 ],
               ),
+              // Divider
               buildDivider(),
+              // Movie Overview
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
@@ -398,6 +410,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 
+  // function to build movie detail
   Widget buildMovieDetail(double screenWidth, Movie movie) {
     return SizedBox(
       height: 290,
@@ -424,7 +437,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   errorWidget: (context, url, error) {
                     return Center(
                       child: Icon(
-                        Icons.nearby_error,
+                        Icons.motion_photos_off_outlined,
                         color: secondaryTextColor,
                       ),
                     );
@@ -490,7 +503,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         errorWidget: (context, url, error) {
                           return Center(
                             child: Icon(
-                              Icons.nearby_error,
+                              Icons.motion_photos_off_outlined,
                               color: secondaryTextColor,
                             ),
                           );
@@ -554,7 +567,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 
-  Widget buildMovieTeaser(double screenWidth) {
+  // function to build movie video
+  Widget buildMovieVideo(double screenWidth) {
     return Container(
       margin: const EdgeInsets.only(bottom: 50),
       height: 240,
@@ -576,6 +590,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 
+  // function to create divider
   Widget buildDivider() {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),
@@ -601,6 +616,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 
+  // function to show snackbar with message
   void showSnackBarMessage({@required String text, int duration = 1500}) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

@@ -31,15 +31,17 @@ class Movie {
       releaseDate: movie['release_date'],
       posterPath: movie['poster_path'],
       backdropPath: movie['backdrop_path'],
-      overview: movie['overview'],
-      runtime: movie['runtime'],
+      overview: movie['overview'] ?? 'None',
+      runtime: movie['runtime'] ?? 0,
       voteCount: movie['vote_count'],
       voteAverage: movie['vote_average'],
-      genres: List<Genre>.from(
-        movie['genres'].map((genre) {
-          return Genre.fromMap(genre);
-        }),
-      ),
+      genres: movie['genres'].isEmpty
+          ? [Genre(name: 'None')]
+          : List<Genre>.from(
+              movie['genres'].map((genre) {
+                return Genre.fromMap(genre);
+              }),
+            ),
     );
   }
 

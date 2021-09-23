@@ -140,18 +140,22 @@ class TvShowServices {
         final List<dynamic> results =
             (tvShowCastsResponse as Map<String, dynamic>)['cast'];
 
-        // initialize empty Cast list
-        final List<Cast> casts = [];
+        if (results.isEmpty) {
+          onFailure('No credits data.');
+        } else {
+          // initialize empty Cast list
+          final List<Cast> casts = [];
 
-        for (var cast in results) {
-          // if casts are already 16 have items, break the loop
-          if (casts.length == 16) break;
-          // add every cast on results to Cast list
-          casts.add(Cast.fromMap(cast));
+          for (var cast in results) {
+            // if casts are already 16 items, break the loop
+            if (casts.length == 16) break;
+            // add every cast on results to Cast list
+            casts.add(Cast.fromMap(cast));
+          }
+
+          // return Cast list
+          onSuccess(casts);
         }
-
-        // return Cast list
-        onSuccess(casts);
       } else {
         onFailure('Request failed.');
       }

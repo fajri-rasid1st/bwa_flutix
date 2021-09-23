@@ -66,7 +66,7 @@ class GridViewItems extends StatelessWidget {
                         errorWidget: (context, url, error) {
                           return Center(
                             child: Icon(
-                              Icons.nearby_error,
+                              Icons.motion_photos_off_outlined,
                               color: secondaryTextColor,
                             ),
                           );

@@ -21,7 +21,7 @@ class FutureOnLoad extends StatelessWidget {
           children: [
             isError
                 ? Icon(
-                    Icons.nearby_error,
+                    Icons.wifi_off,
                     size: 75,
                     color: secondaryColor,
                   )

@@ -38,7 +38,7 @@ class TvShow {
       lastAirDate: tvShow['last_air_date'],
       posterPath: tvShow['poster_path'],
       backdropPath: tvShow['backdrop_path'],
-      overview: tvShow['overview'],
+      overview: tvShow['overview'] ?? 'None',
       numberOfEpisodes: tvShow['number_of_episodes'],
       numberOfSeasons: tvShow['number_of_seasons'],
       episodeRuntime: tvShow['episode_run_time'].isEmpty
