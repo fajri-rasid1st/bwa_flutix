@@ -50,8 +50,9 @@ class _CustomAppbarState extends State<CustomAppbar> {
 
 class CustomBottomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  // default is 56.0
-  final Size preferredSize = Size.fromHeight(44);
+  final Size preferredSize = Size.fromHeight(44); // default is 56.0
+
+  CustomBottomAppBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

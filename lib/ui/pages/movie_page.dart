@@ -1,7 +1,7 @@
 import 'package:cick_movie_app/data/models/movie_popular.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:cick_movie_app/ui/widgets/grid_view_items.dart';
+import 'package:cick_movie_app/ui/widgets/grid_items.dart';
 import 'package:flutter/material.dart';
 
 class MoviePage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _MoviePageState extends State<MoviePage> {
       if (_movies == null) {
         return FutureOnLoad(text: _failureMessage, isError: true);
       } else {
-        return GridViewItems(items: _movies);
+        return GridItems(items: _movies);
       }
     }
   }

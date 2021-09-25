@@ -9,10 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class GridViewItems extends StatelessWidget {
+class GridItems extends StatelessWidget {
   final List<dynamic> items;
 
-  const GridViewItems({Key key, @required this.items}) : super(key: key);
+  const GridItems({Key key, @required this.items}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

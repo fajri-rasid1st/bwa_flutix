@@ -1,7 +1,7 @@
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:cick_movie_app/ui/widgets/grid_view_items.dart';
+import 'package:cick_movie_app/ui/widgets/grid_items.dart';
 import 'package:flutter/material.dart';
 
 class TvShowPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class _TvShowPageState extends State<TvShowPage> {
       if (_tvShows == null) {
         return FutureOnLoad(text: _failureMessage, isError: true);
       } else {
-        return GridViewItems(items: _tvShows);
+        return GridItems(items: _tvShows);
       }
     }
   }

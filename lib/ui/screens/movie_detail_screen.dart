@@ -82,6 +82,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
+    
     super.initState();
   }
 
