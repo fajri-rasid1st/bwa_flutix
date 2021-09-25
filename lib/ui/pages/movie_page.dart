@@ -7,9 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class MoviePage extends StatefulWidget {
-  final ScrollController controller;
-
-  MoviePage({Key key, @required this.controller}) : super(key: key);
+  const MoviePage({Key key}) : super(key: key);
 
   @override
   _MoviePageState createState() => _MoviePageState();
@@ -19,10 +17,12 @@ class _MoviePageState extends State<MoviePage> {
   // initialize atribute
   int _page = 1;
   bool _isLoading = true;
+  bool _isScrollPositionAtBottom = false;
 
   // this attribute will be filled in the future
   List<MoviePopular> _movies;
   String _failureMessage;
+  bool _hasError;
 
   @override
   void initState() {
@@ -36,34 +36,7 @@ class _MoviePageState extends State<MoviePage> {
       });
     });
 
-    widget.controller.addListener(listen);
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(listen);
-
-    super.dispose();
-  }
-
-  void listen() {
-    if (widget.controller.position.pixels ==
-        widget.controller.position.maxScrollExtent) {
-      _isLoading = true;
-
-      MovieServices.getPopularMovies(
-        page: _page,
-        onSuccess: (movies) => _movies.addAll(movies),
-        onFailure: (message) => _failureMessage = message,
-      ).then((_) {
-        setState(() {
-          _isLoading = false;
-          _page++;
-        });
-      });
-    }
   }
 
   @override
@@ -74,30 +47,59 @@ class _MoviePageState extends State<MoviePage> {
       if (_movies == null) {
         return FutureOnLoad(text: _failureMessage, isError: true);
       } else {
-        return LayoutBuilder(
-          builder: (context, constraints) {
-            return Stack(
-              children: <Widget>[
-                GridItems(items: _movies),
-                if (_isLoading) ...[
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: Container(
-                      width: constraints.maxWidth,
-                      height: 40,
-                      child: Center(
-                        child: SpinKitThreeBounce(
-                          size: 20,
-                          color: secondaryColor,
+        return NotificationListener<ScrollEndNotification>(
+          onNotification: (scrollEnd) {
+            var metrics = scrollEnd.metrics;
+
+            if (metrics.atEdge) {
+              if (metrics.pixels != 0) {
+                setState(() => _isScrollPositionAtBottom = true);
+
+                MovieServices.getPopularMovies(
+                  page: _page,
+                  onSuccess: (movies) {
+                    _movies.addAll(movies);
+                    _hasError = false;
+                  },
+                  onFailure: (_) {
+                    _hasError = true;
+                  },
+                ).then((_) {
+                  setState(() {
+                    _isScrollPositionAtBottom = false;
+                    if (!_hasError) _page++;
+                  });
+                });
+              }
+            }
+
+            return true;
+          },
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                children: <Widget>[
+                  GridItems(items: _movies),
+                  if (_isScrollPositionAtBottom) ...[
+                    Positioned(
+                      left: 0,
+                      bottom: 12,
+                      child: Container(
+                        width: constraints.maxWidth,
+                        height: 32,
+                        child: Center(
+                          child: SpinKitThreeBounce(
+                            size: 20,
+                            color: secondaryColor,
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ]
-              ],
-            );
-          },
+                    )
+                  ],
+                ],
+              );
+            },
+          ),
         );
       }
     }

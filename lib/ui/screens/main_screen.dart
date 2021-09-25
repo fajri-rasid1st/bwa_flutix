@@ -13,17 +13,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final List<Widget> _pages = [];
+  final List<Widget> _pages = [MoviePage(), TvShowPage()];
 
-  ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController;
+
   int _currentIndex = 0;
 
   @override
   void initState() {
-    _pages.addAll([
-      MoviePage(controller: _scrollController),
-      TvShowPage(controller: _scrollController),
-    ]);
+    _scrollController = ScrollController();
 
     super.initState();
   }
