@@ -60,7 +60,10 @@ class GridViewItems extends StatelessWidget {
                         fadeOutDuration: const Duration(milliseconds: 500),
                         placeholder: (context, url) {
                           return Center(
-                            child: SpinKitPulse(color: secondaryColor),
+                            child: SpinKitThreeBounce(
+                              size: 30,
+                              color: secondaryColor,
+                            ),
                           );
                         },
                         errorWidget: (context, url, error) {

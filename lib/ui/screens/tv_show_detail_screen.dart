@@ -42,6 +42,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   @override
   void initState() {
+    // first, get all tv show data from server
     Future.wait([
       TvShowServices.getTvShow(
         tvShowId: widget.tvShowId,
@@ -81,7 +82,6 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
-
     super.initState();
   }
 
@@ -92,7 +92,6 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     }
 
     _scrollController.dispose();
-
     super.dispose();
   }
 
@@ -356,7 +355,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ),
                   const SizedBox(height: 4),
                   _casts == null
-                      ? Text(_castsFailureMessage)
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(_castsFailureMessage),
+                        )
                       : Container(
                           height: 228,
                           child: ListView.separated(
@@ -390,8 +392,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                                         ),
                                         placeholder: (context, url) {
                                           return Center(
-                                            child: SpinKitPulse(
-                                                color: secondaryColor),
+                                            child: SpinKitThreeBounce(
+                                              size: 24,
+                                              color: secondaryColor,
+                                            ),
                                           );
                                         },
                                         errorWidget: (context, url, error) {
@@ -496,7 +500,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   ),
                   placeholder: (context, url) {
                     return Center(
-                      child: SpinKitPulse(color: secondaryColor),
+                      child: SpinKitThreeBounce(
+                        size: 24,
+                        color: secondaryColor,
+                      ),
                     );
                   },
                   errorWidget: (context, url, error) {
@@ -562,7 +569,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         ),
                         placeholder: (context, url) {
                           return Center(
-                            child: SpinKitPulse(color: secondaryColor),
+                            child: SpinKitThreeBounce(
+                              size: 24,
+                              color: secondaryColor,
+                            ),
                           );
                         },
                         errorWidget: (context, url, error) {

@@ -4,7 +4,6 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -34,11 +33,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
-
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,

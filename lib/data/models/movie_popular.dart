@@ -8,12 +8,13 @@ class MoviePopular {
   num voteAverage;
   String posterPath;
 
-  MoviePopular(
-      {@required this.id,
-      @required this.title,
-      @required this.releaseDate,
-      @required this.voteAverage,
-      @required this.posterPath});
+  MoviePopular({
+    @required this.id,
+    @required this.title,
+    @required this.releaseDate,
+    @required this.voteAverage,
+    @required this.posterPath,
+  });
 
   factory MoviePopular.fromMap(Map<String, dynamic> moviePopular) {
     return MoviePopular(

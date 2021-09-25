@@ -42,6 +42,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   void initState() {
+    // first, get all movie data from server
     Future.wait([
       MovieServices.getMovie(
         movieId: widget.movieId,
@@ -81,7 +82,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
-
     super.initState();
   }
 
@@ -92,7 +92,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     }
 
     _scrollController.dispose();
-
     super.dispose();
   }
 
@@ -291,7 +290,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                   const SizedBox(height: 4),
                   _casts == null
-                      ? Text(_castsFailureMessage)
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(_castsFailureMessage),
+                        )
                       : Container(
                           height: 228,
                           child: ListView.separated(
@@ -325,8 +327,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                         ),
                                         placeholder: (context, url) {
                                           return Center(
-                                            child: SpinKitPulse(
-                                                color: secondaryColor),
+                                            child: SpinKitThreeBounce(
+                                              size: 24,
+                                              color: secondaryColor,
+                                            ),
                                           );
                                         },
                                         errorWidget: (context, url, error) {
@@ -431,7 +435,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   ),
                   placeholder: (context, url) {
                     return Center(
-                      child: SpinKitPulse(color: secondaryColor),
+                      child: SpinKitThreeBounce(
+                        size: 24,
+                        color: secondaryColor,
+                      ),
                     );
                   },
                   errorWidget: (context, url, error) {
@@ -497,7 +504,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         ),
                         placeholder: (context, url) {
                           return Center(
-                            child: SpinKitPulse(color: secondaryColor),
+                            child: SpinKitThreeBounce(
+                              size: 24,
+                              color: secondaryColor,
+                            ),
                           );
                         },
                         errorWidget: (context, url, error) {
