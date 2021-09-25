@@ -93,6 +93,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     }
 
     _scrollController.dispose();
+    
     super.dispose();
   }
 
@@ -394,7 +395,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                                         placeholder: (context, url) {
                                           return Center(
                                             child: SpinKitThreeBounce(
-                                              size: 24,
+                                              size: 20,
                                               color: secondaryColor,
                                             ),
                                           );
@@ -502,7 +503,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   placeholder: (context, url) {
                     return Center(
                       child: SpinKitThreeBounce(
-                        size: 24,
+                        size: 20,
                         color: secondaryColor,
                       ),
                     );
@@ -571,7 +572,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         placeholder: (context, url) {
                           return Center(
                             child: SpinKitThreeBounce(
-                              size: 24,
+                              size: 20,
                               color: secondaryColor,
                             ),
                           );

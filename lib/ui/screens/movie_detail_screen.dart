@@ -82,7 +82,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
-    
+
     super.initState();
   }
 
@@ -93,6 +93,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     }
 
     _scrollController.dispose();
+
     super.dispose();
   }
 
@@ -329,7 +330,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                         placeholder: (context, url) {
                                           return Center(
                                             child: SpinKitThreeBounce(
-                                              size: 24,
+                                              size: 20,
                                               color: secondaryColor,
                                             ),
                                           );
@@ -437,7 +438,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   placeholder: (context, url) {
                     return Center(
                       child: SpinKitThreeBounce(
-                        size: 24,
+                        size: 20,
                         color: secondaryColor,
                       ),
                     );
@@ -506,7 +507,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         placeholder: (context, url) {
                           return Center(
                             child: SpinKitThreeBounce(
-                              size: 24,
+                              size: 20,
                               color: secondaryColor,
                             ),
                           );

@@ -17,7 +17,7 @@ class GridItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StaggeredGridView.extentBuilder(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
       shrinkWrap: true,
       maxCrossAxisExtent: 200,
       staggeredTileBuilder: (index) => const StaggeredTile.extent(1, 320),
@@ -61,7 +61,7 @@ class GridItems extends StatelessWidget {
                         placeholder: (context, url) {
                           return Center(
                             child: SpinKitThreeBounce(
-                              size: 30,
+                              size: 20,
                               color: secondaryColor,
                             ),
                           );

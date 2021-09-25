@@ -26,7 +26,7 @@ class FutureOnLoad extends StatelessWidget {
                     color: secondaryColor,
                   )
                 : SpinKitThreeBounce(
-                    size: 60,
+                    size: 40,
                     color: secondaryColor,
                   ),
             const SizedBox(height: 8),
