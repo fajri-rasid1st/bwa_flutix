@@ -17,10 +17,12 @@ class GridItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StaggeredGridView.extentBuilder(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 32),
+      padding: const EdgeInsets.fromLTRB(8, 16, 8, 32),
       shrinkWrap: true,
       maxCrossAxisExtent: 200,
-      staggeredTileBuilder: (index) => const StaggeredTile.extent(1, 320),
+      staggeredTileBuilder: (index) {
+        return const StaggeredTile.extent(1, 320);
+      },
       itemBuilder: (context, index) {
         final item = items[index];
 
@@ -47,7 +49,7 @@ class GridItems extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   margin: const EdgeInsets.only(bottom: 8),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Stack(
                     children: <Widget>[

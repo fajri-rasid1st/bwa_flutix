@@ -1,9 +1,11 @@
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
+import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -18,6 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   ScrollController _scrollController;
 
   int _currentIndex = 0;
+  bool _isFabVisible = true;
 
   @override
   void initState() {
@@ -73,8 +76,32 @@ class _MainScreenState extends State<MainScreen> {
             )
           ];
         },
-        body: _pages[_currentIndex],
+        body: NotificationListener<UserScrollNotification>(
+          onNotification: (userScroll) {
+            if (userScroll.direction == ScrollDirection.forward) {
+              if (!_isFabVisible) {
+                setState(() => _isFabVisible = true);
+              }
+            } else if (userScroll.direction == ScrollDirection.reverse) {
+              if (_isFabVisible) {
+                setState(() => _isFabVisible = false);
+              }
+            }
+
+            return true;
+          },
+          child: _pages[_currentIndex],
+        ),
       ),
+      floatingActionButton: _isFabVisible
+          ? FloatingActionButton(
+              onPressed: () => Utils.scrollToTop(controller: _scrollController),
+              child: Icon(Icons.arrow_upward_rounded),
+              foregroundColor: accentColor,
+              backgroundColor: primaryTextColor.withOpacity(0.75),
+              tooltip: 'Go to top',
+            )
+          : null,
       bottomNavigationBar: ScrollToHide(
         controller: _scrollController,
         child: BottomNavigationBar(

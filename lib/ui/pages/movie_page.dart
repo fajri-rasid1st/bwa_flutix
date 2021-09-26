@@ -66,8 +66,8 @@ class _MoviePageState extends State<MoviePage> {
                   },
                 ).then((_) {
                   setState(() {
-                    _isScrollPositionAtBottom = false;
                     if (!_hasError) _page++;
+                    _isScrollPositionAtBottom = false;
                   });
                 });
               }

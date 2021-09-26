@@ -4,6 +4,7 @@ import 'package:cick_movie_app/data/models/cast.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
+import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
@@ -115,283 +116,281 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // function to build main screen
   Widget buildMainScreen(double screenWidth, Movie movie, Video video) {
     return Scaffold(
-      body: SafeArea(
-        child: NestedScrollView(
-          controller: _scrollController,
-          floatHeaderSlivers: true,
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return <Widget>[CustomAppbar(title: movie.title)];
-          },
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                // Movie Title
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  child: Text(
-                    movie.title,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: primaryTextColor,
-                    ),
+      body: NestedScrollView(
+        controller: _scrollController,
+        floatHeaderSlivers: true,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return <Widget>[CustomAppbar(title: movie.title)];
+        },
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.only(bottom: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              // Movie Title
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                child: Text(
+                  movie.title,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: primaryTextColor,
                   ),
                 ),
-                // Movie Runtime and Vote Average
-                Container(
-                  margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.av_timer_outlined,
-                            size: 20,
-                            color: secondaryTextColor,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${movie.runtime} mins',
-                            style: TextStyle(color: secondaryTextColor),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 12),
-                      CircleAvatar(
-                        radius: 2.5,
-                        backgroundColor: secondaryTextColor,
-                      ),
-                      const SizedBox(width: 12),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.thumb_up_outlined,
-                            size: 20,
-                            color: secondaryTextColor,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            '${movie.voteCount} votes',
-                            style: TextStyle(color: secondaryTextColor),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                // Movie Detail or Video
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 750),
-                  switchInCurve: Curves.easeIn,
-                  switchOutCurve: Curves.easeOut,
-                  child: _isChanged
-                      ? buildMovieVideo(screenWidth)
-                      : buildMovieDetail(screenWidth, movie),
-                ),
-                // Movie Button For Switch Between Detail and Video
-                Container(
-                  margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    onPressed: () {
-                      setState(() => checkMovieVideo(video));
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+              ),
+              // Movie Runtime and Vote Average
+              Container(
+                margin: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
                       children: <Widget>[
-                        _buttonIcon,
+                        Icon(
+                          Icons.av_timer_outlined,
+                          size: 20,
+                          color: secondaryTextColor,
+                        ),
                         const SizedBox(width: 4),
                         Text(
-                          _buttonText,
-                          style: TextStyle(fontSize: 16),
-                        )
+                          '${movie.runtime} mins',
+                          style: TextStyle(color: secondaryTextColor),
+                        ),
                       ],
                     ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(color: primaryColor),
+                    const SizedBox(width: 12),
+                    CircleAvatar(
+                      radius: 2.5,
+                      backgroundColor: secondaryTextColor,
                     ),
-                  ),
-                ),
-                // Movie Genres
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Genres',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
+                    const SizedBox(width: 12),
+                    Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.thumb_up_outlined,
+                          size: 20,
+                          color: secondaryTextColor,
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${movie.voteCount} votes',
+                          style: TextStyle(color: secondaryTextColor),
+                        ),
+                      ],
                     ),
-                    Container(
-                      height: 45,
-                      child: ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          final genres = movie.genres;
-      
-                          return Chip(
-                            label: Text(genres[index].name),
-                            labelStyle: TextStyle(color: primaryTextColor),
-                          );
-                        },
-                        itemCount: movie.genres.length,
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(width: 4);
-                        },
-                      ),
-                    )
                   ],
                 ),
-                // Divider
-                buildDivider(),
-                // Movie Casts
-                Column(
+              ),
+              // Movie Detail or Video
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 750),
+                switchInCurve: Curves.easeIn,
+                switchOutCurve: Curves.easeOut,
+                child: _isChanged
+                    ? buildMovieVideo(screenWidth)
+                    : buildMovieDetail(screenWidth, movie),
+              ),
+              // Movie Button For Switch Between Detail and Video
+              Container(
+                margin: const EdgeInsets.only(left: 16, right: 16, bottom: 8),
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () {
+                    setState(() => checkMovieVideo(video));
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      _buttonIcon,
+                      const SizedBox(width: 4),
+                      Text(
+                        _buttonText,
+                        style: TextStyle(fontSize: 16),
+                      )
+                    ],
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: BorderSide(color: primaryColor),
+                  ),
+                ),
+              ),
+              // Movie Genres
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Genres',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 45,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        final genres = movie.genres;
+
+                        return Chip(
+                          label: Text(genres[index].name),
+                          labelStyle: TextStyle(color: primaryTextColor),
+                        );
+                      },
+                      itemCount: movie.genres.length,
+                      separatorBuilder: (context, index) {
+                        return const SizedBox(width: 4);
+                      },
+                    ),
+                  )
+                ],
+              ),
+              // Divider
+              Utils.buildDivider(),
+              // Movie Casts
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Casts',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  _casts == null
+                      ? Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(_castsFailureMessage),
+                        )
+                      : Container(
+                          height: 228,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                width: 112,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Card(
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                      ),
+                                      clipBehavior: Clip.antiAlias,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: CachedNetworkImage(
+                                        imageUrl:
+                                            '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                        width: 112,
+                                        height: 165,
+                                        fit: BoxFit.cover,
+                                        fadeInDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        fadeOutDuration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        placeholder: (context, url) {
+                                          return Center(
+                                            child: SpinKitThreeBounce(
+                                              size: 20,
+                                              color: secondaryColor,
+                                            ),
+                                          );
+                                        },
+                                        errorWidget: (context, url, error) {
+                                          return Center(
+                                            child: Icon(
+                                              Icons.motion_photos_off_outlined,
+                                              color: secondaryTextColor,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].name,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: appBarTitleTextStyle,
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      _casts[index].character,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: secondaryTextColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            itemCount: _casts.length,
+                            separatorBuilder: (context, index) {
+                              return const SizedBox(width: 16);
+                            },
+                          ),
+                        ),
+                ],
+              ),
+              // Divider
+              Utils.buildDivider(),
+              // Movie Overview
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        'Casts',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
-                        ),
+                    Text(
+                      'Overview',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    _casts == null
-                        ? Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(_castsFailureMessage),
-                          )
-                        : Container(
-                            height: 228,
-                            child: ListView.separated(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  width: 112,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Card(
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 4),
-                                        clipBehavior: Clip.antiAlias,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12),
-                                        ),
-                                        child: CachedNetworkImage(
-                                          imageUrl:
-                                              '${Const.IMG_URL_200}/${_casts[index].profilePath}',
-                                          width: 112,
-                                          height: 165,
-                                          fit: BoxFit.cover,
-                                          fadeInDuration: const Duration(
-                                            milliseconds: 500,
-                                          ),
-                                          fadeOutDuration: const Duration(
-                                            milliseconds: 500,
-                                          ),
-                                          placeholder: (context, url) {
-                                            return Center(
-                                              child: SpinKitThreeBounce(
-                                                size: 20,
-                                                color: secondaryColor,
-                                              ),
-                                            );
-                                          },
-                                          errorWidget: (context, url, error) {
-                                            return Center(
-                                              child: Icon(
-                                                Icons.motion_photos_off_outlined,
-                                                color: secondaryTextColor,
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _casts[index].name,
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: appBarTitleTextStyle,
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        _casts[index].character,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: secondaryTextColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                              itemCount: _casts.length,
-                              separatorBuilder: (context, index) {
-                                return const SizedBox(width: 16);
-                              },
-                            ),
-                          ),
+                    ReadMoreText(
+                      movie.overview,
+                      colorClickableText: primaryColor,
+                      trimMode: TrimMode.Line,
+                      trimCollapsedText: 'Show more',
+                      trimExpandedText: 'Show less',
+                      moreStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor,
+                      ),
+                      lessStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        color: primaryColor,
+                      ),
+                    ),
                   ],
                 ),
-                // Divider
-                buildDivider(),
-                // Movie Overview
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Overview',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      ReadMoreText(
-                        movie.overview,
-                        colorClickableText: primaryColor,
-                        trimMode: TrimMode.Line,
-                        trimCollapsedText: 'Show more',
-                        trimExpandedText: 'Show less',
-                        moreStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
-                        ),
-                        lessStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -411,12 +410,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   imageUrl: '${Const.IMG_URL_500}/${movie.backdropPath}',
                   fit: BoxFit.cover,
                   height: 240,
-                  fadeInDuration: const Duration(
-                    milliseconds: 500,
-                  ),
-                  fadeOutDuration: const Duration(
-                    milliseconds: 500,
-                  ),
+                  fadeInDuration: const Duration(milliseconds: 500),
+                  fadeOutDuration: const Duration(milliseconds: 500),
                   placeholder: (context, url) {
                     return Center(
                       child: SpinKitThreeBounce(
@@ -440,7 +435,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [Colors.black87, Colors.transparent],
+                        colors: [
+                          Colors.black87,
+                          Colors.transparent,
+                        ],
                       ),
                     ),
                   ),
@@ -451,7 +449,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.black45, Colors.transparent],
+                        colors: [
+                          Colors.black45,
+                          Colors.transparent,
+                        ],
                       ),
                     ),
                   ),
@@ -473,19 +474,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       elevation: 4,
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: CachedNetworkImage(
                         imageUrl: '${Const.IMG_URL_300}/${movie.posterPath}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180,
-                        fadeInDuration: const Duration(
-                          milliseconds: 500,
-                        ),
-                        fadeOutDuration: const Duration(
-                          milliseconds: 500,
-                        ),
+                        fadeInDuration: const Duration(milliseconds: 500),
+                        fadeOutDuration: const Duration(milliseconds: 500),
                         placeholder: (context, url) {
                           return Center(
                             child: SpinKitThreeBounce(
@@ -584,47 +581,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 
-  // function to create divider
-  Widget buildDivider() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: Divider(
-        height: 1,
-        thickness: 1,
-        color: dividerColor,
-      ),
-      decoration: BoxDecoration(
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            offset: Offset(0, 0.5),
-            blurRadius: 1,
-            color: dividerColor,
-          ),
-          BoxShadow(
-            offset: Offset(0.5, 0),
-            blurRadius: 1,
-            color: dividerColor,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // function to show snackbar with message
-  void showSnackBarMessage({@required String text, int duration = 1500}) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        duration: Duration(milliseconds: duration),
-      ),
-    );
-  }
-
   // function to determine behavior when movie video is empty or not
   void checkMovieVideo(Video video) {
     if (video != null) {
       if (video.site == 'YouTube') {
-        scrollToTop();
+        Utils.scrollToTop(controller: _scrollController);
 
         _isChanged = !_isChanged;
 
@@ -638,21 +599,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           _buttonIcon = Icon(Icons.play_arrow_outlined);
         }
       } else {
-        showSnackBarMessage(text: _videoFailureMessage);
+        Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
       }
     } else {
-      showSnackBarMessage(text: _videoFailureMessage);
+      Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
     }
-  }
-
-  // function to scroll page to top
-  void scrollToTop() {
-    final start = 0.0;
-
-    _scrollController.animateTo(
-      start,
-      duration: const Duration(milliseconds: 750),
-      curve: Curves.easeInOut,
-    );
   }
 }

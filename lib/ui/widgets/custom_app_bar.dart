@@ -50,7 +50,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
 
 class CustomBottomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  final Size preferredSize = Size.fromHeight(44); // default is 56.0
+  final Size preferredSize = Size.fromHeight(40); // default is 56.0
 
   CustomBottomAppBar({Key key}) : super(key: key);
 
@@ -59,8 +59,8 @@ class CustomBottomAppBar extends StatelessWidget
     return Row(
       children: <Widget>[
         Container(
-          margin: const EdgeInsets.only(left: 16, right: 16),
-          height: 44,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          height: 40,
           child: Text(
             'Detail',
             style: TextStyle(

@@ -66,8 +66,8 @@ class _TvShowPageState extends State<TvShowPage> {
                   },
                 ).then((_) {
                   setState(() {
-                    _isScrollPositionAtBottom = false;
                     if (!_hasError) _page++;
+                    _isScrollPositionAtBottom = false;
                   });
                 });
               }
