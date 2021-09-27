@@ -27,6 +27,7 @@ class TvShowDetailScreen extends StatefulWidget {
 class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
+  String _errorButtonText = 'Try again';
 
   // declaration attribute
   ScrollController _scrollController;
@@ -44,41 +45,9 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   @override
   void initState() {
     // first, get all tv show data from server
-    Future.wait([
-      TvShowServices.getTvShow(
-        tvShowId: widget.tvShowId,
-        onSuccess: (tvShow) => _tvShow = tvShow,
-        onFailure: (message) => _tvShowFailureMessage = message,
-      ),
-      TvShowServices.getTvShowVideo(
-        tvShowId: widget.tvShowId,
-        onSuccess: (video) => _video = video,
-        onFailure: (message) => _videoFailureMessage = message,
-      ),
-      TvShowServices.getTvShowCasts(
-        tvShowId: widget.tvShowId,
-        onSuccess: (casts) => _casts = casts,
-        onFailure: (message) => _castsFailureMessage = message,
-      ),
-    ]).then((_) {
-      setState(() {
-        if (_video != null) {
-          _youtubePlayerController = YoutubePlayerController(
-            initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
-              autoPlay: false,
-              controlsVisibleAtStart: true,
-              disableDragSeek: true,
-              enableCaption: false,
-              loop: true,
-            ),
-          );
-        }
+    getAllTvShowData();
 
-        _isLoading = false;
-      });
-    });
-
+    // initialize declaration attribute
     _scrollController = ScrollController();
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
@@ -106,7 +75,12 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_tvShow == null) {
-        return FutureOnLoad(text: _tvShowFailureMessage, isError: true);
+        return FutureOnLoad(
+          text: _tvShowFailureMessage,
+          isError: true,
+          onPressedErrorButton: getAllTvShowData,
+          errorButtonText: _errorButtonText,
+        );
       } else {
         return buildMainScreen(screenWidth, _tvShow, _video);
       }
@@ -671,5 +645,46 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     } else {
       Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
     }
+  }
+
+  // function to fetch all tv show data
+  Future<void> getAllTvShowData() async {
+    setState(() => _errorButtonText = 'Fetching...');
+
+    Future.wait([
+      TvShowServices.getTvShow(
+        tvShowId: widget.tvShowId,
+        onSuccess: (tvShow) => _tvShow = tvShow,
+        onFailure: (message) => _tvShowFailureMessage = message,
+      ),
+      TvShowServices.getTvShowVideo(
+        tvShowId: widget.tvShowId,
+        onSuccess: (video) => _video = video,
+        onFailure: (message) => _videoFailureMessage = message,
+      ),
+      TvShowServices.getTvShowCasts(
+        tvShowId: widget.tvShowId,
+        onSuccess: (casts) => _casts = casts,
+        onFailure: (message) => _castsFailureMessage = message,
+      ),
+    ]).then((_) {
+      setState(() {
+        if (_video != null) {
+          _youtubePlayerController = YoutubePlayerController(
+            initialVideoId: _video.videoId,
+            flags: YoutubePlayerFlags(
+              autoPlay: false,
+              controlsVisibleAtStart: true,
+              disableDragSeek: true,
+              enableCaption: false,
+              loop: true,
+            ),
+          );
+        }
+
+        _errorButtonText = 'Try again';
+        _isLoading = false;
+      });
+    });
   }
 }

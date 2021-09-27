@@ -51,7 +51,7 @@ class _TvShowPageState extends State<TvShowPage> {
         return FutureOnLoad(
           text: _failureMessage,
           isError: true,
-          onPressedErrorButton: _loadPopularTvShows,
+          onPressedErrorButton: loadPopularTvShows,
           errorButtonText: _errorButtonText,
         );
       } else {
@@ -89,7 +89,7 @@ class _TvShowPageState extends State<TvShowPage> {
                 children: <Widget>[
                   PullToRefresh(
                     child: GridItems(items: _tvShows),
-                    onRefresh: _loadPopularTvShows,
+                    onRefresh: loadPopularTvShows,
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -116,10 +116,8 @@ class _TvShowPageState extends State<TvShowPage> {
     }
   }
 
-  Future<void> _loadPopularTvShows() async {
-    setState(() {
-      _errorButtonText = 'Fetching...';
-    });
+  Future<void> loadPopularTvShows() async {
+    setState(() => _errorButtonText = 'Fetching...');
 
     TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {

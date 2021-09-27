@@ -27,6 +27,7 @@ class MovieDetailScreen extends StatefulWidget {
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
+  String _errorButtonText = 'Try again';
 
   // declaration attribute
   ScrollController _scrollController;
@@ -44,41 +45,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void initState() {
     // first, get all movie data from server
-    Future.wait([
-      MovieServices.getMovie(
-        movieId: widget.movieId,
-        onSuccess: (movie) => _movie = movie,
-        onFailure: (message) => _movieFailureMessage = message,
-      ),
-      MovieServices.getMovieVideo(
-        movieId: widget.movieId,
-        onSuccess: (video) => _video = video,
-        onFailure: (message) => _videoFailureMessage = message,
-      ),
-      MovieServices.getMovieCasts(
-        movieId: widget.movieId,
-        onSuccess: (casts) => _casts = casts,
-        onFailure: (message) => _castsFailureMessage = message,
-      )
-    ]).then((_) {
-      setState(() {
-        if (_video != null) {
-          _youtubePlayerController = YoutubePlayerController(
-            initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
-              autoPlay: false,
-              controlsVisibleAtStart: true,
-              disableDragSeek: true,
-              enableCaption: false,
-              loop: true,
-            ),
-          );
-        }
+    getAllMovieData();
 
-        _isLoading = false;
-      });
-    });
-
+    // initialize declaration attribute
     _scrollController = ScrollController();
     _buttonIcon = Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
@@ -106,7 +75,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_movie == null) {
-        return FutureOnLoad(text: _movieFailureMessage, isError: true);
+        return FutureOnLoad(
+          text: _movieFailureMessage,
+          isError: true,
+          onPressedErrorButton: getAllMovieData,
+          errorButtonText: _errorButtonText,
+        );
       } else {
         return buildMainScreen(screenWidth, _movie, _video);
       }
@@ -606,5 +580,46 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     } else {
       Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
     }
+  }
+
+  // function to fetch all movie data
+  Future<void> getAllMovieData() async {
+    setState(() => _errorButtonText = 'Fetching...');
+
+    Future.wait([
+      MovieServices.getMovie(
+        movieId: widget.movieId,
+        onSuccess: (movie) => _movie = movie,
+        onFailure: (message) => _movieFailureMessage = message,
+      ),
+      MovieServices.getMovieVideo(
+        movieId: widget.movieId,
+        onSuccess: (video) => _video = video,
+        onFailure: (message) => _videoFailureMessage = message,
+      ),
+      MovieServices.getMovieCasts(
+        movieId: widget.movieId,
+        onSuccess: (casts) => _casts = casts,
+        onFailure: (message) => _castsFailureMessage = message,
+      )
+    ]).then((_) {
+      setState(() {
+        if (_video != null) {
+          _youtubePlayerController = YoutubePlayerController(
+            initialVideoId: _video.videoId,
+            flags: YoutubePlayerFlags(
+              autoPlay: false,
+              controlsVisibleAtStart: true,
+              disableDragSeek: true,
+              enableCaption: false,
+              loop: true,
+            ),
+          );
+        }
+
+        _errorButtonText = 'Try again';
+        _isLoading = false;
+      });
+    });
   }
 }

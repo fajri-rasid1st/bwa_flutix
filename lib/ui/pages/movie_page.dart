@@ -51,7 +51,7 @@ class _MoviePageState extends State<MoviePage> {
         return FutureOnLoad(
           text: _failureMessage,
           isError: true,
-          onPressedErrorButton: _loadPopularMovies,
+          onPressedErrorButton: loadPopularMovies,
           errorButtonText: _errorButtonText,
         );
       } else {
@@ -89,7 +89,7 @@ class _MoviePageState extends State<MoviePage> {
                 children: <Widget>[
                   PullToRefresh(
                     child: GridItems(items: _movies),
-                    onRefresh: _loadPopularMovies,
+                    onRefresh: loadPopularMovies,
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -116,10 +116,8 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
-  Future<void> _loadPopularMovies() async {
-    setState(() {
-      _errorButtonText = 'Fetching...';
-    });
+  Future<void> loadPopularMovies() async {
+    setState(() => _errorButtonText = 'Fetching...');
 
     MovieServices.getPopularMovies(
       onSuccess: (movies) {
