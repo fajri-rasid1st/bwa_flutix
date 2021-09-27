@@ -21,13 +21,13 @@ class Utils {
     final start = 0.0;
     var duration = controller.position.pixels.toInt() * 5;
 
-    if (duration > 1500) duration = 1500;
-
-    controller.animateTo(
-      start,
-      duration: Duration(milliseconds: duration),
-      curve: Curves.easeInOut,
-    );
+    if (duration != 0) {
+      controller.animateTo(
+        start,
+        duration: Duration(milliseconds: duration),
+        curve: Curves.ease,
+      );
+    }
   }
 
   // function to create divider

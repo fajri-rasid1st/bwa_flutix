@@ -20,6 +20,7 @@ class Cast {
   }
 
   @override
-  String toString() =>
-      'Cast(name: $name, character: $character, profilePath: $profilePath)';
+  String toString() {
+    return 'Cast(name: $name, character: $character, profilePath: $profilePath)';
+  }
 }

@@ -197,7 +197,9 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() => checkMovieVideo(video));
+                    setState(() {
+                      checkMovieVideo(video);
+                    });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

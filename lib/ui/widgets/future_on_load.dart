@@ -5,11 +5,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class FutureOnLoad extends StatelessWidget {
   final String text;
   final bool isError;
+  final Future<void> Function() onPressedErrorButton;
+  final String errorButtonText;
 
   const FutureOnLoad({
     Key key,
     @required this.text,
     this.isError = false,
+    this.onPressedErrorButton,
+    this.errorButtonText,
   }) : super(key: key);
 
   @override
@@ -39,6 +43,13 @@ class FutureOnLoad extends StatelessWidget {
                 color: secondaryColor,
               ),
             ),
+            const SizedBox(height: 8),
+            if (isError) ...[
+              ElevatedButton(
+                onPressed: onPressedErrorButton,
+                child: Text(errorButtonText),
+              )
+            ]
           ],
         ),
       ),

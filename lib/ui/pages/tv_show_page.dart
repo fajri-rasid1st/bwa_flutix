@@ -1,8 +1,10 @@
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
+import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:cick_movie_app/ui/widgets/grid_items.dart';
+import 'package:cick_movie_app/ui/widgets/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -18,6 +20,7 @@ class _TvShowPageState extends State<TvShowPage> {
   int _page = 1;
   bool _isLoading = true;
   bool _isScrollPositionAtBottom = false;
+  String _errorButtonText = 'Try again';
 
   // this attribute will be filled in the future
   List<TvShowPopular> _tvShows;
@@ -45,7 +48,12 @@ class _TvShowPageState extends State<TvShowPage> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_tvShows == null) {
-        return FutureOnLoad(text: _failureMessage, isError: true);
+        return FutureOnLoad(
+          text: _failureMessage,
+          isError: true,
+          onPressedErrorButton: _loadPopularTvShows,
+          errorButtonText: _errorButtonText,
+        );
       } else {
         return NotificationListener<ScrollEndNotification>(
           onNotification: (scrollEnd) {
@@ -66,7 +74,7 @@ class _TvShowPageState extends State<TvShowPage> {
                   },
                 ).then((_) {
                   setState(() {
-                    if (!_hasError) _page++;
+                    if (_hasError == false) _page++;
                     _isScrollPositionAtBottom = false;
                   });
                 });
@@ -79,7 +87,10 @@ class _TvShowPageState extends State<TvShowPage> {
             builder: (context, constraints) {
               return Stack(
                 children: <Widget>[
-                  GridItems(items: _tvShows),
+                  PullToRefresh(
+                    child: GridItems(items: _tvShows),
+                    onRefresh: _loadPopularTvShows,
+                  ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
                       left: 0,
@@ -95,7 +106,7 @@ class _TvShowPageState extends State<TvShowPage> {
                         ),
                       ),
                     )
-                  ],
+                  ]
                 ],
               );
             },
@@ -103,5 +114,25 @@ class _TvShowPageState extends State<TvShowPage> {
         );
       }
     }
+  }
+
+  Future<void> _loadPopularTvShows() async {
+    setState(() {
+      _errorButtonText = 'Fetching...';
+    });
+
+    TvShowServices.getPopularTvShows(
+      onSuccess: (tvShows) {
+        _tvShows = tvShows;
+      },
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
+    ).then((_) {
+      setState(() {
+        _errorButtonText = 'Try again';
+        _page = 2;
+      });
+    });
   }
 }

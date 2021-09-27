@@ -262,7 +262,9 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    setState(() => checkTvShowVideo(video));
+                    setState(() {
+                      checkTvShowVideo(video);
+                    });
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

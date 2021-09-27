@@ -1,8 +1,10 @@
 import 'package:cick_movie_app/data/models/movie_popular.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
+import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:cick_movie_app/ui/widgets/grid_items.dart';
+import 'package:cick_movie_app/ui/widgets/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -18,6 +20,7 @@ class _MoviePageState extends State<MoviePage> {
   int _page = 1;
   bool _isLoading = true;
   bool _isScrollPositionAtBottom = false;
+  String _errorButtonText = 'Try again';
 
   // this attribute will be filled in the future
   List<MoviePopular> _movies;
@@ -45,7 +48,12 @@ class _MoviePageState extends State<MoviePage> {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
       if (_movies == null) {
-        return FutureOnLoad(text: _failureMessage, isError: true);
+        return FutureOnLoad(
+          text: _failureMessage,
+          isError: true,
+          onPressedErrorButton: _loadPopularMovies,
+          errorButtonText: _errorButtonText,
+        );
       } else {
         return NotificationListener<ScrollEndNotification>(
           onNotification: (scrollEnd) {
@@ -66,7 +74,7 @@ class _MoviePageState extends State<MoviePage> {
                   },
                 ).then((_) {
                   setState(() {
-                    if (!_hasError) _page++;
+                    if (_hasError == false) _page++;
                     _isScrollPositionAtBottom = false;
                   });
                 });
@@ -79,7 +87,10 @@ class _MoviePageState extends State<MoviePage> {
             builder: (context, constraints) {
               return Stack(
                 children: <Widget>[
-                  GridItems(items: _movies),
+                  PullToRefresh(
+                    child: GridItems(items: _movies),
+                    onRefresh: _loadPopularMovies,
+                  ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
                       left: 0,
@@ -95,7 +106,7 @@ class _MoviePageState extends State<MoviePage> {
                         ),
                       ),
                     )
-                  ],
+                  ]
                 ],
               );
             },
@@ -103,5 +114,25 @@ class _MoviePageState extends State<MoviePage> {
         );
       }
     }
+  }
+
+  Future<void> _loadPopularMovies() async {
+    setState(() {
+      _errorButtonText = 'Fetching...';
+    });
+
+    MovieServices.getPopularMovies(
+      onSuccess: (movies) {
+        _movies = movies;
+      },
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
+    ).then((_) {
+      setState(() {
+        _errorButtonText = 'Try again';
+        _page = 2;
+      });
+    });
   }
 }
