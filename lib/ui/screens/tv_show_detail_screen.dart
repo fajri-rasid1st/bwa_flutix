@@ -27,7 +27,7 @@ class TvShowDetailScreen extends StatefulWidget {
 class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
-  String _errorButtonText = 'Try again';
+  Widget _errorButtonChild = const Text('Try again');
 
   // declaration attribute
   ScrollController _scrollController;
@@ -79,7 +79,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           text: _tvShowFailureMessage,
           isError: true,
           onPressedErrorButton: getAllTvShowData,
-          errorButtonText: _errorButtonText,
+          errorButtonChild: _errorButtonChild,
         );
       } else {
         return buildMainScreen(screenWidth, _tvShow, _video);
@@ -649,13 +649,35 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   // function to fetch all tv show data
   Future<void> getAllTvShowData() async {
-    setState(() => _errorButtonText = 'Fetching...');
+    setState(() {
+      _errorButtonChild = Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text('Fetching data...'),
+        ],
+      );
+    });
 
     Future.wait([
       TvShowServices.getTvShow(
         tvShowId: widget.tvShowId,
         onSuccess: (tvShow) => _tvShow = tvShow,
-        onFailure: (message) => _tvShowFailureMessage = message,
+        onFailure: (message) {
+          _tvShowFailureMessage = message;
+          Utils.showSnackBarMessage(
+            context: context,
+            text: _tvShowFailureMessage,
+          );
+        },
       ),
       TvShowServices.getTvShowVideo(
         tvShowId: widget.tvShowId,
@@ -682,7 +704,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           );
         }
 
-        _errorButtonText = 'Try again';
+        _errorButtonChild = const Text('Try again');
         _isLoading = false;
       });
     });

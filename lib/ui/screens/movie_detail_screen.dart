@@ -27,7 +27,7 @@ class MovieDetailScreen extends StatefulWidget {
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
-  String _errorButtonText = 'Try again';
+  Widget _errorButtonChild = const Text('Try again');
 
   // declaration attribute
   ScrollController _scrollController;
@@ -79,7 +79,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           text: _movieFailureMessage,
           isError: true,
           onPressedErrorButton: getAllMovieData,
-          errorButtonText: _errorButtonText,
+          errorButtonChild: _errorButtonChild,
         );
       } else {
         return buildMainScreen(screenWidth, _movie, _video);
@@ -584,13 +584,35 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   // function to fetch all movie data
   Future<void> getAllMovieData() async {
-    setState(() => _errorButtonText = 'Fetching...');
+    setState(() {
+      _errorButtonChild = Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text('Fetching data...'),
+        ],
+      );
+    });
 
     Future.wait([
       MovieServices.getMovie(
         movieId: widget.movieId,
         onSuccess: (movie) => _movie = movie,
-        onFailure: (message) => _movieFailureMessage = message,
+        onFailure: (message) {
+          _movieFailureMessage = message;
+          Utils.showSnackBarMessage(
+            context: context,
+            text: _movieFailureMessage,
+          );
+        },
       ),
       MovieServices.getMovieVideo(
         movieId: widget.movieId,
@@ -617,7 +639,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           );
         }
 
-        _errorButtonText = 'Try again';
+        _errorButtonChild = const Text('Try again');
         _isLoading = false;
       });
     });

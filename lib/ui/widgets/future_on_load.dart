@@ -6,14 +6,14 @@ class FutureOnLoad extends StatelessWidget {
   final String text;
   final bool isError;
   final Future<void> Function() onPressedErrorButton;
-  final String errorButtonText;
+  final Widget errorButtonChild;
 
   const FutureOnLoad({
     Key key,
     @required this.text,
     this.isError = false,
     this.onPressedErrorButton,
-    this.errorButtonText,
+    this.errorButtonChild,
   }) : super(key: key);
 
   @override
@@ -47,7 +47,7 @@ class FutureOnLoad extends StatelessWidget {
             if (isError) ...[
               ElevatedButton(
                 onPressed: onPressedErrorButton,
-                child: Text(errorButtonText),
+                child: errorButtonChild,
               )
             ]
           ],

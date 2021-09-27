@@ -20,7 +20,7 @@ class _MoviePageState extends State<MoviePage> {
   int _page = 1;
   bool _isLoading = true;
   bool _isScrollPositionAtBottom = false;
-  String _errorButtonText = 'Try again';
+  Widget _errorButtonChild = const Text('Try again');
 
   // this attribute will be filled in the future
   List<MoviePopular> _movies;
@@ -52,7 +52,7 @@ class _MoviePageState extends State<MoviePage> {
           text: _failureMessage,
           isError: true,
           onPressedErrorButton: loadPopularMovies,
-          errorButtonText: _errorButtonText,
+          errorButtonChild: _errorButtonChild,
         );
       } else {
         return NotificationListener<ScrollEndNotification>(
@@ -117,7 +117,25 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Future<void> loadPopularMovies() async {
-    setState(() => _errorButtonText = 'Fetching...');
+    setState(() {
+      _errorButtonChild = Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text('Fetching data...'),
+        ],
+      );
+    });
+
+    await Future.delayed(Duration(milliseconds: 1500));
 
     MovieServices.getPopularMovies(
       onSuccess: (movies) {
@@ -128,7 +146,7 @@ class _MoviePageState extends State<MoviePage> {
       },
     ).then((_) {
       setState(() {
-        _errorButtonText = 'Try again';
+        _errorButtonChild = const Text('Try again');
         _page = 2;
       });
     });

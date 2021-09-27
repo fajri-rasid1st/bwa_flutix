@@ -47,6 +47,8 @@ class _MainScreenState extends State<MainScreen> {
             SliverAppBar(
               floating: true,
               snap: true,
+              elevation: 2,
+              forceElevated: innerBoxIsScrolled,
               backgroundColor: backgroundColor,
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,

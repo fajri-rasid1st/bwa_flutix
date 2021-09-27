@@ -20,7 +20,7 @@ class _TvShowPageState extends State<TvShowPage> {
   int _page = 1;
   bool _isLoading = true;
   bool _isScrollPositionAtBottom = false;
-  String _errorButtonText = 'Try again';
+  Widget _errorButtonChild = const Text('Try again');
 
   // this attribute will be filled in the future
   List<TvShowPopular> _tvShows;
@@ -52,7 +52,7 @@ class _TvShowPageState extends State<TvShowPage> {
           text: _failureMessage,
           isError: true,
           onPressedErrorButton: loadPopularTvShows,
-          errorButtonText: _errorButtonText,
+          errorButtonChild: _errorButtonChild,
         );
       } else {
         return NotificationListener<ScrollEndNotification>(
@@ -117,7 +117,25 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> loadPopularTvShows() async {
-    setState(() => _errorButtonText = 'Fetching...');
+    setState(() {
+      _errorButtonChild = Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: <Widget>[
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(width: 8),
+          const Text('Fetching data...'),
+        ],
+      );
+    });
+
+    await Future.delayed(Duration(milliseconds: 1500));
 
     TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {
@@ -128,7 +146,7 @@ class _TvShowPageState extends State<TvShowPage> {
       },
     ).then((_) {
       setState(() {
-        _errorButtonText = 'Try again';
+        _errorButtonChild = const Text('Try again');
         _page = 2;
       });
     });

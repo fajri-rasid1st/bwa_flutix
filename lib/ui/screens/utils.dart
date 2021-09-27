@@ -6,7 +6,7 @@ class Utils {
   static void showSnackBarMessage({
     @required BuildContext context,
     @required String text,
-    int duration = 1500,
+    int duration = 2000,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
