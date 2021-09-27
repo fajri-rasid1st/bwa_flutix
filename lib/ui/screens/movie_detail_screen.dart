@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readmore/readmore.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
@@ -59,7 +59,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void dispose() {
     if (_youtubePlayerController != null) {
-      _youtubePlayerController.dispose();
+      _youtubePlayerController.close();
     }
 
     _scrollController.dispose();
@@ -69,8 +69,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     if (_isLoading) {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
@@ -82,13 +80,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           errorButtonChild: _errorButtonChild,
         );
       } else {
-        return buildMainScreen(screenWidth, _movie, _video);
+        return buildMainScreen(_movie, _video);
       }
     }
   }
 
   // function to build main screen
-  Widget buildMainScreen(double screenWidth, Movie movie, Video video) {
+  Widget buildMainScreen(Movie movie, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -161,9 +159,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 duration: const Duration(milliseconds: 750),
                 switchInCurve: Curves.easeIn,
                 switchOutCurve: Curves.easeOut,
-                child: _isChanged
-                    ? buildMovieVideo(screenWidth)
-                    : buildMovieDetail(screenWidth, movie),
+                child: _isChanged ? buildMovieVideo() : buildMovieDetail(movie),
               ),
               // Movie Button For Switch Between Detail and Video
               Container(
@@ -374,7 +370,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to build movie detail
-  Widget buildMovieDetail(double screenWidth, Movie movie) {
+  Widget buildMovieDetail(Movie movie) {
     return SizedBox(
       height: 290,
       child: Stack(
@@ -385,6 +381,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 CachedNetworkImage(
                   imageUrl: '${Const.IMG_URL_500}/${movie.backdropPath}',
                   fit: BoxFit.cover,
+                  width: double.infinity,
                   height: 240,
                   fadeInDuration: const Duration(milliseconds: 500),
                   fadeOutDuration: const Duration(milliseconds: 500),
@@ -438,7 +435,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           ),
           Positioned(
             top: 90,
-            width: screenWidth,
+            left: 0,
+            right: 0,
             child: Container(
               margin: const EdgeInsets.only(left: 12, right: 16),
               child: Row(
@@ -535,25 +533,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to build movie video
-  Widget buildMovieVideo(double screenWidth) {
+  Widget buildMovieVideo() {
     return Container(
       margin: const EdgeInsets.only(bottom: 50),
+      width: double.infinity,
       height: 240,
-      child: YoutubePlayer(
+      child: YoutubePlayerIFrame(
         controller: _youtubePlayerController,
-        width: screenWidth,
-        bottomActions: [
-          const SizedBox(width: 12.0),
-          CurrentPosition(),
-          const SizedBox(width: 8.0),
-          ProgressBar(isExpanded: true),
-          const SizedBox(width: 8.0),
-          RemainingDuration(),
-          const SizedBox(width: 4.0),
-          PlaybackSpeedButton(),
-          const SizedBox(width: 12.0),
-        ],
+        aspectRatio: 16 / 9,
       ),
+      color: Colors.black,
     );
   }
 
@@ -629,12 +618,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         if (_video != null) {
           _youtubePlayerController = YoutubePlayerController(
             initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
+            params: YoutubePlayerParams(
               autoPlay: false,
-              controlsVisibleAtStart: true,
-              disableDragSeek: true,
               enableCaption: false,
-              loop: true,
+              showVideoAnnotations: false,
             ),
           );
         }

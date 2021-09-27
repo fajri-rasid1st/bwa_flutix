@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readmore/readmore.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class TvShowDetailScreen extends StatefulWidget {
   final int tvShowId;
@@ -59,7 +59,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   @override
   void dispose() {
     if (_youtubePlayerController != null) {
-      _youtubePlayerController.dispose();
+      _youtubePlayerController.close();
     }
 
     _scrollController.dispose();
@@ -69,8 +69,6 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     if (_isLoading) {
       return const FutureOnLoad(text: 'Fetching data...');
     } else {
@@ -82,13 +80,13 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           errorButtonChild: _errorButtonChild,
         );
       } else {
-        return buildMainScreen(screenWidth, _tvShow, _video);
+        return buildMainScreen(_tvShow, _video);
       }
     }
   }
 
   // function to build main screen
-  Widget buildMainScreen(double screenWidth, TvShow tvShow, Video video) {
+  Widget buildMainScreen(TvShow tvShow, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -161,9 +159,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 duration: const Duration(milliseconds: 750),
                 switchInCurve: Curves.easeIn,
                 switchOutCurve: Curves.easeOut,
-                child: _isChanged
-                    ? buildTvShowVideo(screenWidth)
-                    : buildTvShowDetail(screenWidth, tvShow),
+                child:
+                    _isChanged ? buildTvShowVideo() : buildTvShowDetail(tvShow),
               ),
               // Tv Show Total Episodes and Seasons
               Container(
@@ -439,7 +436,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   }
 
   // function to build tv show detail
-  Widget buildTvShowDetail(double screenWidth, TvShow tvShow) {
+  Widget buildTvShowDetail(TvShow tvShow) {
     return SizedBox(
       height: 290,
       child: Stack(
@@ -450,6 +447,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 CachedNetworkImage(
                   imageUrl: '${Const.IMG_URL_500}/${tvShow.backdropPath}',
                   fit: BoxFit.cover,
+                  width: double.infinity,
                   height: 240,
                   fadeInDuration: const Duration(milliseconds: 500),
                   fadeOutDuration: const Duration(milliseconds: 500),
@@ -503,7 +501,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           ),
           Positioned(
             top: 90,
-            width: screenWidth,
+            left: 0,
+            right: 0,
             child: Container(
               margin: const EdgeInsets.only(left: 12, right: 16),
               child: Row(
@@ -600,25 +599,16 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   }
 
   // function to build tv show vidoe
-  Widget buildTvShowVideo(double screenWidth) {
+  Widget buildTvShowVideo() {
     return Container(
       margin: const EdgeInsets.only(bottom: 50),
+      width: double.infinity,
       height: 240,
-      child: YoutubePlayer(
+      child: YoutubePlayerIFrame(
         controller: _youtubePlayerController,
-        width: screenWidth,
-        bottomActions: [
-          const SizedBox(width: 12.0),
-          CurrentPosition(),
-          const SizedBox(width: 8.0),
-          ProgressBar(isExpanded: true),
-          const SizedBox(width: 8.0),
-          RemainingDuration(),
-          const SizedBox(width: 4.0),
-          PlaybackSpeedButton(),
-          const SizedBox(width: 12.0),
-        ],
+        aspectRatio: 16 / 9,
       ),
+      color: Colors.black,
     );
   }
 
@@ -694,12 +684,10 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         if (_video != null) {
           _youtubePlayerController = YoutubePlayerController(
             initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
+            params: YoutubePlayerParams(
               autoPlay: false,
-              controlsVisibleAtStart: true,
-              disableDragSeek: true,
               enableCaption: false,
-              loop: true,
+              showVideoAnnotations: false,
             ),
           );
         }
