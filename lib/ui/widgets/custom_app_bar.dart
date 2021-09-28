@@ -2,16 +2,11 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
-class CustomAppbar extends StatefulWidget {
+class CustomAppbar extends StatelessWidget {
   final String title;
 
   const CustomAppbar({Key key, @required this.title}) : super(key: key);
 
-  @override
-  _CustomAppbarState createState() => _CustomAppbarState();
-}
-
-class _CustomAppbarState extends State<CustomAppbar> {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
@@ -22,7 +17,7 @@ class _CustomAppbarState extends State<CustomAppbar> {
       backgroundColor: backgroundColor,
       centerTitle: true,
       title: Text(
-        widget.title,
+        title,
         style: appBarTitleTextStyle,
       ),
       leading: IconButton(

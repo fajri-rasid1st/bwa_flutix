@@ -1,7 +1,7 @@
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:flutter/material.dart';
 
-class PullToRefresh extends StatefulWidget {
+class PullToRefresh extends StatelessWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
 
@@ -12,15 +12,10 @@ class PullToRefresh extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PullToRefreshState createState() => _PullToRefreshState();
-}
-
-class _PullToRefreshState extends State<PullToRefresh> {
-  @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      child: widget.child,
-      onRefresh: widget.onRefresh,
+      child: child,
+      onRefresh: onRefresh,
       color: primaryColor,
     );
   }

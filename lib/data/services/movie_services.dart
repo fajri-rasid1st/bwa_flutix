@@ -31,7 +31,7 @@ class MovieServices {
             (popularMoviesResponse as Map<String, dynamic>)['results'];
 
         // get each movie inside results
-        final List<MoviePopular> movies = List<MoviePopular>.from(
+        final movies = List<MoviePopular>.from(
           results.map((moviePopular) {
             return MoviePopular.fromMap(moviePopular);
           }),
@@ -65,11 +65,10 @@ class MovieServices {
         final movieResponse = json.decode(response.body);
 
         // casting response to Map<string, dynamic>
-        final Map<String, dynamic> results =
-            (movieResponse as Map<String, dynamic>);
+        final results = (movieResponse as Map<String, dynamic>);
 
         // get Movie from Map<string, dynamic> results
-        final Movie movie = Movie.fromMap(results);
+        final movie = Movie.fromMap(results);
 
         // return Movie when request success
         onSuccess(movie);

@@ -31,7 +31,7 @@ class TvShowServices {
             (popularTvShowsResponse as Map<String, dynamic>)['results'];
 
         // get each tv show inside results
-        final List<TvShowPopular> tvShows = List<TvShowPopular>.from(
+        final tvShows = List<TvShowPopular>.from(
           results.map((tvShowPopular) {
             return TvShowPopular.fromMap(tvShowPopular);
           }),
@@ -65,11 +65,10 @@ class TvShowServices {
         final tvShowResponse = json.decode(response.body);
 
         // casting response to Map<string, dynamic>
-        final Map<String, dynamic> results =
-            (tvShowResponse as Map<String, dynamic>);
+        final results = (tvShowResponse as Map<String, dynamic>);
 
         // get TvShow from Map<string, dynamic> results
-        final TvShow tvShow = TvShow.fromMap(results);
+        final tvShow = TvShow.fromMap(results);
 
         // return TvShow when request success
         onSuccess(tvShow);

@@ -19,7 +19,6 @@ class FavoriteDatabase {
 
   // initialize, create, and open database
   Future<Database> _initDB(String file) async {
-    // Get a location using getDatabasesPath
     final databasesPath = await getDatabasesPath();
     final path = join(databasesPath, file);
 
@@ -36,12 +35,11 @@ class FavoriteDatabase {
         ${FavoriteFields.posterPath} TEXT,
         ${FavoriteFields.overview} TEXT,
         ${FavoriteFields.type} TEXT NOT NULL,
-        ${FavoriteFields.createdAt} TEXT NOT NULL,
-      )
+        ${FavoriteFields.createdAt} TEXT NOT NULL)
     ''');
   }
 
-  // create favorite item and insert it into database table
+  // create favorite record and insert it into database table
   Future<Favorite> createFavorite(Favorite favorite) async {
     final db = await instance.database;
 
@@ -54,11 +52,11 @@ class FavoriteDatabase {
     return favorite.copyWith(id: id);
   }
 
-  // read favorite items depending on its type
+  // read favorite records depending on its type
   Future<List<Favorite>> readFavorites(String type) async {
     final db = await instance.database;
 
-    final results = await db.query(
+    final maps = await db.query(
       favoriteTable,
       columns: [
         FavoriteFields.favoriteId,
@@ -69,12 +67,12 @@ class FavoriteDatabase {
       ],
       where: '${FavoriteFields.type} = ?',
       whereArgs: [type],
-      orderBy: '${FavoriteFields.createdAt} ASC',
+      orderBy: '${FavoriteFields.createdAt} DESC',
     );
 
-    if (results.isNotEmpty) {
+    if (maps.isNotEmpty) {
       final favorites = List<Favorite>.from(
-        results.map((favorite) {
+        maps.map((favorite) {
           return Favorite.fromMap(favorite);
         }),
       );
@@ -83,6 +81,19 @@ class FavoriteDatabase {
     }
 
     return <Favorite>[];
+  }
+
+  // delete favorite record depending on its id
+  Future<int> deleteFavorite(int id) async {
+    final db = await instance.database;
+
+    final count = await db.delete(
+      favoriteTable,
+      where: '${FavoriteFields.id} = ?',
+      whereArgs: [id],
+    );
+
+    return count;
   }
 
   // close database
