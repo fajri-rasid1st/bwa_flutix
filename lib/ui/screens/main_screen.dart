@@ -16,27 +16,19 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  final List<Widget> _pages = [
-    MoviePage(),
-    TvShowPage(),
-    FavoritePage(),
-  ];
-
-  ScrollController _scrollController;
-  Widget _appBar;
+  final List<Widget> _pages = [MoviePage(), TvShowPage(), FavoritePage()];
 
   int _currentIndex = 0;
   bool _isFabVisible = true;
-  bool _innerBoxIsScrolled = false;
+
+  ScrollController _scrollController;
+  Widget _appBar;
 
   @override
   void initState() {
     _scrollController = ScrollController();
 
-    _appBar = DefaultAppBar(
-      title: 'Movies',
-      innerBoxIsScrolled: _innerBoxIsScrolled,
-    );
+    _appBar = const DefaultAppBar(title: 'Movies');
 
     super.initState();
   }
@@ -55,10 +47,6 @@ class _MainScreenState extends State<MainScreen> {
         controller: _scrollController,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          setState(() {
-            _innerBoxIsScrolled = innerBoxIsScrolled;
-          });
-
           return <Widget>[_appBar];
         },
         body: NotificationListener<UserScrollNotification>(
@@ -125,22 +113,13 @@ class _MainScreenState extends State<MainScreen> {
 
               switch (index) {
                 case 0:
-                  _appBar = DefaultAppBar(
-                    title: 'Movies',
-                    innerBoxIsScrolled: _innerBoxIsScrolled,
-                  );
+                  _appBar = DefaultAppBar(title: 'Movies');
                   break;
                 case 1:
-                  _appBar = DefaultAppBar(
-                    title: 'TV Shows',
-                    innerBoxIsScrolled: _innerBoxIsScrolled,
-                  );
+                  _appBar = DefaultAppBar(title: 'TV Shows');
                   break;
                 case 2:
-                  _appBar = DefaultAppBar(
-                    title: 'Favorites',
-                    innerBoxIsScrolled: _innerBoxIsScrolled,
-                  );
+                  _appBar = DefaultAppBar(title: 'Favorites');
                   break;
               }
             });

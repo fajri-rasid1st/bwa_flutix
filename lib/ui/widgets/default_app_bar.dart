@@ -4,13 +4,8 @@ import 'package:flutter/material.dart';
 
 class DefaultAppBar extends StatelessWidget {
   final String title;
-  final bool innerBoxIsScrolled;
 
-  const DefaultAppBar({
-    Key key,
-    @required this.title,
-    @required this.innerBoxIsScrolled,
-  }) : super(key: key);
+  const DefaultAppBar({Key key, @required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +13,6 @@ class DefaultAppBar extends StatelessWidget {
       floating: true,
       snap: true,
       elevation: 2,
-      forceElevated: innerBoxIsScrolled,
       backgroundColor: backgroundColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
