@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:readmore/readmore.dart';
-import 'package:youtube_player_iframe/youtube_player_iframe.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
@@ -59,7 +59,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void dispose() {
     if (_youtubePlayerController != null) {
-      _youtubePlayerController.close();
+      _youtubePlayerController.dispose();
     }
 
     _scrollController.dispose();
@@ -538,11 +538,19 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       margin: const EdgeInsets.only(bottom: 50),
       width: double.infinity,
       height: 240,
-      child: YoutubePlayerIFrame(
+      child: YoutubePlayer(
         controller: _youtubePlayerController,
         aspectRatio: 16 / 9,
+        bottomActions: [
+          const SizedBox(width: 12.0),
+          CurrentPosition(),
+          const SizedBox(width: 8.0),
+          ProgressBar(isExpanded: true),
+          const SizedBox(width: 8.0),
+          RemainingDuration(),
+          const SizedBox(width: 12.0),
+        ],
       ),
-      color: Colors.black,
     );
   }
 
@@ -618,10 +626,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         if (_video != null) {
           _youtubePlayerController = YoutubePlayerController(
             initialVideoId: _video.videoId,
-            params: YoutubePlayerParams(
+            flags: YoutubePlayerFlags(
               autoPlay: false,
+              controlsVisibleAtStart: true,
+              disableDragSeek: true,
               enableCaption: false,
-              showVideoAnnotations: false,
+              loop: true,
             ),
           );
         }
