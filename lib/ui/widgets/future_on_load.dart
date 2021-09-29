@@ -1,6 +1,7 @@
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class FutureOnLoad extends StatelessWidget {
   final String text;
@@ -19,38 +20,39 @@ class FutureOnLoad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            isError
-                ? Icon(
-                    Icons.wifi_off,
-                    size: 75,
-                    color: secondaryColor,
-                  )
-                : SpinKitThreeBounce(
-                    size: 40,
-                    color: secondaryColor,
-                  ),
-            const SizedBox(height: 8),
-            Text(
-              text,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: secondaryColor,
+      body: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              isError
+                  ? SvgPicture.asset(
+                      'assets/svg/undraw_server_down_s4lk.svg',
+                      height: 150,
+                    )
+                  : SpinKitThreeBounce(
+                      size: 40,
+                      color: secondaryColor,
+                    ),
+              const SizedBox(height: 12),
+              Text(
+                text,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: secondaryColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            if (isError) ...[
-              ElevatedButton(
-                onPressed: onPressedErrorButton,
-                child: errorButtonChild,
-              )
-            ]
-          ],
+              const SizedBox(height: 8),
+              if (isError) ...[
+                ElevatedButton(
+                  onPressed: onPressedErrorButton,
+                  child: errorButtonChild,
+                )
+              ]
+            ],
+          ),
         ),
       ),
     );

@@ -83,6 +83,28 @@ class FavoriteDatabase {
     return <Favorite>[];
   }
 
+  // read favorite record depending on its favoriteId and type
+  Future<bool> isFavoriteExist(int favoriteId, String type) async {
+    final db = await instance.database;
+
+    final maps = await db.query(
+      favoriteTable,
+      columns: [
+        FavoriteFields.favoriteId,
+        FavoriteFields.title,
+        FavoriteFields.posterPath,
+        FavoriteFields.overview,
+        FavoriteFields.createdAt,
+      ],
+      where: '${FavoriteFields.favoriteId} = ? AND ${FavoriteFields.type} = ?',
+      whereArgs: [favoriteId, type],
+    );
+
+    if (maps.isNotEmpty) return true;
+
+    return false;
+  }
+
   // delete favorite record depending on its id
   Future<int> deleteFavorite(int id) async {
     final db = await instance.database;

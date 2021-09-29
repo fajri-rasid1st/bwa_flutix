@@ -1,3 +1,4 @@
+import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
@@ -48,6 +49,8 @@ class _MainScreenState extends State<MainScreen>
   void dispose() {
     _scrollController.dispose();
     _tabController.dispose();
+    
+    FavoriteDatabase.instance.close();
 
     super.dispose();
   }

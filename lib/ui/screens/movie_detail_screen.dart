@@ -8,6 +8,7 @@ import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
+import 'package:cick_movie_app/ui/widgets/custom_divider.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -226,7 +227,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ],
               ),
               // Divider
-              Utils.buildDivider(),
+              CustomDivider(),
               // Movie Casts
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +329,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ],
               ),
               // Divider
-              Utils.buildDivider(),
+              CustomDivider(),
               // Movie Overview
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -641,4 +642,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       });
     });
   }
+
+  
 }
