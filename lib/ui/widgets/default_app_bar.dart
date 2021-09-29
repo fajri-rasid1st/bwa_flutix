@@ -12,7 +12,6 @@ class DefaultAppBar extends StatelessWidget {
     return SliverAppBar(
       floating: true,
       snap: true,
-      elevation: 2,
       backgroundColor: backgroundColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,

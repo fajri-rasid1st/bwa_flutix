@@ -10,10 +10,15 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Text('Favorite'),
-      ),
+    return TabBarView(
+      children: <Widget>[
+        Center(
+          child: Text('Favorite Movie Tab'),
+        ),
+        Center(
+          child: Text('Favorite Tv Show Tab'),
+        ),
+      ],
     );
   }
 }

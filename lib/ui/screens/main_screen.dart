@@ -4,6 +4,7 @@ import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
 import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/default_app_bar.dart';
+import 'package:cick_movie_app/ui/widgets/favorite_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -16,18 +17,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  // initialize atribute
   final List<Widget> _pages = [MoviePage(), TvShowPage(), FavoritePage()];
-
   int _currentIndex = 0;
   bool _isFabVisible = true;
 
+  // declaration attribute
   ScrollController _scrollController;
   Widget _appBar;
 
   @override
   void initState() {
     _scrollController = ScrollController();
-
     _appBar = const DefaultAppBar(title: 'Movies');
 
     super.initState();
@@ -42,6 +43,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return _currentIndex != 2
+        ? buildMainScreen()
+        : DefaultTabController(length: 2, child: buildMainScreen());
+  }
+
+  Widget buildMainScreen() {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -66,7 +73,7 @@ class _MainScreenState extends State<MainScreen> {
           child: _pages[_currentIndex],
         ),
       ),
-      floatingActionButton: _isFabVisible
+      floatingActionButton: _isFabVisible && _currentIndex != 2
           ? FloatingActionButton(
               onPressed: () => Utils.scrollToTop(controller: _scrollController),
               child: Icon(Icons.arrow_upward_rounded),
@@ -119,7 +126,7 @@ class _MainScreenState extends State<MainScreen> {
                   _appBar = DefaultAppBar(title: 'TV Shows');
                   break;
                 case 2:
-                  _appBar = DefaultAppBar(title: 'Favorites');
+                  _appBar = FavoriteAppBar(title: 'Favorites');
                   break;
               }
             });
