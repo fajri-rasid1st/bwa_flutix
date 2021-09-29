@@ -16,20 +16,30 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   // initialize atribute
-  final List<Widget> _pages = [MoviePage(), TvShowPage(), FavoritePage()];
+  final List<Widget> _pages = [];
+
   int _currentIndex = 0;
   bool _isFabVisible = true;
 
   // declaration attribute
   ScrollController _scrollController;
+  TabController _tabController;
   Widget _appBar;
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    _tabController = TabController(length: 2, vsync: this);
     _appBar = const DefaultAppBar(title: 'Movies');
+
+    _pages.addAll([
+      MoviePage(),
+      TvShowPage(),
+      FavoritePage(controller: _tabController),
+    ]);
 
     super.initState();
   }
@@ -37,18 +47,13 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _tabController.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return _currentIndex != 2
-        ? buildMainScreen()
-        : DefaultTabController(length: 2, child: buildMainScreen());
-  }
-
-  Widget buildMainScreen() {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -96,6 +101,7 @@ class _MainScreenState extends State<MainScreen> {
             opacity: 1,
             color: secondaryColor,
           ),
+          unselectedFontSize: 0, // handle bug when clicking bottom nav label
           type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -126,7 +132,10 @@ class _MainScreenState extends State<MainScreen> {
                   _appBar = DefaultAppBar(title: 'TV Shows');
                   break;
                 case 2:
-                  _appBar = FavoriteAppBar(title: 'Favorites');
+                  _appBar = FavoriteAppBar(
+                    title: 'Favorites',
+                    controller: _tabController,
+                  );
                   break;
               }
             });

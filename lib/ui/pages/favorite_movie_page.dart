@@ -1,3 +1,4 @@
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteMoviePage extends StatefulWidget {
@@ -12,7 +13,10 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Text('Favorite'),
+        child: Text(
+          'Favorite Movie Page',
+          style: appBarTitleTextStyle,
+        ),
       ),
     );
   }

@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 
 class FavoriteAppBar extends StatelessWidget {
   final String title;
+  final TabController controller;
 
-  const FavoriteAppBar({Key key, @required this.title}) : super(key: key);
+  const FavoriteAppBar({
+    Key key,
+    @required this.title,
+    @required this.controller,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,7 @@ class FavoriteAppBar extends StatelessWidget {
         ],
       ),
       bottom: TabBar(
+        controller: controller,
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorColor: primaryColor,
         labelColor: primaryColor,
