@@ -2,6 +2,7 @@ import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_empty.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
+import 'package:cick_movie_app/ui/widgets/list_items.dart';
 import 'package:flutter/material.dart';
 
 class FavoriteMoviePage extends StatefulWidget {
@@ -13,7 +14,7 @@ class FavoriteMoviePage extends StatefulWidget {
 
 class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   List<Favorite> _movieFavorites;
-  
+
   bool _isLoading = true;
 
   @override
@@ -31,7 +32,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
       if (_movieFavorites.isEmpty) {
         return FavoriteEmpty(text: 'Movie');
       } else {
-        return Text('Asiap');
+        return ListItems(items: _movieFavorites);
       }
     }
   }

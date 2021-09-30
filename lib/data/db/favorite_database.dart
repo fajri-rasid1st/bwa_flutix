@@ -46,7 +46,6 @@ class FavoriteDatabase {
     final id = await db.insert(
       favoriteTable,
       favorite.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
     return favorite.copyWith(id: id);
@@ -59,10 +58,12 @@ class FavoriteDatabase {
     final maps = await db.query(
       favoriteTable,
       columns: [
+        FavoriteFields.id,
         FavoriteFields.favoriteId,
         FavoriteFields.title,
         FavoriteFields.posterPath,
         FavoriteFields.overview,
+        FavoriteFields.type,
         FavoriteFields.createdAt,
       ],
       where: '${FavoriteFields.type} = ?',
@@ -84,18 +85,12 @@ class FavoriteDatabase {
   }
 
   // read favorite record depending on its favoriteId and type
-  Future<bool> isFavoriteExist(int favoriteId, String type) async {
+  Future<bool> isFavoriteAlreadyExist(int favoriteId, String type) async {
     final db = await instance.database;
 
     final maps = await db.query(
       favoriteTable,
-      columns: [
-        FavoriteFields.favoriteId,
-        FavoriteFields.title,
-        FavoriteFields.posterPath,
-        FavoriteFields.overview,
-        FavoriteFields.createdAt,
-      ],
+      columns: [FavoriteFields.favoriteId, FavoriteFields.type],
       where: '${FavoriteFields.favoriteId} = ? AND ${FavoriteFields.type} = ?',
       whereArgs: [favoriteId, type],
     );
@@ -105,14 +100,14 @@ class FavoriteDatabase {
     return false;
   }
 
-  // delete favorite record depending on its id
-  Future<int> deleteFavorite(int id) async {
+  // delete favorite record depending on its favoriteId and type
+  Future<int> deleteFavorite(int favoriteId, String type) async {
     final db = await instance.database;
 
     final count = await db.delete(
       favoriteTable,
-      where: '${FavoriteFields.id} = ?',
-      whereArgs: [id],
+      where: '${FavoriteFields.favoriteId} = ? AND ${FavoriteFields.type} = ?',
+      whereArgs: [favoriteId, type],
     );
 
     return count;

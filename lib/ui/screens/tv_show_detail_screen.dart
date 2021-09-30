@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/cast.dart';
+import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
@@ -43,10 +45,17 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   YoutubePlayerController _youtubePlayerController;
   String _tvShowFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
+  // handle favorite behavior
+  Icon _favoriteIcon;
+  bool _isFavorite;
+
   @override
   void initState() {
     // first, get all tv show data from server
     getAllTvShowData();
+
+    // determine favorite icon action
+    setFavoriteIconAction();
 
     // initialize declaration attribute
     _scrollController = ScrollController();
@@ -93,7 +102,14 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         controller: _scrollController,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[CustomAppbar(title: tvShow.title)];
+          return <Widget>[
+            CustomAppbar(
+              title: tvShow.title,
+              favoriteIcon: _favoriteIcon,
+              onPressedFavoriteIcon:
+                  _isFavorite ? removeFromFavorite : addToFavorite,
+            )
+          ];
         },
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 24),
@@ -161,7 +177,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               ),
               // Tv Show Total Episodes and Seasons
               Container(
-                margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -383,8 +399,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       trimMode: TrimMode.Line,
                       trimCollapsedText: 'Show more',
                       trimExpandedText: 'Show less',
-                      moreStyle: readMoreTextStyle,
-                      lessStyle: readMoreTextStyle,
+                      moreStyle: tvShowTextStyle2,
+                      lessStyle: tvShowTextStyle2,
                     ),
                   ],
                 ),
@@ -509,7 +525,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const SizedBox(height: 46),
+                        const SizedBox(height: 48),
                         Text(
                           tvShow.title,
                           maxLines: 2,
@@ -611,7 +627,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           const SizedBox(
             width: 16,
             height: 16,
-            child: CircularProgressIndicator(
+            child: const CircularProgressIndicator(
               strokeWidth: 2,
               color: Colors.white,
             ),
@@ -663,5 +679,74 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  // function to determine favorite icon action
+  Future<void> setFavoriteIconAction() async {
+    final isExist = await FavoriteDatabase.instance
+        .isFavoriteAlreadyExist(widget.tvShowId, 'tv_show');
+
+    if (isExist) {
+      setState(() {
+        _favoriteIcon = Icon(
+          Icons.favorite,
+          color: Colors.red,
+        );
+        _isFavorite = true;
+      });
+    } else {
+      setState(() {
+        _favoriteIcon = Icon(
+          Icons.favorite_outline,
+          color: defaultTextColor,
+        );
+        _isFavorite = false;
+      });
+    }
+  }
+
+  // function to add tv show to favorite
+  Future<void> addToFavorite() async {
+    final favorite = Favorite(
+      favoriteId: widget.tvShowId,
+      title: _tvShow.title,
+      posterPath: _tvShow.posterPath,
+      overview: _tvShow.overview,
+      type: 'tv_show',
+      createdAt: DateTime.now(),
+    );
+
+    await FavoriteDatabase.instance.createFavorite(favorite);
+
+    setState(() {
+      _favoriteIcon = Icon(
+        Icons.favorite,
+        color: Colors.red,
+      );
+      _isFavorite = true;
+    });
+
+    Utils.showSnackBarMessage(
+      context: context,
+      text: 'Successfully added Tv Show to favorite.',
+    );
+  }
+
+  // function to remove tv show from favorite
+  Future<void> removeFromFavorite() async {
+    await FavoriteDatabase.instance.deleteFavorite(widget.tvShowId, 'tv_show');
+
+    setState(() {
+      _favoriteIcon = Icon(
+        Icons.favorite_outline,
+        color: defaultTextColor,
+      );
+      _isFavorite = false;
+    });
+
+    Utils.showSnackBarMessage(
+      context: context,
+      text: 'Successfully removed Tv Show from favorite.',
+    );
   }
 }

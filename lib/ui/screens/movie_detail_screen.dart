@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
+import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/cast.dart';
+import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
@@ -43,10 +45,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   YoutubePlayerController _youtubePlayerController;
   String _movieFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
+  // handle favorite behavior
+  Icon _favoriteIcon;
+  bool _isFavorite;
+
   @override
   void initState() {
     // first, get all movie data from server
     getAllMovieData();
+
+    // determine favorite icon action
+    setFavoriteIconAction();
 
     // initialize declaration attribute
     _scrollController = ScrollController();
@@ -93,7 +102,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         controller: _scrollController,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[CustomAppbar(title: movie.title)];
+          return <Widget>[
+            CustomAppbar(
+              title: movie.title,
+              favoriteIcon: _favoriteIcon,
+              onPressedFavoriteIcon:
+                  _isFavorite ? removeFromFavorite : addToFavorite,
+            )
+          ];
         },
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 24),
@@ -329,8 +345,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       trimMode: TrimMode.Line,
                       trimCollapsedText: 'Show more',
                       trimExpandedText: 'Show less',
-                      moreStyle: readMoreTextStyle,
-                      lessStyle: readMoreTextStyle,
+                      moreStyle: tvShowTextStyle2,
+                      lessStyle: tvShowTextStyle2,
                     ),
                   ],
                 ),
@@ -455,7 +471,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const SizedBox(height: 46),
+                        const SizedBox(height: 48),
                         Text(
                           movie.title,
                           maxLines: 2,
@@ -557,7 +573,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           const SizedBox(
             width: 16,
             height: 16,
-            child: CircularProgressIndicator(
+            child: const CircularProgressIndicator(
               strokeWidth: 2,
               color: Colors.white,
             ),
@@ -609,5 +625,74 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  // function to determine favorite icon action
+  Future<void> setFavoriteIconAction() async {
+    final isExist = await FavoriteDatabase.instance
+        .isFavoriteAlreadyExist(widget.movieId, 'movie');
+
+    if (isExist) {
+      setState(() {
+        _favoriteIcon = Icon(
+          Icons.favorite,
+          color: Colors.red,
+        );
+        _isFavorite = true;
+      });
+    } else {
+      setState(() {
+        _favoriteIcon = Icon(
+          Icons.favorite_outline,
+          color: defaultTextColor,
+        );
+        _isFavorite = false;
+      });
+    }
+  }
+
+  // function to add movie to favorite
+  Future<void> addToFavorite() async {
+    final favorite = Favorite(
+      favoriteId: widget.movieId,
+      title: _movie.title,
+      posterPath: _movie.posterPath,
+      overview: _movie.overview,
+      type: 'movie',
+      createdAt: DateTime.now(),
+    );
+
+    await FavoriteDatabase.instance.createFavorite(favorite);
+
+    setState(() {
+      _favoriteIcon = Icon(
+        Icons.favorite,
+        color: Colors.red,
+      );
+      _isFavorite = true;
+    });
+
+    Utils.showSnackBarMessage(
+      context: context,
+      text: 'Successfully added Movie to favorite.',
+    );
+  }
+
+  // function to remove movie from favorite
+  Future<void> removeFromFavorite() async {
+    await FavoriteDatabase.instance.deleteFavorite(widget.movieId, 'movie');
+
+    setState(() {
+      _favoriteIcon = Icon(
+        Icons.favorite_outline,
+        color: defaultTextColor,
+      );
+      _isFavorite = false;
+    });
+
+    Utils.showSnackBarMessage(
+      context: context,
+      text: 'Successfully removed Movie from favorite.',
+    );
   }
 }

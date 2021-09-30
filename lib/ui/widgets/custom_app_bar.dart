@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 
 class CustomAppbar extends StatelessWidget {
   final String title;
+  final Icon favoriteIcon;
+  final Future<void> Function() onPressedFavoriteIcon;
 
-  const CustomAppbar({Key key, @required this.title}) : super(key: key);
+  const CustomAppbar({
+    Key key,
+    @required this.title,
+    @required this.favoriteIcon,
+    @required this.onPressedFavoriteIcon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +37,8 @@ class CustomAppbar extends StatelessWidget {
       ),
       actions: <Widget>[
         IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.favorite_outline,
-            color: defaultTextColor,
-          ),
+          onPressed: onPressedFavoriteIcon,
+          icon: favoriteIcon,
           tooltip: 'Favorite',
         ),
       ],

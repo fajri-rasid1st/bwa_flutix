@@ -44,13 +44,13 @@ class FavoriteAppBar extends StatelessWidget {
           Tab(
             child: Text(
               'Movies',
-              style: tabBarTextStyle,
+              style: titleTextStyle,
             ),
           ),
           Tab(
             child: Text(
               'Tv Shows',
-              style: tabBarTextStyle,
+              style: titleTextStyle,
             ),
           ),
         ],

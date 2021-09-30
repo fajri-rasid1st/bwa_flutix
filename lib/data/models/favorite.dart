@@ -22,7 +22,7 @@ class Favorite {
   DateTime createdAt;
 
   Favorite({
-    @required this.id,
+    this.id,
     @required this.favoriteId,
     @required this.title,
     @required this.posterPath,
@@ -75,5 +75,10 @@ class Favorite {
       type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Favorite(id: $id, favoriteId: $favoriteId, title: $title, posterPath: $posterPath, overview: $overview, type: $type, createdAt: $createdAt)';
   }
 }

@@ -19,9 +19,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-  // initialize atribute
+  // initialize final atribute
   final List<Widget> _pages = [];
 
+  // initialize atribute
   int _currentIndex = 0;
   bool _isFabVisible = true;
 
@@ -104,6 +105,7 @@ class _MainScreenState extends State<MainScreen>
             opacity: 1,
             color: secondaryColor,
           ),
+          selectedFontSize: 0, // handle bug when clicking bottom nav label
           unselectedFontSize: 0, // handle bug when clicking bottom nav label
           type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
