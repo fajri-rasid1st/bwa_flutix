@@ -105,11 +105,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 child: Text(
                   tvShow.title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: primaryTextColor,
-                  ),
+                  style: detailMainTitleTextStyle,
                 ),
               ),
               // Tv Show Runtime and Vote Average
@@ -128,7 +124,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '${tvShow.episodeRuntime} mins per episode',
-                          style: TextStyle(color: secondaryTextColor),
+                          style: secondaryTextStyle,
                         ),
                       ],
                     ),
@@ -148,7 +144,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '${tvShow.voteCount} votes',
-                          style: TextStyle(color: secondaryTextColor),
+                          style: secondaryTextStyle,
                         ),
                       ],
                     ),
@@ -174,17 +170,11 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       children: <Widget>[
                         Text(
                           '${tvShow.numberOfSeasons}',
-                          style: TextStyle(
-                            fontSize: 28,
-                            color: primaryTextColor,
-                          ),
+                          style: tvShowTextStyle1,
                         ),
                         Text(
                           'Total Seasons',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: primaryColor,
-                          ),
+                          style: tvShowTextStyle2,
                         ),
                       ],
                     ),
@@ -211,17 +201,11 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       children: <Widget>[
                         Text(
                           '${tvShow.numberOfEpisodes}',
-                          style: TextStyle(
-                            fontSize: 28,
-                            color: primaryTextColor,
-                          ),
+                          style: tvShowTextStyle1,
                         ),
                         Text(
                           'Total Episodes',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            color: primaryColor,
-                          ),
+                          style: tvShowTextStyle2,
                         ),
                       ],
                     ),
@@ -246,7 +230,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       const SizedBox(width: 4),
                       Text(
                         _buttonText,
-                        style: TextStyle(fontSize: 16),
+                        style: buttonTextStyle,
                       )
                     ],
                   ),
@@ -263,11 +247,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Genres',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                   ),
                   Container(
@@ -279,10 +259,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       itemBuilder: (context, index) {
                         final genres = tvShow.genres;
 
-                        return Chip(
-                          label: Text(genres[index].name),
-                          labelStyle: TextStyle(color: primaryTextColor),
-                        );
+                        return Chip(label: Text(genres[index].name));
                       },
                       itemCount: tvShow.genres.length,
                       separatorBuilder: (context, index) {
@@ -302,11 +279,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Casts',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -370,17 +343,14 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                                       _casts[index].name,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: appBarTitleTextStyle,
+                                      style: cardTitleTextStyle,
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       _casts[index].character,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: secondaryTextColor,
-                                      ),
+                                      style: cardSubTitleTextStyle,
                                     ),
                                   ],
                                 ),
@@ -404,11 +374,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                   children: <Widget>[
                     Text(
                       'Overview',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                     const SizedBox(height: 4),
                     ReadMoreText(
@@ -417,14 +383,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       trimMode: TrimMode.Line,
                       trimCollapsedText: 'Show more',
                       trimExpandedText: 'Show less',
-                      moreStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
-                      lessStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      moreStyle: readMoreTextStyle,
+                      lessStyle: readMoreTextStyle,
                     ),
                   ],
                 ),
@@ -505,14 +465,14 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
             left: 0,
             right: 0,
             child: Container(
-              margin: const EdgeInsets.only(left: 12, right: 16),
+              margin: const EdgeInsets.only(left: 14, right: 16),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
                     flex: 4,
                     child: Card(
-                      elevation: 4,
+                      elevation: 2,
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -554,16 +514,12 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                           tvShow.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: backgroundColor,
-                          ),
+                          style: detailTitleTextStyle,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           tvShow.firstandLastAirDateParse,
-                          style: TextStyle(color: backgroundColor),
+                          style: backgroundTextStyle,
                         ),
                         const SizedBox(height: 4),
                         Row(
@@ -583,7 +539,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                             const SizedBox(width: 4),
                             Text(
                               tvShow.voteAverage.toString(),
-                              style: TextStyle(color: backgroundColor),
+                              style: backgroundTextStyle,
                             ),
                           ],
                         ),

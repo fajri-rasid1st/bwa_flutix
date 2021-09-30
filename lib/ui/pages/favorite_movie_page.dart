@@ -13,7 +13,7 @@ class FavoriteMoviePage extends StatefulWidget {
 
 class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   List<Favorite> _movieFavorites;
-
+  
   bool _isLoading = true;
 
   @override

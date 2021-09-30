@@ -8,3 +8,4 @@ Color primaryTextColor = const Color(0XFF240046);
 Color secondaryTextColor = Colors.grey[600];
 Color dividerColor = Colors.grey[200];
 Color backgroundColor = Colors.grey[50];
+Color defaultTextColor = Colors.black;

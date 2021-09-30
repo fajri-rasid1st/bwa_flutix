@@ -45,9 +45,9 @@ class GridItems extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Card(
+                  margin: const EdgeInsets.only(bottom: 8),
                   elevation: 2,
                   clipBehavior: Clip.antiAlias,
-                  margin: const EdgeInsets.only(bottom: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -56,8 +56,8 @@ class GridItems extends StatelessWidget {
                       CachedNetworkImage(
                         imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
                         fit: BoxFit.cover,
-                        height: 240,
                         width: double.infinity,
+                        height: 240,
                         fadeInDuration: const Duration(milliseconds: 500),
                         fadeOutDuration: const Duration(milliseconds: 500),
                         placeholder: (context, url) {
@@ -115,7 +115,7 @@ class GridItems extends StatelessWidget {
                 ),
                 Text(
                   item.releaseDateParse,
-                  style: subtitleTextStyle,
+                  style: subTitleTextStyle,
                 ),
               ],
             ),

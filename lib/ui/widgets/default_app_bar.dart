@@ -33,7 +33,7 @@ class DefaultAppBar extends StatelessWidget {
           onPressed: () {},
           icon: Icon(
             Icons.search,
-            color: primaryTextColor,
+            color: defaultTextColor,
           ),
           tooltip: 'Search',
         ),

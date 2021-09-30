@@ -105,11 +105,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                 child: Text(
                   movie.title,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: primaryTextColor,
-                  ),
+                  style: detailMainTitleTextStyle,
                 ),
               ),
               // Movie Runtime and Vote Average
@@ -128,7 +124,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '${movie.runtime} mins',
-                          style: TextStyle(color: secondaryTextColor),
+                          style: secondaryTextStyle,
                         ),
                       ],
                     ),
@@ -148,7 +144,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         const SizedBox(width: 4),
                         Text(
                           '${movie.voteCount} votes',
-                          style: TextStyle(color: secondaryTextColor),
+                          style: secondaryTextStyle,
                         ),
                       ],
                     ),
@@ -180,7 +176,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       const SizedBox(width: 4),
                       Text(
                         _buttonText,
-                        style: TextStyle(fontSize: 16),
+                        style: buttonTextStyle,
                       )
                     ],
                   ),
@@ -197,11 +193,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Genres',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                   ),
                   Container(
@@ -213,10 +205,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       itemBuilder: (context, index) {
                         final genres = movie.genres;
 
-                        return Chip(
-                          label: Text(genres[index].name),
-                          labelStyle: TextStyle(color: primaryTextColor),
-                        );
+                        return Chip(label: Text(genres[index].name));
                       },
                       itemCount: movie.genres.length,
                       separatorBuilder: (context, index) {
@@ -236,11 +225,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Casts',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -304,17 +289,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       _casts[index].name,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
-                                      style: appBarTitleTextStyle,
+                                      style: cardTitleTextStyle,
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
                                       _casts[index].character,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: secondaryTextColor,
-                                      ),
+                                      style: cardSubTitleTextStyle,
                                     ),
                                   ],
                                 ),
@@ -338,11 +320,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   children: <Widget>[
                     Text(
                       'Overview',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      style: detailTextStyle,
                     ),
                     const SizedBox(height: 4),
                     ReadMoreText(
@@ -351,14 +329,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       trimMode: TrimMode.Line,
                       trimCollapsedText: 'Show more',
                       trimExpandedText: 'Show less',
-                      moreStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
-                      lessStyle: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: primaryColor,
-                      ),
+                      moreStyle: readMoreTextStyle,
+                      lessStyle: readMoreTextStyle,
                     ),
                   ],
                 ),
@@ -439,14 +411,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             left: 0,
             right: 0,
             child: Container(
-              margin: const EdgeInsets.only(left: 12, right: 16),
+              margin: const EdgeInsets.only(left: 14, right: 16),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
                     flex: 4,
                     child: Card(
-                      elevation: 4,
+                      elevation: 2,
                       clipBehavior: Clip.antiAlias,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -488,16 +460,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           movie.title,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            color: backgroundColor,
-                          ),
+                          style: detailTitleTextStyle,
                         ),
                         const SizedBox(height: 2),
                         Text(
                           movie.releaseDateParse,
-                          style: TextStyle(color: backgroundColor),
+                          style: backgroundTextStyle,
                         ),
                         const SizedBox(height: 4),
                         Row(
@@ -517,7 +485,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             const SizedBox(width: 4),
                             Text(
                               movie.voteAverage.toString(),
-                              style: TextStyle(color: backgroundColor),
+                              style: backgroundTextStyle,
                             ),
                           ],
                         ),
@@ -642,6 +610,4 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       });
     });
   }
-
-  
 }

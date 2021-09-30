@@ -1,4 +1,5 @@
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -39,10 +40,7 @@ class FutureOnLoad extends StatelessWidget {
               Text(
                 text,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: secondaryColor,
-                ),
+                style: errorTextStyle,
               ),
               const SizedBox(height: 8),
               if (isError) ...[

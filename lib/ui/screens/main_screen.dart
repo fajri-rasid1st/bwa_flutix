@@ -49,7 +49,7 @@ class _MainScreenState extends State<MainScreen>
   void dispose() {
     _scrollController.dispose();
     _tabController.dispose();
-    
+
     FavoriteDatabase.instance.close();
 
     super.dispose();
@@ -86,7 +86,7 @@ class _MainScreenState extends State<MainScreen>
               onPressed: () => Utils.scrollToTop(controller: _scrollController),
               child: Icon(Icons.arrow_upward_rounded),
               foregroundColor: accentColor,
-              backgroundColor: primaryTextColor.withOpacity(0.75),
+              backgroundColor: primaryTextColor,
               tooltip: 'Go to top',
             )
           : null,

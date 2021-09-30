@@ -1,4 +1,4 @@
-import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -26,17 +26,13 @@ class FavoriteEmpty extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: primaryTextColor,
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 'Press the heart icon on $text detail to add a list of favorite $text.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: secondaryColor,
-                ),
+                style: errorTextStyle,
               ),
             ],
           ),

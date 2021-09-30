@@ -24,7 +24,7 @@ class CustomAppbar extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
         icon: Icon(
           Icons.chevron_left,
-          color: primaryTextColor,
+          color: defaultTextColor,
         ),
         tooltip: 'Back',
       ),
@@ -33,7 +33,7 @@ class CustomAppbar extends StatelessWidget {
           onPressed: () {},
           icon: Icon(
             Icons.favorite_outline,
-            color: primaryTextColor,
+            color: defaultTextColor,
           ),
           tooltip: 'Favorite',
         ),
@@ -58,10 +58,7 @@ class CustomBottomAppBar extends StatelessWidget
           height: 40,
           child: Text(
             'Detail',
-            style: TextStyle(
-              fontSize: 30,
-              color: primaryTextColor,
-            ),
+            style: TextStyle(fontSize: 30),
           ),
           decoration: BoxDecoration(
             border: Border(
