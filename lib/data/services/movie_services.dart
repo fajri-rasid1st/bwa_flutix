@@ -73,7 +73,7 @@ class MovieServices {
         // return Movie when request success
         onSuccess(movie);
       } else {
-        onFailure('Request failed');
+        onFailure('Request failed.');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -104,13 +104,13 @@ class MovieServices {
 
         if (results.isEmpty) {
           // failure if results is empty
-          onFailure('This movie has no trailer');
+          onFailure('This movie has no trailer.');
         } else {
           // else, get video from results at index 0
           onSuccess(Video.fromMap(results[0]));
         }
       } else {
-        onFailure('Request failed');
+        onFailure('Request failed.');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -140,7 +140,7 @@ class MovieServices {
             (movieCastsResponse as Map<String, dynamic>)['cast'];
 
         if (results.isEmpty) {
-          onFailure('No credits data.');
+          onFailure('No credit(s) or cast(s) data.');
         } else {
           // initialize empty Cast list
           final List<Cast> casts = [];

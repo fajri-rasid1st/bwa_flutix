@@ -105,8 +105,8 @@ class _MainScreenState extends State<MainScreen>
             opacity: 1,
             color: secondaryColor,
           ),
-          selectedFontSize: 0, // handle bug when clicking bottom nav label
-          unselectedFontSize: 0, // handle bug when clicking bottom nav label
+          selectedFontSize: 0, // fix bug when clicking bottom nav label
+          unselectedFontSize: 0, // fix bug when clicking bottom nav label
           type: BottomNavigationBarType.fixed,
           items: <BottomNavigationBarItem>[
             BottomNavigationBarItem(

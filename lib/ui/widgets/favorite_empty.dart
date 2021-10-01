@@ -18,7 +18,7 @@ class FavoriteEmpty extends StatelessWidget {
             children: <Widget>[
               SvgPicture.asset(
                 'assets/svg/undraw_Taken_re_yn20.svg',
-                height: 160,
+                height: 120,
               ),
               const SizedBox(height: 12),
               Text(
@@ -32,7 +32,7 @@ class FavoriteEmpty extends StatelessWidget {
               Text(
                 'Press the heart icon on $text detail to add a list of favorite $text.',
                 textAlign: TextAlign.center,
-                style: errorTextStyle,
+                style: secondaryTextStyle,
               ),
             ],
           ),

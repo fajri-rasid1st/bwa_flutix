@@ -117,23 +117,25 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> loadPopularTvShows() async {
-    setState(() {
-      _errorButtonChild = Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: <Widget>[
-          const SizedBox(
-            width: 16,
-            height: 16,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.white,
+    if (_tvShows == null) {
+      setState(() {
+        _errorButtonChild = Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: <Widget>[
+            const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          const Text('Fetching data...'),
-        ],
-      );
-    });
+            const SizedBox(width: 8),
+            const Text('Fetching data...'),
+          ],
+        );
+      });
+    }
 
     await Future.delayed(Duration(milliseconds: 1500));
 
@@ -146,7 +148,10 @@ class _TvShowPageState extends State<TvShowPage> {
       },
     ).then((_) {
       setState(() {
-        _errorButtonChild = const Text('Try again');
+        if (_tvShows == null) {
+          _errorButtonChild = const Text('Try again');
+        }
+        
         _page = 2;
       });
     });

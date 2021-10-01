@@ -30,20 +30,20 @@ class FutureOnLoad extends StatelessWidget {
               isError
                   ? SvgPicture.asset(
                       'assets/svg/undraw_server_down_s4lk.svg',
-                      height: 150,
+                      height: 100,
                     )
                   : SpinKitThreeBounce(
                       size: 40,
                       color: secondaryColor,
                     ),
-              const SizedBox(height: 12),
-              Text(
-                text,
-                textAlign: TextAlign.center,
-                style: errorTextStyle,
-              ),
-              const SizedBox(height: 8),
               if (isError) ...[
+                const SizedBox(height: 12),
+                Text(
+                  text,
+                  textAlign: TextAlign.center,
+                  style: secondaryTextStyle,
+                ),
+                const SizedBox(height: 8),
                 ElevatedButton(
                   onPressed: onPressedErrorButton,
                   child: errorButtonChild,

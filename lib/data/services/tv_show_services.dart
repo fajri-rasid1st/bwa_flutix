@@ -73,7 +73,7 @@ class TvShowServices {
         // return TvShow when request success
         onSuccess(tvShow);
       } else {
-        onFailure('Request failed');
+        onFailure('Request failed.');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -104,13 +104,13 @@ class TvShowServices {
 
         if (results.isEmpty) {
           // failure if results is empty
-          onFailure('This tv show has no trailer');
+          onFailure('This tv show has no trailer.');
         } else {
           // else, get video from results at index 0
           onSuccess(Video.fromMap(results[0]));
         }
       } else {
-        onFailure('Request failed');
+        onFailure('Request failed.');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -140,7 +140,7 @@ class TvShowServices {
             (tvShowCastsResponse as Map<String, dynamic>)['cast'];
 
         if (results.isEmpty) {
-          onFailure('No credits data.');
+          onFailure('No credit(s) or cast(s) data.');
         } else {
           // initialize empty Cast list
           final List<Cast> casts = [];

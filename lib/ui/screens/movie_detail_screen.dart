@@ -634,18 +634,12 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     if (isExist) {
       setState(() {
-        _favoriteIcon = Icon(
-          Icons.favorite,
-          color: Colors.red,
-        );
+        _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
         _isFavorite = true;
       });
     } else {
       setState(() {
-        _favoriteIcon = Icon(
-          Icons.favorite_outline,
-          color: defaultTextColor,
-        );
+        _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
         _isFavorite = false;
       });
     }
@@ -665,16 +659,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     await FavoriteDatabase.instance.createFavorite(favorite);
 
     setState(() {
-      _favoriteIcon = Icon(
-        Icons.favorite,
-        color: Colors.red,
-      );
+      _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
       _isFavorite = true;
     });
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully added Movie to favorite.',
+      text: 'Successfully added movie to favorite.',
     );
   }
 
@@ -683,16 +674,13 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     await FavoriteDatabase.instance.deleteFavorite(widget.movieId, 'movie');
 
     setState(() {
-      _favoriteIcon = Icon(
-        Icons.favorite_outline,
-        color: defaultTextColor,
-      );
+      _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
       _isFavorite = false;
     });
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully removed Movie from favorite.',
+      text: 'Successfully removed movie from favorite.',
     );
   }
 }

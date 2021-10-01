@@ -52,8 +52,3 @@ TextStyle tvShowTextStyle2 = TextStyle(
   fontWeight: FontWeight.w700,
   color: primaryColor,
 );
-
-TextStyle errorTextStyle = TextStyle(
-  fontSize: 16,
-  color: secondaryColor,
-);

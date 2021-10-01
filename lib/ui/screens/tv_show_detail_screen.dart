@@ -728,7 +728,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully added Tv Show to favorite.',
+      text: 'Successfully added tv show to favorite.',
     );
   }
 
@@ -746,7 +746,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully removed Tv Show from favorite.',
+      text: 'Successfully removed tv show from favorite.',
     );
   }
 }
