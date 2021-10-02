@@ -644,6 +644,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         onSuccess: (tvShow) => _tvShow = tvShow,
         onFailure: (message) {
           _tvShowFailureMessage = message;
+          
           Utils.showSnackBarMessage(
             context: context,
             text: _tvShowFailureMessage,
@@ -688,18 +689,12 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     if (isExist) {
       setState(() {
-        _favoriteIcon = Icon(
-          Icons.favorite,
-          color: Colors.red,
-        );
+        _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
         _isFavorite = true;
       });
     } else {
       setState(() {
-        _favoriteIcon = Icon(
-          Icons.favorite_outline,
-          color: defaultTextColor,
-        );
+        _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
         _isFavorite = false;
       });
     }
@@ -719,10 +714,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     await FavoriteDatabase.instance.createFavorite(favorite);
 
     setState(() {
-      _favoriteIcon = Icon(
-        Icons.favorite,
-        color: Colors.red,
-      );
+      _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
       _isFavorite = true;
     });
 
@@ -737,10 +729,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     await FavoriteDatabase.instance.deleteFavorite(widget.tvShowId, 'tv_show');
 
     setState(() {
-      _favoriteIcon = Icon(
-        Icons.favorite_outline,
-        color: defaultTextColor,
-      );
+      _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
       _isFavorite = false;
     });
 

@@ -25,7 +25,12 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
 
   @override
   void initState() {
-    getTvShowFavorites();
+    getTvShowFavorites().then((favorites) {
+      setState(() {
+        _tvShowFavorites = favorites;
+        _isLoading = false;
+      });
+    });
 
     super.initState();
   }
@@ -41,12 +46,6 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
         return buildTvShowFavoriteList(_tvShowFavorites);
       }
     }
-  }
-
-  Future<void> getTvShowFavorites() async {
-    _tvShowFavorites = await FavoriteDatabase.instance.readFavorites('tv_show');
-
-    setState(() => _isLoading = false);
   }
 
   Widget buildTvShowFavoriteList(List<Favorite> tvShowFavorites) {
@@ -143,7 +142,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () async {
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -153,13 +152,9 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
                               );
                             },
                           ),
-                        ).then((_) async {
-                          final _newTvShowFavorites = await FavoriteDatabase
-                              .instance
-                              .readFavorites('tv_show');
-
-                          setState(() {
-                            _tvShowFavorites = _newTvShowFavorites;
+                        ).then((_) {
+                          getTvShowFavorites().then((favorites) {
+                            setState(() => _tvShowFavorites = favorites);
                           });
                         });
                       },
@@ -176,5 +171,9 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
       },
       itemCount: _tvShowFavorites.length,
     );
+  }
+
+  Future<List<Favorite>> getTvShowFavorites() async {
+    return await FavoriteDatabase.instance.readFavorites('tv_show');
   }
 }

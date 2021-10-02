@@ -6,6 +6,11 @@ import 'package:flutter/services.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemChrome.setPreferredOrientations(<DeviceOrientation>[
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   // change status bar color
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,

@@ -590,6 +590,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         onSuccess: (movie) => _movie = movie,
         onFailure: (message) {
           _movieFailureMessage = message;
+
           Utils.showSnackBarMessage(
             context: context,
             text: _movieFailureMessage,

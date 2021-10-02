@@ -29,18 +29,7 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   void initState() {
-    MovieServices.getPopularMovies(
-      onSuccess: (movies) {
-        _movies = movies;
-        _lastInsertedMovie = _movies[0];
-      },
-      onFailure: (message) => _failureMessage = message,
-    ).then((_) {
-      setState(() {
-        _isLoading = false;
-        _page++;
-      });
-    });
+    initPopularMovies();
 
     super.initState();
   }
@@ -64,23 +53,7 @@ class _MoviePageState extends State<MoviePage> {
 
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
-                setState(() => _isScrollPositionAtBottom = true);
-
-                MovieServices.getPopularMovies(
-                  page: _page,
-                  onSuccess: (movies) {
-                    if (_lastInsertedMovie.toString() != movies[0].toString()) {
-                      _movies.addAll(movies);
-                      _lastInsertedMovie = movies[0];
-                      _page++;
-                    }
-                  },
-                  onFailure: (_) {},
-                ).then((_) {
-                  setState(() {
-                    _isScrollPositionAtBottom = false;
-                  });
-                });
+                loadMorePopularMovies();
               }
             }
 
@@ -119,6 +92,43 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
+  Future<void> initPopularMovies() async {
+    MovieServices.getPopularMovies(
+      onSuccess: (movies) {
+        _movies = movies;
+        _lastInsertedMovie = _movies[0];
+      },
+      onFailure: (message) {
+        _failureMessage = message;
+      },
+    ).then((_) {
+      setState(() {
+        _isLoading = false;
+        _page++;
+      });
+    });
+  }
+
+  Future<void> loadMorePopularMovies() async {
+    setState(() => _isScrollPositionAtBottom = true);
+
+    MovieServices.getPopularMovies(
+      page: _page,
+      onSuccess: (movies) {
+        if (_lastInsertedMovie.toString() != movies[0].toString()) {
+          _movies.addAll(movies);
+
+          _lastInsertedMovie = movies[0];
+
+          _page++;
+        }
+      },
+      onFailure: (_) {},
+    ).then((_) {
+      setState(() => _isScrollPositionAtBottom = false);
+    });
+  }
+
   Future<void> refreshPopularMovies() async {
     if (_movies == null) {
       setState(() {
@@ -145,6 +155,7 @@ class _MoviePageState extends State<MoviePage> {
     MovieServices.getPopularMovies(
       onSuccess: (movies) {
         _movies = movies;
+        _lastInsertedMovie = _movies[0];
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);

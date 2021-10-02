@@ -25,7 +25,12 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
 
   @override
   void initState() {
-    getMovieFavorites();
+    getMovieFavorites().then((favorites) {
+      setState(() {
+        _movieFavorites = favorites;
+        _isLoading = false;
+      });
+    });
 
     super.initState();
   }
@@ -41,12 +46,6 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
         return buildMovieFavoriteList(_movieFavorites);
       }
     }
-  }
-
-  Future<void> getMovieFavorites() async {
-    _movieFavorites = await FavoriteDatabase.instance.readFavorites('movie');
-
-    setState(() => _isLoading = false);
   }
 
   Widget buildMovieFavoriteList(List<Favorite> movieFavorites) {
@@ -143,7 +142,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
-                      onTap: () async {
+                      onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -153,13 +152,9 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
                               );
                             },
                           ),
-                        ).then((_) async {
-                          final _newMovieFavorites = await FavoriteDatabase
-                              .instance
-                              .readFavorites('movie');
-
-                          setState(() {
-                            _movieFavorites = _newMovieFavorites;
+                        ).then((_) {
+                          getMovieFavorites().then((favorites) {
+                            setState(() => _movieFavorites = favorites);
                           });
                         });
                       },
@@ -176,5 +171,9 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
       },
       itemCount: _movieFavorites.length,
     );
+  }
+
+  Future<List<Favorite>> getMovieFavorites() async {
+    return await FavoriteDatabase.instance.readFavorites('movie');
   }
 }

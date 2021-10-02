@@ -29,18 +29,7 @@ class _TvShowPageState extends State<TvShowPage> {
 
   @override
   void initState() {
-    TvShowServices.getPopularTvShows(
-      onSuccess: (tvShow) {
-        _tvShows = tvShow;
-        _lastInsertedTvShow = _tvShows[0];
-      },
-      onFailure: (message) => _failureMessage = message,
-    ).then((_) {
-      setState(() {
-        _isLoading = false;
-        _page++;
-      });
-    });
+    initFavoriteTvShows();
 
     super.initState();
   }
@@ -64,24 +53,7 @@ class _TvShowPageState extends State<TvShowPage> {
 
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
-                setState(() => _isScrollPositionAtBottom = true);
-
-                TvShowServices.getPopularTvShows(
-                  page: _page,
-                  onSuccess: (tvShows) {
-                    if (_lastInsertedTvShow.toString() !=
-                        tvShows[0].toString()) {
-                      _tvShows.addAll(tvShows);
-                      _lastInsertedTvShow = tvShows[0];
-                      _page++;
-                    }
-                  },
-                  onFailure: (_) {},
-                ).then((_) {
-                  setState(() {
-                    _isScrollPositionAtBottom = false;
-                  });
-                });
+                loadMorePopularTvShows();
               }
             }
 
@@ -120,6 +92,43 @@ class _TvShowPageState extends State<TvShowPage> {
     }
   }
 
+  Future<void> initFavoriteTvShows() async {
+    TvShowServices.getPopularTvShows(
+      onSuccess: (tvShow) {
+        _tvShows = tvShow;
+        _lastInsertedTvShow = _tvShows[0];
+      },
+      onFailure: (message) {
+        _failureMessage = message;
+      },
+    ).then((_) {
+      setState(() {
+        _isLoading = false;
+        _page++;
+      });
+    });
+  }
+
+  Future<void> loadMorePopularTvShows() async {
+    setState(() => _isScrollPositionAtBottom = true);
+
+    TvShowServices.getPopularTvShows(
+      page: _page,
+      onSuccess: (tvShows) {
+        if (_lastInsertedTvShow.toString() != tvShows[0].toString()) {
+          _tvShows.addAll(tvShows);
+
+          _lastInsertedTvShow = tvShows[0];
+
+          _page++;
+        }
+      },
+      onFailure: (_) {},
+    ).then((_) {
+      setState(() => _isScrollPositionAtBottom = false);
+    });
+  }
+
   Future<void> refreshPopularTvShows() async {
     if (_tvShows == null) {
       setState(() {
@@ -146,6 +155,7 @@ class _TvShowPageState extends State<TvShowPage> {
     TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {
         _tvShows = tvShows;
+        _lastInsertedTvShow = _tvShows[0];
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);
