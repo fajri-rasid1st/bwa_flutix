@@ -16,10 +16,7 @@ class _FavoritePageState extends State<FavoritePage> {
   Widget build(BuildContext context) {
     return TabBarView(
       controller: widget.controller,
-      children: <Widget>[
-        FavoriteMoviePage(),
-        FavoriteTvShowPage(),
-      ],
+      children: <Widget>[FavoriteMoviePage(), FavoriteTvShowPage()],
     );
   }
 }

@@ -24,13 +24,16 @@ class _MoviePageState extends State<MoviePage> {
 
   // this attribute will be filled in the future
   List<MoviePopular> _movies;
+  MoviePopular _lastInsertedMovie;
   String _failureMessage;
-  bool _hasError;
 
   @override
   void initState() {
     MovieServices.getPopularMovies(
-      onSuccess: (movies) => _movies = movies,
+      onSuccess: (movies) {
+        _movies = movies;
+        _lastInsertedMovie = _movies[0];
+      },
       onFailure: (message) => _failureMessage = message,
     ).then((_) {
       setState(() {
@@ -45,13 +48,13 @@ class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Fetching data...');
+      return const FutureOnLoad();
     } else {
       if (_movies == null) {
         return FutureOnLoad(
           text: _failureMessage,
           isError: true,
-          onPressedErrorButton: loadPopularMovies,
+          onPressedErrorButton: refreshPopularMovies,
           errorButtonChild: _errorButtonChild,
         );
       } else {
@@ -66,15 +69,15 @@ class _MoviePageState extends State<MoviePage> {
                 MovieServices.getPopularMovies(
                   page: _page,
                   onSuccess: (movies) {
-                    _movies.addAll(movies);
-                    _hasError = false;
+                    if (_lastInsertedMovie.toString() != movies[0].toString()) {
+                      _movies.addAll(movies);
+                      _lastInsertedMovie = movies[0];
+                      _page++;
+                    }
                   },
-                  onFailure: (_) {
-                    _hasError = true;
-                  },
+                  onFailure: (_) {},
                 ).then((_) {
                   setState(() {
-                    if (_hasError == false) _page++;
                     _isScrollPositionAtBottom = false;
                   });
                 });
@@ -89,7 +92,7 @@ class _MoviePageState extends State<MoviePage> {
                 children: <Widget>[
                   PullToRefresh(
                     child: GridItems(items: _movies),
-                    onRefresh: loadPopularMovies,
+                    onRefresh: refreshPopularMovies,
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -116,7 +119,7 @@ class _MoviePageState extends State<MoviePage> {
     }
   }
 
-  Future<void> loadPopularMovies() async {
+  Future<void> refreshPopularMovies() async {
     if (_movies == null) {
       setState(() {
         _errorButtonChild = Wrap(

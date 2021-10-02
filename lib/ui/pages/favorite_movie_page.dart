@@ -33,12 +33,12 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Please wait...');
+      return const FutureOnLoad();
     } else {
       if (_movieFavorites.isEmpty) {
         return FavoriteEmpty(text: 'Movie');
       } else {
-        return buildMovieFavoriteLists(_movieFavorites);
+        return buildMovieFavoriteList(_movieFavorites);
       }
     }
   }
@@ -49,7 +49,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
     setState(() => _isLoading = false);
   }
 
-  Widget buildMovieFavoriteLists(List<Favorite> movieFavorites) {
+  Widget buildMovieFavoriteList(List<Favorite> movieFavorites) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       shrinkWrap: true,

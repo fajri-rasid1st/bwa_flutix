@@ -33,12 +33,12 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Please wait...');
+      return const FutureOnLoad();
     } else {
       if (_tvShowFavorites.isEmpty) {
         return FavoriteEmpty(text: 'Tv Show');
       } else {
-        return buildTvShowFavoriteLists(_tvShowFavorites);
+        return buildTvShowFavoriteList(_tvShowFavorites);
       }
     }
   }
@@ -49,7 +49,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     setState(() => _isLoading = false);
   }
 
-  Widget buildTvShowFavoriteLists(List<Favorite> tvShowFavorites) {
+  Widget buildTvShowFavoriteList(List<Favorite> tvShowFavorites) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       shrinkWrap: true,

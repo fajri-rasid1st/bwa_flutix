@@ -12,7 +12,7 @@ class FutureOnLoad extends StatelessWidget {
 
   const FutureOnLoad({
     Key key,
-    @required this.text,
+    this.text,
     this.isError = false,
     this.onPressedErrorButton,
     this.errorButtonChild,

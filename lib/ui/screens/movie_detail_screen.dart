@@ -80,7 +80,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Fetching data...');
+      return const FutureOnLoad();
     } else {
       if (_movie == null) {
         return FutureOnLoad(

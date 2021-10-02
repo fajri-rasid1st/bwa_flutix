@@ -24,13 +24,16 @@ class _TvShowPageState extends State<TvShowPage> {
 
   // this attribute will be filled in the future
   List<TvShowPopular> _tvShows;
+  TvShowPopular _lastInsertedTvShow;
   String _failureMessage;
-  bool _hasError;
 
   @override
   void initState() {
     TvShowServices.getPopularTvShows(
-      onSuccess: (tvShow) => _tvShows = tvShow,
+      onSuccess: (tvShow) {
+        _tvShows = tvShow;
+        _lastInsertedTvShow = _tvShows[0];
+      },
       onFailure: (message) => _failureMessage = message,
     ).then((_) {
       setState(() {
@@ -45,13 +48,13 @@ class _TvShowPageState extends State<TvShowPage> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Fetching data...');
+      return const FutureOnLoad();
     } else {
       if (_tvShows == null) {
         return FutureOnLoad(
           text: _failureMessage,
           isError: true,
-          onPressedErrorButton: loadPopularTvShows,
+          onPressedErrorButton: refreshPopularTvShows,
           errorButtonChild: _errorButtonChild,
         );
       } else {
@@ -66,15 +69,16 @@ class _TvShowPageState extends State<TvShowPage> {
                 TvShowServices.getPopularTvShows(
                   page: _page,
                   onSuccess: (tvShows) {
-                    _tvShows.addAll(tvShows);
-                    _hasError = false;
+                    if (_lastInsertedTvShow.toString() !=
+                        tvShows[0].toString()) {
+                      _tvShows.addAll(tvShows);
+                      _lastInsertedTvShow = tvShows[0];
+                      _page++;
+                    }
                   },
-                  onFailure: (_) {
-                    _hasError = true;
-                  },
+                  onFailure: (_) {},
                 ).then((_) {
                   setState(() {
-                    if (_hasError == false) _page++;
                     _isScrollPositionAtBottom = false;
                   });
                 });
@@ -89,7 +93,7 @@ class _TvShowPageState extends State<TvShowPage> {
                 children: <Widget>[
                   PullToRefresh(
                     child: GridItems(items: _tvShows),
-                    onRefresh: loadPopularTvShows,
+                    onRefresh: refreshPopularTvShows,
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -116,7 +120,7 @@ class _TvShowPageState extends State<TvShowPage> {
     }
   }
 
-  Future<void> loadPopularTvShows() async {
+  Future<void> refreshPopularTvShows() async {
     if (_tvShows == null) {
       setState(() {
         _errorButtonChild = Wrap(
@@ -151,7 +155,7 @@ class _TvShowPageState extends State<TvShowPage> {
         if (_tvShows == null) {
           _errorButtonChild = const Text('Try again');
         }
-        
+
         _page = 2;
       });
     });

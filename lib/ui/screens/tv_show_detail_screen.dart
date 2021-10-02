@@ -80,7 +80,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const FutureOnLoad(text: 'Fetching data...');
+      return const FutureOnLoad();
     } else {
       if (_tvShow == null) {
         return FutureOnLoad(
