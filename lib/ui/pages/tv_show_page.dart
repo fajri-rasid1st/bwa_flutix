@@ -3,10 +3,11 @@ import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/screens/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:cick_movie_app/ui/widgets/grid_items.dart';
+import 'package:cick_movie_app/ui/widgets/grid_item.dart';
 import 'package:cick_movie_app/ui/widgets/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TvShowPage extends StatefulWidget {
   const TvShowPage({Key key}) : super(key: key);
@@ -64,8 +65,19 @@ class _TvShowPageState extends State<TvShowPage> {
               return Stack(
                 children: <Widget>[
                   PullToRefresh(
-                    child: GridItems(items: _tvShows),
                     onRefresh: refreshPopularTvShows,
+                    child: StaggeredGridView.extentBuilder(
+                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
+                      shrinkWrap: true,
+                      maxCrossAxisExtent: 200,
+                      staggeredTileBuilder: (index) {
+                        return const StaggeredTile.extent(1, 320);
+                      },
+                      itemBuilder: (context, index) {
+                        return GridItem(item: _tvShows[index]);
+                      },
+                      itemCount: _tvShows.length,
+                    ),
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(

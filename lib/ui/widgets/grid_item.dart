@@ -7,26 +7,14 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class GridItems extends StatelessWidget {
-  final List<dynamic> items;
+class GridItem extends StatelessWidget {
+  final dynamic item;
 
-  const GridItems({Key key, @required this.items}) : super(key: key);
+  const GridItem({Key key, @required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StaggeredGridView.extentBuilder(
-      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-      shrinkWrap: true,
-      maxCrossAxisExtent: 200,
-      staggeredTileBuilder: (index) => const StaggeredTile.extent(1, 320),
-      itemBuilder: (context, index) => buildCard(context, items[index]),
-      itemCount: items.length,
-    );
-  }
-
-  Widget buildCard(BuildContext context, dynamic item) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: GestureDetector(
