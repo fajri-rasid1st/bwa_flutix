@@ -5,7 +5,7 @@ class Utils {
   static void showSnackBarMessage({
     @required BuildContext context,
     @required String text,
-    int duration = 2500,
+    int duration = 2000,
     bool showAction = false,
   }) {
     SnackBar snackBar = SnackBar(

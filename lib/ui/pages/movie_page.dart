@@ -52,7 +52,7 @@ class _MoviePageState extends State<MoviePage> {
       } else {
         return NotificationListener<ScrollEndNotification>(
           onNotification: (scrollEnd) {
-            var metrics = scrollEnd.metrics;
+            final metrics = scrollEnd.metrics;
 
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {

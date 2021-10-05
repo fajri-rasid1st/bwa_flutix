@@ -2,13 +2,14 @@ import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
-import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
+import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/default_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -25,31 +26,34 @@ class _MainScreenState extends State<MainScreen>
   // initialize atribute
   int _currentIndex = 0;
   bool _isFabVisible = true;
+  bool _isSearching = false;
 
   // declaration attribute
-  ScrollController _scrollController;
+  String _title;
   TabController _tabController;
-  Widget _appBar;
+  ScrollController _scrollController = ScrollController();
+  TextEditingController _textEditingController = TextEditingController();
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    _title = 'Movies';
     _tabController = TabController(length: 2, vsync: this);
-    _appBar = const DefaultAppBar(title: 'Movies');
 
     _pages.addAll([
       MoviePage(),
       TvShowPage(),
       FavoritePage(controller: _tabController),
     ]);
+    _textEditingController.addListener(() => setState(() {}));
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
     _tabController.dispose();
+    _scrollController.dispose();
+    _textEditingController.dispose();
 
     FavoriteDatabase.instance.close();
 
@@ -63,32 +67,47 @@ class _MainScreenState extends State<MainScreen>
 
   Widget buildMainScreen() {
     return Scaffold(
-      body: NestedScrollView(
-        controller: _scrollController,
-        floatHeaderSlivers: true,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return <Widget>[_appBar];
-        },
-        body: NotificationListener<UserScrollNotification>(
-          onNotification: (userScroll) {
-            if (userScroll.direction == ScrollDirection.forward) {
-              if (!_isFabVisible) {
-                setState(() => _isFabVisible = true);
-              }
-            } else if (userScroll.direction == ScrollDirection.reverse) {
-              if (_isFabVisible) {
-                setState(() => _isFabVisible = false);
-              }
-            }
-
-            return true;
+      body: SafeArea(
+        child: NestedScrollView(
+          controller: _scrollController,
+          floatHeaderSlivers: true,
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return <Widget>[
+              if (_currentIndex != 2) ...[
+                DefaultAppBar(
+                  title: _isSearching ? buildSearchField() : buildTitle(_title),
+                  leading: _isSearching ? buildLeading() : null,
+                  actions: _isSearching ? null : buildActions(),
+                )
+              ] else ...[
+                FavoriteAppBar(
+                  title: _title,
+                  controller: _tabController,
+                )
+              ]
+            ];
           },
-          child: _pages[_currentIndex],
+          body: NotificationListener<UserScrollNotification>(
+            onNotification: (userScroll) {
+              if (userScroll.direction == ScrollDirection.forward) {
+                if (!_isFabVisible) {
+                  setState(() => _isFabVisible = true);
+                }
+              } else if (userScroll.direction == ScrollDirection.reverse) {
+                if (_isFabVisible) {
+                  setState(() => _isFabVisible = false);
+                }
+              }
+
+              return true;
+            },
+            child: _pages[_currentIndex],
+          ),
         ),
       ),
       floatingActionButton: _isFabVisible && _currentIndex != 2
           ? FloatingActionButton(
-              onPressed: () => Utils.scrollToTop(controller: _scrollController),
+              onPressed: () => _scrollController.jumpTo(0),
               child: Icon(Icons.arrow_upward_rounded),
               foregroundColor: accentColor,
               backgroundColor: primaryTextColor,
@@ -132,19 +151,21 @@ class _MainScreenState extends State<MainScreen>
           onTap: (index) {
             setState(() {
               _currentIndex = index;
+              _isSearching = false;
 
               switch (index) {
                 case 0:
-                  _appBar = DefaultAppBar(title: 'Movies');
+                  _title = 'Movies';
+
                   break;
                 case 1:
-                  _appBar = DefaultAppBar(title: 'TV Shows');
+                  _title = 'Tv Shows';
+
                   break;
                 case 2:
-                  _appBar = FavoriteAppBar(
-                    title: 'Favorites',
-                    controller: _tabController,
-                  );
+                  _tabController.index = 0;
+                  _title = 'Favorites';
+
                   break;
               }
             });
@@ -152,5 +173,77 @@ class _MainScreenState extends State<MainScreen>
         ),
       ),
     );
+  }
+
+  Widget buildTitle(String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Image.asset(
+          'assets/images/cickmovie_sm.png',
+          width: 32,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          title,
+          style: appBarTitleTextStyle,
+        )
+      ],
+    );
+  }
+
+  Widget buildSearchField() {
+    return Container(
+      height: 40,
+      child: TextField(
+        controller: _textEditingController,
+        autofocus: true,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          hintText: "Search...",
+          filled: true,
+          fillColor: dividerColor,
+          suffixIcon: _textEditingController.text.isEmpty
+              ? Container(width: 0)
+              : IconButton(
+                  onPressed: () => _textEditingController.clear(),
+                  icon: Icon(
+                    Icons.close,
+                    color: defaultTextColor,
+                  ),
+                ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildLeading() {
+    return IconButton(
+      onPressed: () => setState(() => _isSearching = false),
+      icon: Icon(
+        Icons.arrow_back,
+        color: defaultTextColor,
+      ),
+      tooltip: 'Back',
+    );
+  }
+
+  List<Widget> buildActions() {
+    return <Widget>[
+      IconButton(
+        onPressed: () => setState(() => _isSearching = true),
+        icon: Icon(
+          Icons.search,
+          color: defaultTextColor,
+        ),
+        tooltip: 'Search',
+      )
+    ];
   }
 }

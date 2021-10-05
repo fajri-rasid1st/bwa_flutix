@@ -46,7 +46,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   YoutubePlayerController _youtubePlayerController;
   String _tvShowFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
-  // handle favorite behavior
+  // favorite attributes
   Icon _favoriteIcon;
   bool _isFavorite;
 

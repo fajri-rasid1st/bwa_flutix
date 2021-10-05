@@ -46,7 +46,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   YoutubePlayerController _youtubePlayerController;
   String _movieFailureMessage, _videoFailureMessage, _castsFailureMessage;
 
-  // handle favorite behavior
+  // favorite attributes
   Icon _favoriteIcon;
   bool _isFavorite;
 

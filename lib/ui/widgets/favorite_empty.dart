@@ -18,7 +18,7 @@ class FavoriteEmpty extends StatelessWidget {
             children: <Widget>[
               SvgPicture.asset(
                 'assets/svg/undraw_Taken_re_yn20.svg',
-                height: 120,
+                height: 160,
               ),
               const SizedBox(height: 12),
               Text(
