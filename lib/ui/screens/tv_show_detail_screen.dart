@@ -6,7 +6,7 @@ import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
-import 'package:cick_movie_app/ui/screens/utils.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
@@ -30,6 +30,7 @@ class TvShowDetailScreen extends StatefulWidget {
 class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
+  bool _isErrorButtonDisabled = false;
   Widget _errorButtonChild = const Text('Try again');
 
   // declaration attribute
@@ -86,7 +87,8 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         return FutureOnLoad(
           text: _tvShowFailureMessage,
           isError: true,
-          onPressedErrorButton: getAllTvShowData,
+          onPressedErrorButton:
+              _isErrorButtonDisabled ? null : getAllTvShowData,
           errorButtonChild: _errorButtonChild,
         );
       } else {
@@ -621,15 +623,16 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   // function to fetch all tv show data
   Future<void> getAllTvShowData() async {
     setState(() {
+      _isErrorButtonDisabled = true;
       _errorButtonChild = Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: <Widget>[
-          const SizedBox(
+          SizedBox(
             width: 16,
             height: 16,
-            child: const CircularProgressIndicator(
+            child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Colors.white,
+              color: secondaryTextColor,
             ),
           ),
           const SizedBox(width: 8),
@@ -644,7 +647,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         onSuccess: (tvShow) => _tvShow = tvShow,
         onFailure: (message) {
           _tvShowFailureMessage = message;
-          
+
           Utils.showSnackBarMessage(
             context: context,
             text: _tvShowFailureMessage,
@@ -676,6 +679,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           );
         }
 
+        _isErrorButtonDisabled = false;
         _errorButtonChild = const Text('Try again');
         _isLoading = false;
       });

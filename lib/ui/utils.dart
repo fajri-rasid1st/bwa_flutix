@@ -5,14 +5,23 @@ class Utils {
   static void showSnackBarMessage({
     @required BuildContext context,
     @required String text,
-    int duration = 2000,
+    int duration = 2500,
+    bool showAction = false,
   }) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(text),
-        duration: Duration(milliseconds: duration),
-      ),
+    SnackBar snackBar = SnackBar(
+      content: Text(text),
+      duration: Duration(milliseconds: duration),
+      action: showAction
+          ? SnackBarAction(
+              label: 'Dismiss',
+              onPressed: () {},
+            )
+          : null,
     );
+
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 
   // function to scroll page to top

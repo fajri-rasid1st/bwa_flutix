@@ -1,6 +1,6 @@
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
-import 'package:cick_movie_app/ui/screens/utils.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:cick_movie_app/ui/widgets/grid_item.dart';
@@ -21,6 +21,7 @@ class _TvShowPageState extends State<TvShowPage> {
   int _page = 1;
   bool _isLoading = true;
   bool _isScrollPositionAtBottom = false;
+  bool _isErrorButtonDisabled = false;
   Widget _errorButtonChild = const Text('Try again');
 
   // this attribute will be filled in the future
@@ -44,7 +45,8 @@ class _TvShowPageState extends State<TvShowPage> {
         return FutureOnLoad(
           text: _failureMessage,
           isError: true,
-          onPressedErrorButton: refreshPopularTvShows,
+          onPressedErrorButton:
+              _isErrorButtonDisabled ? null : refreshPopularTvShows,
           errorButtonChild: _errorButtonChild,
         );
       } else {
@@ -144,15 +146,16 @@ class _TvShowPageState extends State<TvShowPage> {
   Future<void> refreshPopularTvShows() async {
     if (_tvShows == null) {
       setState(() {
+        _isErrorButtonDisabled = true;
         _errorButtonChild = Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: <Widget>[
-            const SizedBox(
+            SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                color: Colors.white,
+                color: secondaryTextColor,
               ),
             ),
             const SizedBox(width: 8),
@@ -175,6 +178,7 @@ class _TvShowPageState extends State<TvShowPage> {
     ).then((_) {
       setState(() {
         if (_tvShows == null) {
+          _isErrorButtonDisabled = false;
           _errorButtonChild = const Text('Try again');
         }
 

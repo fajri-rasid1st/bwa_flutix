@@ -2,7 +2,7 @@ import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
-import 'package:cick_movie_app/ui/screens/utils.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/default_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_app_bar.dart';
@@ -58,6 +58,10 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    return buildMainScreen();
+  }
+
+  Widget buildMainScreen() {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,

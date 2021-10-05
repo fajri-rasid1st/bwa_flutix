@@ -6,7 +6,7 @@ import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
-import 'package:cick_movie_app/ui/screens/utils.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
@@ -30,6 +30,7 @@ class MovieDetailScreen extends StatefulWidget {
 class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
+  bool _isErrorButtonDisabled = false;
   Widget _errorButtonChild = const Text('Try again');
 
   // declaration attribute
@@ -86,7 +87,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         return FutureOnLoad(
           text: _movieFailureMessage,
           isError: true,
-          onPressedErrorButton: getAllMovieData,
+          onPressedErrorButton: _isErrorButtonDisabled ? null : getAllMovieData,
           errorButtonChild: _errorButtonChild,
         );
       } else {
@@ -96,7 +97,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to build main screen
-  Widget buildMainScreen(Movie movie, Video video) {
+  Scaffold buildMainScreen(Movie movie, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,
@@ -567,15 +568,16 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // function to fetch all movie data
   Future<void> getAllMovieData() async {
     setState(() {
+      _isErrorButtonDisabled = true;
       _errorButtonChild = Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: <Widget>[
-          const SizedBox(
+          SizedBox(
             width: 16,
             height: 16,
-            child: const CircularProgressIndicator(
+            child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: Colors.white,
+              color: secondaryTextColor,
             ),
           ),
           const SizedBox(width: 8),
@@ -622,6 +624,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
           );
         }
 
+        _isErrorButtonDisabled = false;
         _errorButtonChild = const Text('Try again');
         _isLoading = false;
       });
