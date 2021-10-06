@@ -162,4 +162,58 @@ class MovieServices {
       onFailure(e.toString());
     }
   }
+
+  static Future<void> searchMovies({
+    int page = 1,
+    @required String query,
+    @required void Function(List<MoviePopular> movies) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
+    // define URL target
+    final url =
+        '${Const.BASE_URL}/search/movie?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=true';
+
+    try {
+      // send HTTP GET request
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // parse the string and returns the resulting json object
+        final searchMoviesResponse = json.decode(response.body);
+
+        // casting response to Map<string, dynamic>
+        final searchMoviesMap = (searchMoviesResponse as Map<String, dynamic>);
+
+        // get results value
+        final List<dynamic> results = searchMoviesMap['results'];
+
+        // get total_pages value
+        final int totalPages = searchMoviesMap['total_pages'];
+
+        if (totalPages == 0) {
+          // if no result(s) based inserted query, return failure
+          onFailure('Movie(s) not found.');
+        } else {
+          if (results.isEmpty) {
+            // if results is empty, return failure
+            onFailure('No more movies to load.');
+          } else {
+            // otherwise, get each movie inside results
+            final movies = List<MoviePopular>.from(
+              results.map((movie) {
+                return MoviePopular.fromMap(movie);
+              }),
+            );
+
+            // return movies
+            onSuccess(movies);
+          }
+        }
+      } else {
+        onFailure('Request failed.');
+      }
+    } catch (e) {
+      onFailure(e.toString());
+    }
+  }
 }

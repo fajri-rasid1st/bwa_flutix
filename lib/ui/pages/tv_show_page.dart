@@ -107,7 +107,7 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> initFavoriteTvShows() async {
-    TvShowServices.getPopularTvShows(
+    await TvShowServices.getPopularTvShows(
       onSuccess: (tvShow) {
         _tvShows = tvShow;
         _lastInsertedTvShow = _tvShows[0];
@@ -126,7 +126,7 @@ class _TvShowPageState extends State<TvShowPage> {
   Future<void> loadMorePopularTvShows() async {
     setState(() => _isScrollPositionAtBottom = true);
 
-    TvShowServices.getPopularTvShows(
+    await TvShowServices.getPopularTvShows(
       page: _page,
       onSuccess: (tvShows) {
         if (_lastInsertedTvShow.toString() != tvShows[0].toString()) {
@@ -167,7 +167,7 @@ class _TvShowPageState extends State<TvShowPage> {
 
     await Future.delayed(Duration(milliseconds: 1500));
 
-    TvShowServices.getPopularTvShows(
+    await TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {
         _tvShows = tvShows;
         _lastInsertedTvShow = _tvShows[0];

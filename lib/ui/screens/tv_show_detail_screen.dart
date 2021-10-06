@@ -641,7 +641,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
       );
     });
 
-    Future.wait([
+    await Future.wait([
       TvShowServices.getTvShow(
         tvShowId: widget.tvShowId,
         onSuccess: (tvShow) => _tvShow = tvShow,

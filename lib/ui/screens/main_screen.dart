@@ -1,15 +1,18 @@
 import 'package:cick_movie_app/data/db/favorite_database.dart';
+import 'package:cick_movie_app/data/services/movie_services.dart';
+import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/widgets/default_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
+import 'package:cick_movie_app/ui/widgets/search_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key key}) : super(key: key);
@@ -24,7 +27,6 @@ class _MainScreenState extends State<MainScreen>
   List<Widget> _pages = [];
   int _currentIndex = 0;
   bool _isFabVisible = true;
-  bool _isSearching = false;
 
   // declaration attributes
   String _title;
@@ -33,6 +35,10 @@ class _MainScreenState extends State<MainScreen>
   TabController _tabController;
   ScrollController _scrollController;
   TextEditingController _searchController;
+
+  // search atributes
+  bool _isSearching = false;
+  String _query = '';
 
   @override
   void initState() {
@@ -205,40 +211,10 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Widget buildSearchField() {
-    return Container(
-      height: 40,
-      child: TextField(
-        controller: _searchController,
-        autofocus: true,
-        autocorrect: false,
-        enableSuggestions: false,
-        textInputAction: TextInputAction.done,
-        textCapitalization: TextCapitalization.words,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.only(left: 16),
-          hintText: "Search...",
-          filled: true,
-          fillColor: dividerColor,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          suffixIcon: _searchController.text.isEmpty
-              ? Container(width: 0)
-              : IconButton(
-                  onPressed: () => _searchController.clear(),
-                  icon: Icon(
-                    Icons.close,
-                    color: defaultTextColor,
-                  ),
-                ),
-        ),
-        onChanged: (text) {},
-        style: TextStyle(
-          fontSize: 16,
-          color: defaultTextColor,
-        ),
-      ),
+    return SearchField(
+      query: _query,
+      controller: _searchController,
+      onChanged: searchContent,
     );
   }
 
@@ -283,5 +259,42 @@ class _MainScreenState extends State<MainScreen>
     }
 
     return Future.value(true);
+  }
+
+  Future<void> searchContent(String query) async {
+    if (query.isNotEmpty) {
+      switch (_currentIndex) {
+        case 0:
+          await MovieServices.searchMovies(
+            query: query,
+            onSuccess: (movies) {},
+            onFailure: (message) {
+              Utils.showSnackBarMessage(context: context, text: message);
+            },
+          ).then((_) {
+            setState(() {
+              _query = query;
+              print(_query);
+            });
+          });
+
+          break;
+        case 1:
+          await TvShowServices.searchTvShows(
+            query: query,
+            onSuccess: (tvShows) {},
+            onFailure: (message) {
+              Utils.showSnackBarMessage(context: context, text: message);
+            },
+          ).then((_) {
+            setState(() {
+              _query = query;
+              print(_query);
+            });
+          });
+
+          break;
+      }
+    }
   }
 }

@@ -162,4 +162,59 @@ class TvShowServices {
       onFailure(e.toString());
     }
   }
+
+  static Future<void> searchTvShows({
+    int page = 1,
+    @required String query,
+    @required void Function(List<TvShowPopular> tvShows) onSuccess,
+    @required void Function(String message) onFailure,
+  }) async {
+    // define URL target
+    final url =
+        '${Const.BASE_URL}/search/tv?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=true';
+
+    try {
+      // send HTTP GET request
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // parse the string and returns the resulting json object
+        final searchTvShowsResponse = json.decode(response.body);
+
+        // casting response to Map<string, dynamic>
+        final searchTvShowsMap =
+            (searchTvShowsResponse as Map<String, dynamic>);
+
+        // get results value
+        final List<dynamic> results = searchTvShowsMap['results'];
+
+        // get total_pages value
+        final int totalPages = searchTvShowsMap['total_pages'];
+
+        if (totalPages == 0) {
+          // if no result(s) based inserted query, return failure
+          onFailure('Tv show(s) not found.');
+        } else {
+          if (results.isEmpty) {
+            // if results is empty, return failure
+            onFailure('No more tv shows to load.');
+          } else {
+            // otherwise, get each tv show inside results
+            final tvShows = List<TvShowPopular>.from(
+              results.map((tvShow) {
+                return TvShowPopular.fromMap(tvShow);
+              }),
+            );
+
+            // return tvShows
+            onSuccess(tvShows);
+          }
+        }
+      } else {
+        onFailure('Request failed.');
+      }
+    } catch (e) {
+      onFailure(e.toString());
+    }
+  }
 }

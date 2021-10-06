@@ -107,7 +107,7 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Future<void> initPopularMovies() async {
-    MovieServices.getPopularMovies(
+    await MovieServices.getPopularMovies(
       onSuccess: (movies) {
         _movies = movies;
         _lastInsertedMovie = _movies[0];
@@ -126,7 +126,7 @@ class _MoviePageState extends State<MoviePage> {
   Future<void> loadMorePopularMovies() async {
     setState(() => _isScrollPositionAtBottom = true);
 
-    MovieServices.getPopularMovies(
+    await MovieServices.getPopularMovies(
       page: _page,
       onSuccess: (movies) {
         if (_lastInsertedMovie.toString() != movies[0].toString()) {
@@ -167,7 +167,7 @@ class _MoviePageState extends State<MoviePage> {
 
     await Future.delayed(Duration(milliseconds: 1500));
 
-    MovieServices.getPopularMovies(
+    await MovieServices.getPopularMovies(
       onSuccess: (movies) {
         _movies = movies;
         _lastInsertedMovie = _movies[0];
