@@ -2,12 +2,12 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 
-class CustomAppbar extends StatelessWidget {
+class DetailAppBar extends StatelessWidget {
   final String title;
   final Icon favoriteIcon;
   final Future<void> Function() onPressedFavoriteIcon;
 
-  const CustomAppbar({
+  const DetailAppBar({
     Key key,
     @required this.title,
     @required this.favoriteIcon,
@@ -42,16 +42,16 @@ class CustomAppbar extends StatelessWidget {
           tooltip: 'Favorite',
         ),
       ],
-      bottom: CustomBottomAppBar(),
+      bottom: DetailBottomAppBar(),
     );
   }
 }
 
-class CustomBottomAppBar extends StatelessWidget
+class DetailBottomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   final Size preferredSize = Size.fromHeight(40); // default is 56.0
 
-  CustomBottomAppBar({Key key}) : super(key: key);
+  DetailBottomAppBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

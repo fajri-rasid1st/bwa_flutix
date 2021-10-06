@@ -9,7 +9,7 @@ import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
-import 'package:cick_movie_app/ui/widgets/custom_app_bar.dart';
+import 'package:cick_movie_app/ui/widgets/detail_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/custom_divider.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +105,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
-            CustomAppbar(
+            DetailAppBar(
               title: tvShow.title,
               favoriteIcon: _favoriteIcon,
               onPressedFavoriteIcon:

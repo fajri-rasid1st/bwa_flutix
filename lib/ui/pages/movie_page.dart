@@ -10,7 +10,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MoviePage extends StatefulWidget {
-  const MoviePage({Key key}) : super(key: key);
+  final List<MoviePopular> movies;
+
+  const MoviePage({Key key, this.movies}) : super(key: key);
 
   @override
   _MoviePageState createState() => _MoviePageState();
@@ -76,9 +78,14 @@ class _MoviePageState extends State<MoviePage> {
                         return const StaggeredTile.extent(1, 320);
                       },
                       itemBuilder: (context, index) {
-                        return GridItem(item: _movies[index]);
+                        return GridItem(
+                            item: widget.movies != null
+                                ? widget.movies[index]
+                                : _movies[index]);
                       },
-                      itemCount: _movies.length,
+                      itemCount: widget.movies != null
+                          ? widget.movies.length
+                          : _movies.length,
                     ),
                   ),
                   if (_isScrollPositionAtBottom) ...[

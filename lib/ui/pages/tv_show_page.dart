@@ -10,7 +10,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TvShowPage extends StatefulWidget {
-  const TvShowPage({Key key}) : super(key: key);
+  final List<TvShowPopular> tvShows;
+
+  const TvShowPage({Key key, this.tvShows}) : super(key: key);
 
   @override
   _TvShowPageState createState() => _TvShowPageState();
@@ -76,9 +78,14 @@ class _TvShowPageState extends State<TvShowPage> {
                         return const StaggeredTile.extent(1, 320);
                       },
                       itemBuilder: (context, index) {
-                        return GridItem(item: _tvShows[index]);
+                        return GridItem(
+                            item: widget.tvShows != null
+                                ? widget.tvShows[index]
+                                : _tvShows[index]);
                       },
-                      itemCount: _tvShows.length,
+                      itemCount: widget.tvShows != null
+                          ? widget.tvShows.length
+                          : _tvShows.length,
                     ),
                   ),
                   if (_isScrollPositionAtBottom) ...[

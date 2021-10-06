@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
+import 'package:cick_movie_app/data/models/movie_popular.dart';
+import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
@@ -8,7 +10,7 @@ import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/utils.dart';
-import 'package:cick_movie_app/ui/widgets/default_app_bar.dart';
+import 'package:cick_movie_app/ui/widgets/main_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/scroll_to_hide.dart';
 import 'package:cick_movie_app/ui/widgets/search_field.dart';
@@ -37,6 +39,14 @@ class _MainScreenState extends State<MainScreen>
   ScrollController _scrollController;
   TextEditingController _searchController;
 
+  // movies
+  List<MoviePopular> _movies;
+  MoviePage _moviePage;
+
+  // tv shows
+  List<TvShowPopular> _tvShows;
+  TvShowPage _tvShowPage;
+
   // search atributes
   Timer _debouncer;
   bool _isSearching = false;
@@ -50,9 +60,12 @@ class _MainScreenState extends State<MainScreen>
     _scrollController = ScrollController();
     _searchController = TextEditingController();
 
+    _moviePage = MoviePage();
+    _tvShowPage = TvShowPage();
+
     _pages.addAll([
-      MoviePage(),
-      TvShowPage(),
+      _moviePage,
+      _tvShowPage,
       FavoritePage(controller: _tabController),
     ]);
 
@@ -91,7 +104,7 @@ class _MainScreenState extends State<MainScreen>
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return <Widget>[
               if (_currentIndex != 2) ...[
-                DefaultAppBar(
+                MainAppBar(
                   title: _isSearching ? buildSearchField() : buildTitle(_title),
                   leading: _isSearching ? buildLeading() : null,
                   actions: _isSearching ? null : buildActions(),
@@ -172,10 +185,12 @@ class _MainScreenState extends State<MainScreen>
 
               switch (index) {
                 case 0:
+                  _pages[_currentIndex] = _moviePage;
                   _title = 'Movies';
 
                   break;
                 case 1:
+                  _pages[_currentIndex] = _tvShowPage;
                   _title = 'Tv Shows';
 
                   break;
@@ -225,7 +240,16 @@ class _MainScreenState extends State<MainScreen>
       padding: const EdgeInsets.only(left: 8),
       child: IconButton(
         onPressed: () {
-          setState(() => _isSearching = false);
+          setState(() {
+            _isSearching = false;
+
+            if (_currentIndex == 0) {
+              _pages[_currentIndex] = _moviePage;
+            } else {
+              _pages[_currentIndex] = _tvShowPage;
+            }
+          });
+
           _searchController.clear();
         },
         icon: Icon(
@@ -254,7 +278,16 @@ class _MainScreenState extends State<MainScreen>
 
   Future<bool> onWillPop() {
     if (_isSearching) {
-      setState(() => _isSearching = false);
+      setState(() {
+        _isSearching = false;
+
+        if (_currentIndex == 0) {
+          _pages[_currentIndex] = _moviePage;
+        } else {
+          _pages[_currentIndex] = _tvShowPage;
+        }
+      });
+
       _searchController.clear();
 
       return Future.value(false);
@@ -270,7 +303,9 @@ class _MainScreenState extends State<MainScreen>
           debounce(() async {
             await MovieServices.searchMovies(
               query: query,
-              onSuccess: (movies) {},
+              onSuccess: (movies) {
+                _movies = movies;
+              },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
               },
@@ -279,7 +314,7 @@ class _MainScreenState extends State<MainScreen>
 
               setState(() {
                 _query = query;
-                print(_query);
+                _pages[_currentIndex] = MoviePage(movies: _movies);
               });
             });
           });
@@ -290,9 +325,7 @@ class _MainScreenState extends State<MainScreen>
             await TvShowServices.searchTvShows(
               query: query,
               onSuccess: (tvShows) {
-                for (var item in tvShows) {
-                  print('${item.posterPath} - ${item.title}');
-                }
+                _tvShows = tvShows;
               },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
@@ -302,7 +335,7 @@ class _MainScreenState extends State<MainScreen>
 
               setState(() {
                 _query = query;
-                print(_query);
+                _pages[_currentIndex] = TvShowPage(tvShows: _tvShows);
               });
             });
           });
