@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
@@ -37,6 +38,7 @@ class _MainScreenState extends State<MainScreen>
   TextEditingController _searchController;
 
   // search atributes
+  Timer _debouncer;
   bool _isSearching = false;
   String _query = '';
 
@@ -54,9 +56,7 @@ class _MainScreenState extends State<MainScreen>
       FavoritePage(controller: _tabController),
     ]);
 
-    _searchController.addListener(() {
-      setState(() {});
-    });
+    _searchController.addListener(() => setState(() {}));
 
     super.initState();
   }
@@ -66,6 +66,8 @@ class _MainScreenState extends State<MainScreen>
     _tabController.dispose();
     _scrollController.dispose();
     _searchController.dispose();
+
+    if (_debouncer != null) _debouncer.cancel();
 
     FavoriteDatabase.instance.close();
 
@@ -265,36 +267,54 @@ class _MainScreenState extends State<MainScreen>
     if (query.isNotEmpty) {
       switch (_currentIndex) {
         case 0:
-          await MovieServices.searchMovies(
-            query: query,
-            onSuccess: (movies) {},
-            onFailure: (message) {
-              Utils.showSnackBarMessage(context: context, text: message);
-            },
-          ).then((_) {
-            setState(() {
-              _query = query;
-              print(_query);
+          debounce(() async {
+            await MovieServices.searchMovies(
+              query: query,
+              onSuccess: (movies) {},
+              onFailure: (message) {
+                Utils.showSnackBarMessage(context: context, text: message);
+              },
+            ).then((_) {
+              if (!mounted) return;
+
+              setState(() {
+                _query = query;
+                print(_query);
+              });
             });
           });
 
           break;
         case 1:
-          await TvShowServices.searchTvShows(
-            query: query,
-            onSuccess: (tvShows) {},
-            onFailure: (message) {
-              Utils.showSnackBarMessage(context: context, text: message);
-            },
-          ).then((_) {
-            setState(() {
-              _query = query;
-              print(_query);
+          debounce(() async {
+            await TvShowServices.searchTvShows(
+              query: query,
+              onSuccess: (tvShows) {
+                for (var item in tvShows) {
+                  print('${item.posterPath} - ${item.title}');
+                }
+              },
+              onFailure: (message) {
+                Utils.showSnackBarMessage(context: context, text: message);
+              },
+            ).then((_) {
+              if (!mounted) return;
+
+              setState(() {
+                _query = query;
+                print(_query);
+              });
             });
           });
 
           break;
       }
     }
+  }
+
+  void debounce(VoidCallback callback) {
+    if (_debouncer != null) _debouncer.cancel();
+
+    _debouncer = Timer(const Duration(seconds: 1), callback);
   }
 }
