@@ -95,9 +95,9 @@ class FavoriteDatabase {
       whereArgs: [favoriteId, type],
     );
 
-    if (maps.isNotEmpty) return true;
+    if (maps.isNotEmpty) return Future.value(true);
 
-    return false;
+    return Future.value(false);
   }
 
   // delete favorite record depending on its favoriteId and type

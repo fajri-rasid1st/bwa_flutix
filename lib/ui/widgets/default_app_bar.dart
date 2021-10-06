@@ -21,6 +21,7 @@ class DefaultAppBar extends StatelessWidget {
       backgroundColor: backgroundColor,
       title: title,
       leading: leading,
+      leadingWidth: 40,
       actions: actions,
     );
   }

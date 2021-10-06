@@ -20,31 +20,37 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-  // initialize final atribute
-  final List<Widget> _pages = [];
-
-  // initialize atribute
+  // initialize atributes
+  List<Widget> _pages = [];
   int _currentIndex = 0;
   bool _isFabVisible = true;
   bool _isSearching = false;
 
-  // declaration attribute
+  // declaration attributes
   String _title;
+
+  // declaration controller attributes
   TabController _tabController;
-  ScrollController _scrollController = ScrollController();
-  TextEditingController _textEditingController = TextEditingController();
+  ScrollController _scrollController;
+  TextEditingController _searchController;
 
   @override
   void initState() {
     _title = 'Movies';
+
     _tabController = TabController(length: 2, vsync: this);
+    _scrollController = ScrollController();
+    _searchController = TextEditingController();
 
     _pages.addAll([
       MoviePage(),
       TvShowPage(),
       FavoritePage(controller: _tabController),
     ]);
-    _textEditingController.addListener(() => setState(() {}));
+
+    _searchController.addListener(() {
+      setState(() {});
+    });
 
     super.initState();
   }
@@ -53,7 +59,7 @@ class _MainScreenState extends State<MainScreen>
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
-    _textEditingController.dispose();
+    _searchController.dispose();
 
     FavoriteDatabase.instance.close();
 
@@ -62,7 +68,10 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    return buildMainScreen();
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: buildMainScreen(),
+    );
   }
 
   Widget buildMainScreen() {
@@ -169,6 +178,8 @@ class _MainScreenState extends State<MainScreen>
                   break;
               }
             });
+
+            _searchController.clear();
           },
         ),
       ),
@@ -197,47 +208,63 @@ class _MainScreenState extends State<MainScreen>
     return Container(
       height: 40,
       child: TextField(
-        controller: _textEditingController,
+        controller: _searchController,
         autofocus: true,
+        autocorrect: false,
+        enableSuggestions: false,
         textInputAction: TextInputAction.done,
+        textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.only(left: 16),
+          hintText: "Search...",
+          filled: true,
+          fillColor: dividerColor,
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(8),
           ),
-          contentPadding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-          hintText: "Search...",
-          filled: true,
-          fillColor: dividerColor,
-          suffixIcon: _textEditingController.text.isEmpty
+          suffixIcon: _searchController.text.isEmpty
               ? Container(width: 0)
               : IconButton(
-                  onPressed: () => _textEditingController.clear(),
+                  onPressed: () => _searchController.clear(),
                   icon: Icon(
                     Icons.close,
                     color: defaultTextColor,
                   ),
                 ),
         ),
+        onChanged: (text) {},
+        style: TextStyle(
+          fontSize: 16,
+          color: defaultTextColor,
+        ),
       ),
     );
   }
 
   Widget buildLeading() {
-    return IconButton(
-      onPressed: () => setState(() => _isSearching = false),
-      icon: Icon(
-        Icons.arrow_back,
-        color: defaultTextColor,
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: IconButton(
+        onPressed: () {
+          setState(() => _isSearching = false);
+          _searchController.clear();
+        },
+        icon: Icon(
+          Icons.arrow_back,
+          color: defaultTextColor,
+        ),
+        tooltip: 'Back',
       ),
-      tooltip: 'Back',
     );
   }
 
   List<Widget> buildActions() {
     return <Widget>[
       IconButton(
-        onPressed: () => setState(() => _isSearching = true),
+        onPressed: () {
+          setState(() => _isSearching = true);
+        },
         icon: Icon(
           Icons.search,
           color: defaultTextColor,
@@ -245,5 +272,16 @@ class _MainScreenState extends State<MainScreen>
         tooltip: 'Search',
       )
     ];
+  }
+
+  Future<bool> onWillPop() {
+    if (_isSearching) {
+      setState(() => _isSearching = false);
+      _searchController.clear();
+
+      return Future.value(false);
+    }
+
+    return Future.value(true);
   }
 }
