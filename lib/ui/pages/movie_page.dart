@@ -156,9 +156,7 @@ class _MoviePageState extends State<MoviePage> {
           _page++;
         }
       },
-      onFailure: (message) {
-        Utils.showSnackBarMessage(context: context, text: message);
-      },
+      onFailure: (_) {},
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });
@@ -172,9 +170,7 @@ class _MoviePageState extends State<MoviePage> {
         widget.searchedMovies.addAll(movies);
         _page++;
       },
-      onFailure: (message) {
-        Utils.showSnackBarMessage(context: context, text: message);
-      },
+      onFailure: (_) {},
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });

@@ -163,6 +163,7 @@ class MovieServices {
     }
   }
 
+  // function to search movies
   static Future<void> searchMovies({
     int page = 1,
     @required String query,
@@ -194,20 +195,15 @@ class MovieServices {
           // if no result(s) based inserted query, return failure
           onFailure('Movie(s) not found.');
         } else {
-          if (results.isEmpty) {
-            // if results is empty, return failure
-            onFailure('No more movies to load.');
-          } else {
-            // otherwise, get each movie inside results
-            final movies = List<MoviePopular>.from(
-              results.map((movie) {
-                return MoviePopular.fromMap(movie);
-              }),
-            );
+          // get each movie inside results
+          final movies = List<MoviePopular>.from(
+            results.map((movie) {
+              return MoviePopular.fromMap(movie);
+            }),
+          );
 
-            // return movies
-            onSuccess(movies);
-          }
+          // return movies
+          onSuccess(movies);
         }
       } else {
         onFailure('Request failed.');

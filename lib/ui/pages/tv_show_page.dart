@@ -156,9 +156,7 @@ class _TvShowPageState extends State<TvShowPage> {
           _page++;
         }
       },
-      onFailure: (message) {
-        Utils.showSnackBarMessage(context: context, text: message);
-      },
+      onFailure: (_) {},
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });
@@ -172,9 +170,7 @@ class _TvShowPageState extends State<TvShowPage> {
         widget.searchedTvShows.addAll(tvShows);
         _page++;
       },
-      onFailure: (message) {
-        Utils.showSnackBarMessage(context: context, text: message);
-      },
+      onFailure: (_) {},
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });

@@ -57,11 +57,11 @@ class TvShow {
   }
 
   String get firstandLastAirDateParse {
-    var firstAirDateParse = firstAirDate == null
+    final firstAirDateParse = firstAirDate == null
         ? 'None'
         : DateFormat('MMM dd, y').format(DateTime.parse(firstAirDate));
 
-    var lastAirDateParse = lastAirDate == null
+    final lastAirDateParse = lastAirDate == null
         ? 'None'
         : DateFormat('MMM dd, y').format(DateTime.parse(lastAirDate));
 

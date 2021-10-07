@@ -163,6 +163,7 @@ class TvShowServices {
     }
   }
 
+  // function to search movies
   static Future<void> searchTvShows({
     int page = 1,
     @required String query,
@@ -195,20 +196,15 @@ class TvShowServices {
           // if no result(s) based inserted query, return failure
           onFailure('Tv show(s) not found.');
         } else {
-          if (results.isEmpty) {
-            // if results is empty, return failure
-            onFailure('No more tv shows to load.');
-          } else {
-            // otherwise, get each tv show inside results
-            final tvShows = List<TvShowPopular>.from(
-              results.map((tvShow) {
-                return TvShowPopular.fromMap(tvShow);
-              }),
-            );
+          // otherwise, get each tv show inside results
+          final tvShows = List<TvShowPopular>.from(
+            results.map((tvShow) {
+              return TvShowPopular.fromMap(tvShow);
+            }),
+          );
 
-            // return tvShows
-            onSuccess(tvShows);
-          }
+          // return tvShows
+          onSuccess(tvShows);
         }
       } else {
         onFailure('Request failed.');

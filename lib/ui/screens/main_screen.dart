@@ -234,37 +234,6 @@ class _MainScreenState extends State<MainScreen>
     );
   }
 
-  Widget buildLeading() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: IconButton(
-        onPressed: () {
-          if (_pages[_currentIndex] != _moviePage &&
-              _pages[_currentIndex] != _tvShowPage) {
-            _scrollController.jumpTo(0);
-          }
-
-          setState(() {
-            _isSearching = false;
-
-            if (_currentIndex == 0) {
-              _pages[_currentIndex] = _moviePage;
-            } else {
-              _pages[_currentIndex] = _tvShowPage;
-            }
-          });
-
-          _searchController.clear();
-        },
-        icon: Icon(
-          Icons.arrow_back,
-          color: defaultTextColor,
-        ),
-        tooltip: 'Back',
-      ),
-    );
-  }
-
   List<Widget> buildActions() {
     return <Widget>[
       IconButton(
@@ -280,24 +249,23 @@ class _MainScreenState extends State<MainScreen>
     ];
   }
 
+  Widget buildLeading() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: IconButton(
+        onPressed: () => resetSearching(),
+        icon: Icon(
+          Icons.arrow_back,
+          color: defaultTextColor,
+        ),
+        tooltip: 'Back',
+      ),
+    );
+  }
+
   Future<bool> onWillPop() {
     if (_isSearching) {
-      if (_pages[_currentIndex] != _moviePage &&
-          _pages[_currentIndex] != _tvShowPage) {
-        _scrollController.jumpTo(0);
-      }
-
-      setState(() {
-        _isSearching = false;
-
-        if (_currentIndex == 0) {
-          _pages[_currentIndex] = _moviePage;
-        } else {
-          _pages[_currentIndex] = _tvShowPage;
-        }
-      });
-
-      _searchController.clear();
+      resetSearching();
 
       return Future.value(false);
     }
@@ -368,5 +336,24 @@ class _MainScreenState extends State<MainScreen>
     if (_debouncer != null) _debouncer.cancel();
 
     _debouncer = Timer(const Duration(seconds: 1), callback);
+  }
+
+  void resetSearching() {
+    if (_pages[_currentIndex] != _moviePage &&
+        _pages[_currentIndex] != _tvShowPage) {
+      _scrollController.jumpTo(0);
+    }
+
+    setState(() {
+      _isSearching = false;
+
+      if (_currentIndex == 0) {
+        _pages[_currentIndex] = _moviePage;
+      } else {
+        _pages[_currentIndex] = _tvShowPage;
+      }
+    });
+
+    _searchController.clear();
   }
 }
