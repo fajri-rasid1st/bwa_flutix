@@ -51,6 +51,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
   Widget buildTvShowFavoriteList(List<Favorite> tvShowFavorites) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final item = _tvShowFavorites[index];

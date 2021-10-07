@@ -72,6 +72,7 @@ class _TvShowPageState extends State<TvShowPage> {
                     onRefresh: refreshPopularTvShows,
                     child: StaggeredGridView.extentBuilder(
                       padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
+                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       maxCrossAxisExtent: 200,
                       staggeredTileBuilder: (index) {

@@ -26,8 +26,10 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+  // initialize final atributes
+  final List<Widget> _pages = [];
+
   // initialize atributes
-  List<Widget> _pages = [];
   int _currentIndex = 0;
   bool _isFabVisible = true;
 
@@ -48,9 +50,9 @@ class _MainScreenState extends State<MainScreen>
   TvShowPage _tvShowPage;
 
   // search atributes
-  Timer _debouncer;
   bool _isSearching = false;
   String _query = '';
+  Timer _debouncer;
 
   @override
   void initState() {
@@ -120,13 +122,9 @@ class _MainScreenState extends State<MainScreen>
           body: NotificationListener<UserScrollNotification>(
             onNotification: (userScroll) {
               if (userScroll.direction == ScrollDirection.forward) {
-                if (!_isFabVisible) {
-                  setState(() => _isFabVisible = true);
-                }
+                setState(() => _isFabVisible = true);
               } else if (userScroll.direction == ScrollDirection.reverse) {
-                if (_isFabVisible) {
-                  setState(() => _isFabVisible = false);
-                }
+                setState(() => _isFabVisible = false);
               }
 
               return true;
@@ -230,6 +228,7 @@ class _MainScreenState extends State<MainScreen>
   Widget buildSearchField() {
     return SearchField(
       query: _query,
+      hintText: _currentIndex == 0 ? 'Explore movie...' : 'Explore tv show...',
       controller: _searchController,
       onChanged: searchContent,
     );
@@ -240,6 +239,11 @@ class _MainScreenState extends State<MainScreen>
       padding: const EdgeInsets.only(left: 8),
       child: IconButton(
         onPressed: () {
+          if (_pages[_currentIndex] != _moviePage &&
+              _pages[_currentIndex] != _tvShowPage) {
+            _scrollController.jumpTo(0);
+          }
+
           setState(() {
             _isSearching = false;
 
@@ -278,6 +282,11 @@ class _MainScreenState extends State<MainScreen>
 
   Future<bool> onWillPop() {
     if (_isSearching) {
+      if (_pages[_currentIndex] != _moviePage &&
+          _pages[_currentIndex] != _tvShowPage) {
+        _scrollController.jumpTo(0);
+      }
+
       setState(() {
         _isSearching = false;
 
@@ -312,6 +321,8 @@ class _MainScreenState extends State<MainScreen>
             ).then((_) {
               if (!mounted) return;
 
+              _scrollController.jumpTo(0);
+
               setState(() {
                 _query = query;
                 _pages[_currentIndex] = MoviePage(movies: _movies);
@@ -332,6 +343,8 @@ class _MainScreenState extends State<MainScreen>
               },
             ).then((_) {
               if (!mounted) return;
+
+              _scrollController.jumpTo(0);
 
               setState(() {
                 _query = query;

@@ -51,6 +51,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   Widget buildMovieFavoriteList(List<Favorite> movieFavorites) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         final item = _movieFavorites[index];

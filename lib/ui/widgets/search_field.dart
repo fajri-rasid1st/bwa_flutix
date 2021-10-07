@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 class SearchField extends StatefulWidget {
   final String query;
+  final String hintText;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
 
   const SearchField({
     Key key,
     @required this.query,
+    @required this.hintText,
     @required this.controller,
     @required this.onChanged,
   }) : super(key: key);
@@ -31,7 +33,7 @@ class _SearchFieldState extends State<SearchField> {
         textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.only(left: 16),
-          hintText: "Search...",
+          hintText: widget.hintText,
           filled: true,
           fillColor: dividerColor,
           border: OutlineInputBorder(
@@ -44,7 +46,7 @@ class _SearchFieldState extends State<SearchField> {
                   onPressed: () {
                     widget.controller.clear();
                     widget.onChanged('');
-                    FocusScope.of(context).requestFocus(FocusNode());
+                    // FocusScope.of(context).requestFocus(FocusNode());
                   },
                   icon: Icon(
                     Icons.close,
