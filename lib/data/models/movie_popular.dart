@@ -20,8 +20,8 @@ class MoviePopular {
     return MoviePopular(
       id: moviePopular['id'],
       title: moviePopular['title'],
-      releaseDate: moviePopular['release_date'],
-      voteAverage: moviePopular['vote_average'],
+      releaseDate: moviePopular['release_date'] ?? '',
+      voteAverage: moviePopular['vote_average'] ?? 0,
       posterPath: moviePopular['poster_path'],
     );
   }

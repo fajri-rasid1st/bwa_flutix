@@ -97,7 +97,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to build main screen
-  Scaffold buildMainScreen(Movie movie, Video video) {
+  Widget buildMainScreen(Movie movie, Video video) {
     return Scaffold(
       body: NestedScrollView(
         controller: _scrollController,

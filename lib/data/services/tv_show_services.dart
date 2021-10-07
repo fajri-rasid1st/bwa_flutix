@@ -171,7 +171,7 @@ class TvShowServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/search/tv?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=true';
+        '${Const.BASE_URL}/search/tv?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=false';
 
     try {
       // send HTTP GET request

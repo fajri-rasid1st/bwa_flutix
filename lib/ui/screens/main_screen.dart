@@ -42,11 +42,11 @@ class _MainScreenState extends State<MainScreen>
   TextEditingController _searchController;
 
   // movies
-  List<MoviePopular> _movies;
+  List<MoviePopular> _searchedMovies;
   MoviePage _moviePage;
 
   // tv shows
-  List<TvShowPopular> _tvShows;
+  List<TvShowPopular> _searchedTvShows;
   TvShowPage _tvShowPage;
 
   // search atributes
@@ -313,7 +313,7 @@ class _MainScreenState extends State<MainScreen>
             await MovieServices.searchMovies(
               query: query,
               onSuccess: (movies) {
-                _movies = movies;
+                _searchedMovies = movies;
               },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
@@ -325,7 +325,10 @@ class _MainScreenState extends State<MainScreen>
 
               setState(() {
                 _query = query;
-                _pages[_currentIndex] = MoviePage(movies: _movies);
+                _pages[_currentIndex] = MoviePage(
+                  searchedMovies: _searchedMovies,
+                  query: _query,
+                );
               });
             });
           });
@@ -336,7 +339,7 @@ class _MainScreenState extends State<MainScreen>
             await TvShowServices.searchTvShows(
               query: query,
               onSuccess: (tvShows) {
-                _tvShows = tvShows;
+                _searchedTvShows = tvShows;
               },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
@@ -348,7 +351,10 @@ class _MainScreenState extends State<MainScreen>
 
               setState(() {
                 _query = query;
-                _pages[_currentIndex] = TvShowPage(tvShows: _tvShows);
+                _pages[_currentIndex] = TvShowPage(
+                  searchedTvShows: _searchedTvShows,
+                  query: _query,
+                );
               });
             });
           });

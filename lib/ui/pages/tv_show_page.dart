@@ -10,9 +10,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TvShowPage extends StatefulWidget {
-  final List<TvShowPopular> tvShows;
+  final List<TvShowPopular> searchedTvShows;
+  final String query;
 
-  const TvShowPage({Key key, this.tvShows}) : super(key: key);
+  const TvShowPage({
+    Key key,
+    this.searchedTvShows,
+    this.query,
+  }) : super(key: key);
 
   @override
   _TvShowPageState createState() => _TvShowPageState();
@@ -33,13 +38,15 @@ class _TvShowPageState extends State<TvShowPage> {
 
   @override
   void initState() {
-    initFavoriteTvShows();
+    initPopularTvShows();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final searchedTvShows = widget.searchedTvShows;
+
     if (_isLoading) {
       return const FutureOnLoad();
     } else {
@@ -58,7 +65,13 @@ class _TvShowPageState extends State<TvShowPage> {
 
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
-                loadMorePopularTvShows();
+                setState(() => _isScrollPositionAtBottom = true);
+
+                if (searchedTvShows == null) {
+                  loadMorePopularTvShows();
+                } else {
+                  loadMoreSearchedTvShows();
+                }
               }
             }
 
@@ -80,13 +93,13 @@ class _TvShowPageState extends State<TvShowPage> {
                       },
                       itemBuilder: (context, index) {
                         return GridItem(
-                            item: widget.tvShows != null
-                                ? widget.tvShows[index]
-                                : _tvShows[index]);
+                            item: searchedTvShows == null
+                                ? _tvShows[index]
+                                : searchedTvShows[index]);
                       },
-                      itemCount: widget.tvShows != null
-                          ? widget.tvShows.length
-                          : _tvShows.length,
+                      itemCount: searchedTvShows == null
+                          ? _tvShows.length
+                          : searchedTvShows.length,
                     ),
                   ),
                   if (_isScrollPositionAtBottom) ...[
@@ -114,7 +127,7 @@ class _TvShowPageState extends State<TvShowPage> {
     }
   }
 
-  Future<void> initFavoriteTvShows() async {
+  Future<void> initPopularTvShows() async {
     await TvShowServices.getPopularTvShows(
       onSuccess: (tvShow) {
         _tvShows = tvShow;
@@ -132,8 +145,6 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> loadMorePopularTvShows() async {
-    setState(() => _isScrollPositionAtBottom = true);
-
     await TvShowServices.getPopularTvShows(
       page: _page,
       onSuccess: (tvShows) {
@@ -145,7 +156,25 @@ class _TvShowPageState extends State<TvShowPage> {
           _page++;
         }
       },
-      onFailure: (_) {},
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
+    ).then((_) {
+      setState(() => _isScrollPositionAtBottom = false);
+    });
+  }
+
+  Future<void> loadMoreSearchedTvShows() async {
+    await TvShowServices.searchTvShows(
+      page: _page,
+      query: widget.query,
+      onSuccess: (tvShows) {
+        widget.searchedTvShows.addAll(tvShows);
+        _page++;
+      },
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });

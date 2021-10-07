@@ -20,8 +20,8 @@ class TvShowPopular {
     return TvShowPopular(
       id: tvShowPopular['id'],
       title: tvShowPopular['name'],
-      releaseDate: tvShowPopular['first_air_date'],
-      voteAverage: tvShowPopular['vote_average'],
+      releaseDate: tvShowPopular['first_air_date'] ?? '',
+      voteAverage: tvShowPopular['vote_average'] ?? 0,
       posterPath: tvShowPopular['poster_path'],
     );
   }

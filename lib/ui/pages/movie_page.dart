@@ -10,9 +10,14 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MoviePage extends StatefulWidget {
-  final List<MoviePopular> movies;
+  final List<MoviePopular> searchedMovies;
+  final String query;
 
-  const MoviePage({Key key, this.movies}) : super(key: key);
+  const MoviePage({
+    Key key,
+    this.searchedMovies,
+    this.query,
+  }) : super(key: key);
 
   @override
   _MoviePageState createState() => _MoviePageState();
@@ -40,6 +45,8 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
+    final searchedMovies = widget.searchedMovies;
+
     if (_isLoading) {
       return const FutureOnLoad();
     } else {
@@ -58,7 +65,13 @@ class _MoviePageState extends State<MoviePage> {
 
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
-                loadMorePopularMovies();
+                setState(() => _isScrollPositionAtBottom = true);
+
+                if (searchedMovies == null) {
+                  loadMorePopularMovies();
+                } else {
+                  loadMoreSearchedMovies();
+                }
               }
             }
 
@@ -80,13 +93,13 @@ class _MoviePageState extends State<MoviePage> {
                       },
                       itemBuilder: (context, index) {
                         return GridItem(
-                            item: widget.movies != null
-                                ? widget.movies[index]
-                                : _movies[index]);
+                            item: searchedMovies == null
+                                ? _movies[index]
+                                : searchedMovies[index]);
                       },
-                      itemCount: widget.movies != null
-                          ? widget.movies.length
-                          : _movies.length,
+                      itemCount: searchedMovies == null
+                          ? _movies.length
+                          : searchedMovies.length,
                     ),
                   ),
                   if (_isScrollPositionAtBottom) ...[
@@ -132,8 +145,6 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Future<void> loadMorePopularMovies() async {
-    setState(() => _isScrollPositionAtBottom = true);
-
     await MovieServices.getPopularMovies(
       page: _page,
       onSuccess: (movies) {
@@ -145,7 +156,25 @@ class _MoviePageState extends State<MoviePage> {
           _page++;
         }
       },
-      onFailure: (_) {},
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
+    ).then((_) {
+      setState(() => _isScrollPositionAtBottom = false);
+    });
+  }
+
+  Future<void> loadMoreSearchedMovies() async {
+    await MovieServices.searchMovies(
+      page: _page,
+      query: widget.query,
+      onSuccess: (movies) {
+        widget.searchedMovies.addAll(movies);
+        _page++;
+      },
+      onFailure: (message) {
+        Utils.showSnackBarMessage(context: context, text: message);
+      },
     ).then((_) {
       setState(() => _isScrollPositionAtBottom = false);
     });
