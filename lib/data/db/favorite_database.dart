@@ -101,13 +101,26 @@ class FavoriteDatabase {
   }
 
   // delete favorite record depending on its favoriteId and type
-  Future<int> deleteFavorite(int favoriteId, String type) async {
+  Future<int> deleteFavoriteByType(int favoriteId, String type) async {
     final db = await instance.database;
 
     final count = await db.delete(
       favoriteTable,
       where: '${FavoriteFields.favoriteId} = ? AND ${FavoriteFields.type} = ?',
       whereArgs: [favoriteId, type],
+    );
+
+    return count;
+  }
+
+  // delete favorite record depending on its id
+  Future<int> deleteFavoriteById(int id) async {
+    final db = await instance.database;
+
+    final count = await db.delete(
+      favoriteTable,
+      where: '${FavoriteFields.id} = ?',
+      whereArgs: [id],
     );
 
     return count;

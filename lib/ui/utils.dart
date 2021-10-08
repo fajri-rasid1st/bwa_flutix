@@ -7,6 +7,7 @@ class Utils {
     @required String text,
     int duration = 2000,
     bool showAction = false,
+    Future<void> Function() action,
   }) {
     SnackBar snackBar = SnackBar(
       content: Text(text),
@@ -14,7 +15,7 @@ class Utils {
       action: showAction
           ? SnackBarAction(
               label: 'Dismiss',
-              onPressed: () {},
+              onPressed: action,
             )
           : null,
     );

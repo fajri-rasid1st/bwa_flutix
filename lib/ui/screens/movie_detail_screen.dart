@@ -669,13 +669,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully added movie to favorite.',
+      text: 'Successfully added movie to favorite',
     );
   }
 
   // function to remove movie from favorite
   Future<void> removeFromFavorite() async {
-    await FavoriteDatabase.instance.deleteFavorite(widget.movieId, 'movie');
+    await FavoriteDatabase.instance
+        .deleteFavoriteByType(widget.movieId, 'movie');
 
     setState(() {
       _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
@@ -684,7 +685,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully removed movie from favorite.',
+      text: 'Successfully removed movie from favorite',
     );
   }
 }

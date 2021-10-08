@@ -724,13 +724,14 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully added tv show to favorite.',
+      text: 'Successfully added tv show to favorite',
     );
   }
 
   // function to remove tv show from favorite
   Future<void> removeFromFavorite() async {
-    await FavoriteDatabase.instance.deleteFavorite(widget.tvShowId, 'tv_show');
+    await FavoriteDatabase.instance
+        .deleteFavoriteByType(widget.tvShowId, 'tv_show');
 
     setState(() {
       _favoriteIcon = Icon(Icons.favorite_outline, color: defaultTextColor);
@@ -739,7 +740,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     Utils.showSnackBarMessage(
       context: context,
-      text: 'Successfully removed tv show from favorite.',
+      text: 'Successfully removed tv show from favorite',
     );
   }
 }
