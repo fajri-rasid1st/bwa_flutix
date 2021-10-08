@@ -40,7 +40,7 @@ class MovieServices {
         // return MoviePopular list
         onSuccess(movies);
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -73,7 +73,7 @@ class MovieServices {
         // return Movie when request success
         onSuccess(movie);
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -104,13 +104,13 @@ class MovieServices {
 
         if (results.isEmpty) {
           // failure if results is empty
-          onFailure('This movie has no trailer.');
+          onFailure('This movie has no trailer');
         } else {
           // else, get video from results at index 0
           onSuccess(Video.fromMap(results[0]));
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -140,7 +140,7 @@ class MovieServices {
             (movieCastsResponse as Map<String, dynamic>)['cast'];
 
         if (results.isEmpty) {
-          onFailure('No credit(s) or cast(s) data.');
+          onFailure('No credit(s) or cast(s) data');
         } else {
           // initialize empty Cast list
           final List<Cast> casts = [];
@@ -156,7 +156,7 @@ class MovieServices {
           onSuccess(casts);
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -193,7 +193,7 @@ class MovieServices {
 
         if (totalPages == 0) {
           // if no result(s) based inserted query, return failure
-          onFailure('Movie(s) not found.');
+          onFailure('Movie(s) not found');
         } else {
           // get each movie inside results
           final movies = List<MoviePopular>.from(
@@ -203,10 +203,12 @@ class MovieServices {
           );
 
           // return movies
-          onSuccess(movies);
+          return movies.length == 0
+              ? onFailure('No more movies')
+              : onSuccess(movies);
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());

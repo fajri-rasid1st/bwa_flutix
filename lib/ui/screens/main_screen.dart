@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
-import 'package:cick_movie_app/data/models/movie_popular.dart';
-import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/pages/favorite_page.dart';
 import 'package:cick_movie_app/ui/pages/movie_page.dart';
+import 'package:cick_movie_app/ui/pages/movie_search_page.dart';
 import 'package:cick_movie_app/ui/pages/tv_show_page.dart';
+import 'package:cick_movie_app/ui/pages/tv_show_search_page.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/utils.dart';
@@ -41,12 +41,8 @@ class _MainScreenState extends State<MainScreen>
   ScrollController _scrollController;
   TextEditingController _searchController;
 
-  // movies
-  List<MoviePopular> _searchedMovies;
+  // movies and tv shows
   MoviePage _moviePage;
-
-  // tv shows
-  List<TvShowPopular> _searchedTvShows;
   TvShowPage _tvShowPage;
 
   // search atributes
@@ -274,30 +270,40 @@ class _MainScreenState extends State<MainScreen>
   }
 
   Future<void> searchContent(String query) async {
-    if (query.isNotEmpty) {
+    if (query.isEmpty) {
+      debounce(() {
+        setState(() {
+          switch (_currentIndex) {
+            case 0:
+              _pages[_currentIndex] = _moviePage;
+              break;
+            case 1:
+              _pages[_currentIndex] = _tvShowPage;
+              break;
+          }
+        });
+      });
+    } else {
       switch (_currentIndex) {
         case 0:
           debounce(() async {
             await MovieServices.searchMovies(
               query: query,
               onSuccess: (movies) {
-                _searchedMovies = movies;
+                if (!mounted) return;
+
+                _scrollController.jumpTo(0);
+
+                _pages[_currentIndex] = MovieSearchPage(
+                  query: query,
+                  movies: movies,
+                );
               },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
               },
             ).then((_) {
-              if (!mounted) return;
-
-              _scrollController.jumpTo(0);
-
-              setState(() {
-                _query = query;
-                _pages[_currentIndex] = MoviePage(
-                  searchedMovies: _searchedMovies,
-                  query: _query,
-                );
-              });
+              setState(() => _query = query);
             });
           });
 
@@ -307,23 +313,20 @@ class _MainScreenState extends State<MainScreen>
             await TvShowServices.searchTvShows(
               query: query,
               onSuccess: (tvShows) {
-                _searchedTvShows = tvShows;
+                if (!mounted) return;
+
+                _scrollController.jumpTo(0);
+
+                _pages[_currentIndex] = TvShowSearchPage(
+                  query: query,
+                  tvShows: tvShows,
+                );
               },
               onFailure: (message) {
                 Utils.showSnackBarMessage(context: context, text: message);
               },
             ).then((_) {
-              if (!mounted) return;
-
-              _scrollController.jumpTo(0);
-
-              setState(() {
-                _query = query;
-                _pages[_currentIndex] = TvShowPage(
-                  searchedTvShows: _searchedTvShows,
-                  query: _query,
-                );
-              });
+              setState(() => _query = query);
             });
           });
 
@@ -335,7 +338,7 @@ class _MainScreenState extends State<MainScreen>
   void debounce(VoidCallback callback) {
     if (_debouncer != null) _debouncer.cancel();
 
-    _debouncer = Timer(const Duration(seconds: 1), callback);
+    _debouncer = Timer(const Duration(milliseconds: 750), callback);
   }
 
   void resetSearching() {

@@ -40,7 +40,7 @@ class TvShowServices {
         // return TvShowPopular list
         onSuccess(tvShows);
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -73,7 +73,7 @@ class TvShowServices {
         // return TvShow when request success
         onSuccess(tvShow);
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -104,13 +104,13 @@ class TvShowServices {
 
         if (results.isEmpty) {
           // failure if results is empty
-          onFailure('This tv show has no trailer.');
+          onFailure('This tv show has no trailer');
         } else {
           // else, get video from results at index 0
           onSuccess(Video.fromMap(results[0]));
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -140,7 +140,7 @@ class TvShowServices {
             (tvShowCastsResponse as Map<String, dynamic>)['cast'];
 
         if (results.isEmpty) {
-          onFailure('No credit(s) or cast(s) data.');
+          onFailure('No credit(s) or cast(s) data');
         } else {
           // initialize empty Cast list
           final List<Cast> casts = [];
@@ -156,7 +156,7 @@ class TvShowServices {
           onSuccess(casts);
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());
@@ -194,7 +194,7 @@ class TvShowServices {
 
         if (totalPages == 0) {
           // if no result(s) based inserted query, return failure
-          onFailure('Tv show(s) not found.');
+          onFailure('Tv show(s) not found');
         } else {
           // otherwise, get each tv show inside results
           final tvShows = List<TvShowPopular>.from(
@@ -204,10 +204,12 @@ class TvShowServices {
           );
 
           // return tvShows
-          onSuccess(tvShows);
+          return tvShows.length == 0
+              ? onFailure('No more tv shows')
+              : onSuccess(tvShows);
         }
       } else {
-        onFailure('Request failed.');
+        onFailure('Request failed');
       }
     } catch (e) {
       onFailure(e.toString());

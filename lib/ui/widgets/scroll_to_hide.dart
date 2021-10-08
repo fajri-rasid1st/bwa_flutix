@@ -10,7 +10,7 @@ class ScrollToHide extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.child,
-    this.duration = const Duration(milliseconds: 250),
+    this.duration = const Duration(milliseconds: 300),
   }) : super(key: key);
 
   @override

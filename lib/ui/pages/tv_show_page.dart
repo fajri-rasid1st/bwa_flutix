@@ -3,21 +3,13 @@ import 'package:cick_movie_app/data/services/tv_show_services.dart';
 import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:cick_movie_app/ui/widgets/grid_item.dart';
+import 'package:cick_movie_app/ui/widgets/grid_items.dart';
 import 'package:cick_movie_app/ui/widgets/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TvShowPage extends StatefulWidget {
-  final List<TvShowPopular> searchedTvShows;
-  final String query;
-
-  const TvShowPage({
-    Key key,
-    this.searchedTvShows,
-    this.query,
-  }) : super(key: key);
+  const TvShowPage({Key key}) : super(key: key);
 
   @override
   _TvShowPageState createState() => _TvShowPageState();
@@ -26,7 +18,7 @@ class TvShowPage extends StatefulWidget {
 class _TvShowPageState extends State<TvShowPage> {
   // initialize atribute
   int _page = 1;
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isScrollPositionAtBottom = false;
   bool _isErrorButtonDisabled = false;
   Widget _errorButtonChild = const Text('Try again');
@@ -45,8 +37,6 @@ class _TvShowPageState extends State<TvShowPage> {
 
   @override
   Widget build(BuildContext context) {
-    final searchedTvShows = widget.searchedTvShows;
-
     if (_isLoading) {
       return const FutureOnLoad();
     } else {
@@ -66,12 +56,7 @@ class _TvShowPageState extends State<TvShowPage> {
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
                 setState(() => _isScrollPositionAtBottom = true);
-
-                if (searchedTvShows == null) {
-                  loadMorePopularTvShows();
-                } else {
-                  loadMoreSearchedTvShows();
-                }
+                loadMorePopularTvShows();
               }
             }
 
@@ -83,24 +68,7 @@ class _TvShowPageState extends State<TvShowPage> {
                 children: <Widget>[
                   PullToRefresh(
                     onRefresh: refreshPopularTvShows,
-                    child: StaggeredGridView.extentBuilder(
-                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      maxCrossAxisExtent: 200,
-                      staggeredTileBuilder: (index) {
-                        return const StaggeredTile.extent(1, 320);
-                      },
-                      itemBuilder: (context, index) {
-                        return GridItem(
-                            item: searchedTvShows == null
-                                ? _tvShows[index]
-                                : searchedTvShows[index]);
-                      },
-                      itemCount: searchedTvShows == null
-                          ? _tvShows.length
-                          : searchedTvShows.length,
-                    ),
+                    child: GridItems(items: _tvShows),
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -128,10 +96,12 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> initPopularTvShows() async {
+    setState(() => _isLoading = true);
+
     await TvShowServices.getPopularTvShows(
       onSuccess: (tvShow) {
         _tvShows = tvShow;
-        _lastInsertedTvShow = _tvShows[0];
+        _lastInsertedTvShow = _tvShows.first;
       },
       onFailure: (message) {
         _failureMessage = message;
@@ -148,27 +118,13 @@ class _TvShowPageState extends State<TvShowPage> {
     await TvShowServices.getPopularTvShows(
       page: _page,
       onSuccess: (tvShows) {
-        if (_lastInsertedTvShow.toString() != tvShows[0].toString()) {
+        if (_lastInsertedTvShow.toString() != tvShows.first.toString()) {
           _tvShows.addAll(tvShows);
 
-          _lastInsertedTvShow = tvShows[0];
+          _lastInsertedTvShow = tvShows.first;
 
           _page++;
         }
-      },
-      onFailure: (_) {},
-    ).then((_) {
-      setState(() => _isScrollPositionAtBottom = false);
-    });
-  }
-
-  Future<void> loadMoreSearchedTvShows() async {
-    await TvShowServices.searchTvShows(
-      page: _page,
-      query: widget.query,
-      onSuccess: (tvShows) {
-        widget.searchedTvShows.addAll(tvShows);
-        _page++;
       },
       onFailure: (_) {},
     ).then((_) {
@@ -203,7 +159,7 @@ class _TvShowPageState extends State<TvShowPage> {
     await TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {
         _tvShows = tvShows;
-        _lastInsertedTvShow = _tvShows[0];
+        _lastInsertedTvShow = _tvShows.first;
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);

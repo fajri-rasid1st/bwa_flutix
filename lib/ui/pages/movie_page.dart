@@ -3,21 +3,13 @@ import 'package:cick_movie_app/data/services/movie_services.dart';
 import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:cick_movie_app/ui/widgets/grid_item.dart';
+import 'package:cick_movie_app/ui/widgets/grid_items.dart';
 import 'package:cick_movie_app/ui/widgets/pull_to_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class MoviePage extends StatefulWidget {
-  final List<MoviePopular> searchedMovies;
-  final String query;
-
-  const MoviePage({
-    Key key,
-    this.searchedMovies,
-    this.query,
-  }) : super(key: key);
+  const MoviePage({Key key}) : super(key: key);
 
   @override
   _MoviePageState createState() => _MoviePageState();
@@ -26,7 +18,7 @@ class MoviePage extends StatefulWidget {
 class _MoviePageState extends State<MoviePage> {
   // initialize atribute
   int _page = 1;
-  bool _isLoading = true;
+  bool _isLoading = false;
   bool _isScrollPositionAtBottom = false;
   bool _isErrorButtonDisabled = false;
   Widget _errorButtonChild = const Text('Try again');
@@ -45,8 +37,6 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    final searchedMovies = widget.searchedMovies;
-
     if (_isLoading) {
       return const FutureOnLoad();
     } else {
@@ -66,12 +56,7 @@ class _MoviePageState extends State<MoviePage> {
             if (metrics.atEdge) {
               if (metrics.pixels != 0) {
                 setState(() => _isScrollPositionAtBottom = true);
-
-                if (searchedMovies == null) {
-                  loadMorePopularMovies();
-                } else {
-                  loadMoreSearchedMovies();
-                }
+                loadMorePopularMovies();
               }
             }
 
@@ -83,24 +68,7 @@ class _MoviePageState extends State<MoviePage> {
                 children: <Widget>[
                   PullToRefresh(
                     onRefresh: refreshPopularMovies,
-                    child: StaggeredGridView.extentBuilder(
-                      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      maxCrossAxisExtent: 200,
-                      staggeredTileBuilder: (index) {
-                        return const StaggeredTile.extent(1, 320);
-                      },
-                      itemBuilder: (context, index) {
-                        return GridItem(
-                            item: searchedMovies == null
-                                ? _movies[index]
-                                : searchedMovies[index]);
-                      },
-                      itemCount: searchedMovies == null
-                          ? _movies.length
-                          : searchedMovies.length,
-                    ),
+                    child: GridItems(items: _movies),
                   ),
                   if (_isScrollPositionAtBottom) ...[
                     Positioned(
@@ -128,10 +96,12 @@ class _MoviePageState extends State<MoviePage> {
   }
 
   Future<void> initPopularMovies() async {
+    setState(() => _isLoading = true);
+
     await MovieServices.getPopularMovies(
       onSuccess: (movies) {
         _movies = movies;
-        _lastInsertedMovie = _movies[0];
+        _lastInsertedMovie = _movies.first;
       },
       onFailure: (message) {
         _failureMessage = message;
@@ -148,27 +118,13 @@ class _MoviePageState extends State<MoviePage> {
     await MovieServices.getPopularMovies(
       page: _page,
       onSuccess: (movies) {
-        if (_lastInsertedMovie.toString() != movies[0].toString()) {
+        if (_lastInsertedMovie.toString() != movies.first.toString()) {
           _movies.addAll(movies);
 
-          _lastInsertedMovie = movies[0];
+          _lastInsertedMovie = movies.first;
 
           _page++;
         }
-      },
-      onFailure: (_) {},
-    ).then((_) {
-      setState(() => _isScrollPositionAtBottom = false);
-    });
-  }
-
-  Future<void> loadMoreSearchedMovies() async {
-    await MovieServices.searchMovies(
-      page: _page,
-      query: widget.query,
-      onSuccess: (movies) {
-        widget.searchedMovies.addAll(movies);
-        _page++;
       },
       onFailure: (_) {},
     ).then((_) {
@@ -203,7 +159,7 @@ class _MoviePageState extends State<MoviePage> {
     await MovieServices.getPopularMovies(
       onSuccess: (movies) {
         _movies = movies;
-        _lastInsertedMovie = _movies[0];
+        _lastInsertedMovie = _movies.first;
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);
