@@ -76,16 +76,16 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
       page: _page,
       query: widget.query,
       onSuccess: (tvShows) {
-        if (_lastInsertedTvShow != null) {
-          if (_lastInsertedTvShow.toString() != tvShows.first.toString()) {
-            widget.tvShows.addAll(tvShows);
+        if (_lastInsertedTvShow == null) {
+          _lastInsertedTvShow = widget.tvShows.first;
+        }
 
-            _lastInsertedTvShow = tvShows.first;
+        if (_lastInsertedTvShow.toString() != tvShows.first.toString()) {
+          widget.tvShows.addAll(tvShows);
 
-            _page++;
-          }
-        } else {
           _lastInsertedTvShow = tvShows.first;
+
+          _page++;
         }
       },
       onFailure: (message) {

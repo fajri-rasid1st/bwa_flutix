@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/ui/screens/tv_show_detail_screen.dart';
@@ -7,9 +5,8 @@ import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_empty.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
+import 'package:cick_movie_app/ui/widgets/list_items.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
 
 class FavoriteTvShowPage extends StatefulWidget {
   const FavoriteTvShowPage({Key key}) : super(key: key);
@@ -49,129 +46,87 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
   }
 
   Widget buildTvShowFavoriteList(List<Favorite> tvShowFavorites) {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      physics: BouncingScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        return buildCard(_tvShowFavorites[index]);
-      },
-      separatorBuilder: (context, index) {
-        return const SizedBox(height: 4);
-      },
-      itemCount: _tvShowFavorites.length,
+    return ListItems(
+      items: tvShowFavorites,
+      onTap: routeToTvShowDetailScreen,
+      onLongPress: showTvShowFavoriteDialog,
     );
   }
 
-  Widget buildCard(Favorite item) {
-    final dateTime = DateTime.parse(item.createdAt.toString());
-    final createdAt = DateFormat('MMM dd, y hh:mm a').format(dateTime);
+  Future<void> routeToTvShowDetailScreen(
+    BuildContext context,
+    Favorite item,
+  ) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return TvShowDetailScreen(tvShowId: item.favoriteId);
+        },
+      ),
+    ).then((_) {
+      getTvShowFavorites().then((favorites) {
+        setState(() => _tvShowFavorites = favorites);
+      });
+    });
+  }
 
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Stack(
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: CachedNetworkImage(
-                    imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    fadeInDuration: const Duration(milliseconds: 500),
-                    fadeOutDuration: const Duration(milliseconds: 500),
-                    placeholder: (context, url) {
-                      return Center(
-                        child: SpinKitThreeBounce(
-                          size: 20,
-                          color: secondaryColor,
-                        ),
-                      );
-                    },
-                    errorWidget: (context, url, error) {
-                      return Center(
-                        child: Icon(
-                          Icons.motion_photos_off_outlined,
-                          color: secondaryTextColor,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        item.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: titleTextStyle,
-                      ),
-                      const SizedBox(height: 4),
-                      Wrap(
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.event,
-                            size: 18,
-                            color: primaryColor,
-                          ),
-                          const SizedBox(width: 4),
-                          Text(
-                            createdAt,
-                            style: subTitleTextStyle,
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        item.overview,
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                        style: secondaryTextStyle,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+  Future<void> showTvShowFavoriteDialog(
+    BuildContext context,
+    Favorite item,
+  ) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
           ),
-          Positioned.fill(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return TvShowDetailScreen(
-                            tvShowId: item.favoriteId,
-                          );
-                        },
-                      ),
-                    ).then((_) {
-                      getTvShowFavorites().then((favorites) {
-                        setState(() => _tvShowFavorites = favorites);
-                      });
-                    });
-                  },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  item.title,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: titleTextStyle,
                 ),
-              ),
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    buildDialogOption(Icons.delete_outline, 'Delete'),
+                    const SizedBox(width: 24),
+                    buildDialogOption(Icons.info_outline, 'Detail'),
+                  ],
+                ),
+              ],
             ),
           ),
+        );
+      },
+    );
+  }
+
+  Widget buildDialogOption(IconData icon, String text) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Icon(
+            icon,
+            color: defaultTextColor,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            text,
+            style: cardTitleTextStyle,
+          )
         ],
       ),
     );

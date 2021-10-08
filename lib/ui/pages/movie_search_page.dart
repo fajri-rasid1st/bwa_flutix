@@ -76,16 +76,16 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
       page: _page,
       query: widget.query,
       onSuccess: (movies) {
-        if (_lastInsertedMovie != null) {
-          if (_lastInsertedMovie.toString() != movies.first.toString()) {
-            widget.movies.addAll(movies);
+        if (_lastInsertedMovie == null) {
+          _lastInsertedMovie = widget.movies.first;
+        }
 
-            _lastInsertedMovie = movies.first;
+        if (_lastInsertedMovie.toString() != movies.first.toString()) {
+          widget.movies.addAll(movies);
 
-            _page++;
-          }
-        } else {
           _lastInsertedMovie = movies.first;
+
+          _page++;
         }
       },
       onFailure: (message) {

@@ -20,7 +20,7 @@ class Utils {
     );
 
     ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
+      ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
   }
 

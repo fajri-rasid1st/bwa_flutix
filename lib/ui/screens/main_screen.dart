@@ -118,9 +118,13 @@ class _MainScreenState extends State<MainScreen>
           body: NotificationListener<UserScrollNotification>(
             onNotification: (userScroll) {
               if (userScroll.direction == ScrollDirection.forward) {
-                setState(() => _isFabVisible = true);
+                if (!_isFabVisible) {
+                  setState(() => _isFabVisible = true);
+                }
               } else if (userScroll.direction == ScrollDirection.reverse) {
-                setState(() => _isFabVisible = false);
+                if (_isFabVisible) {
+                  setState(() => _isFabVisible = false);
+                }
               }
 
               return true;
