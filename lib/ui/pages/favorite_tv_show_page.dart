@@ -123,10 +123,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
             color: defaultTextColor,
           ),
           const SizedBox(height: 4),
-          Text(
-            text,
-            style: cardTitleTextStyle,
-          )
+          Text(text)
         ],
       ),
     );

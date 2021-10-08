@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class DetailAppBar extends StatelessWidget {
   final String title;
   final Icon favoriteIcon;
-  final Future<void> Function() onPressedFavoriteIcon;
+  final Future<void> Function(BuildContext context) onPressedFavoriteIcon;
 
   const DetailAppBar({
     Key key,
@@ -37,7 +37,7 @@ class DetailAppBar extends StatelessWidget {
       ),
       actions: <Widget>[
         IconButton(
-          onPressed: onPressedFavoriteIcon,
+          onPressed: () => onPressedFavoriteIcon(context),
           icon: favoriteIcon,
           tooltip: 'Favorite',
         ),

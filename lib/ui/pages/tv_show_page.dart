@@ -132,7 +132,7 @@ class _TvShowPageState extends State<TvShowPage> {
     });
   }
 
-  Future<void> refreshPopularTvShows() async {
+  Future<void> refreshPopularTvShows({BuildContext context}) async {
     if (_tvShows == null) {
       setState(() {
         _isErrorButtonDisabled = true;

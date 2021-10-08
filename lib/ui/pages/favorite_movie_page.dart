@@ -123,10 +123,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
             color: defaultTextColor,
           ),
           const SizedBox(height: 4),
-          Text(
-            text,
-            style: cardTitleTextStyle,
-          )
+          Text(text)
         ],
       ),
     );
