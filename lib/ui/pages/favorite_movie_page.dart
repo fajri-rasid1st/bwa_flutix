@@ -53,10 +53,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
     );
   }
 
-  Future<void> routeToMovieDetailScreen(
-    BuildContext context,
-    Favorite item,
-  ) async {
+  Future<void> routeToMovieDetailScreen(Favorite item) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -71,10 +68,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
     });
   }
 
-  Future<void> showMovieFavoriteDialog(
-    BuildContext context,
-    Favorite item,
-  ) async {
+  Future<void> showMovieFavoriteDialog(Favorite item) async {
     showDialog(
       context: context,
       builder: (context) {

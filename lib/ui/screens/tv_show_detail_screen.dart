@@ -621,7 +621,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   }
 
   // function to fetch all tv show data
-  Future<void> getAllTvShowData({BuildContext context}) async {
+  Future<void> getAllTvShowData() async {
     setState(() {
       _isErrorButtonDisabled = true;
       _errorButtonChild = Wrap(
@@ -705,7 +705,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   }
 
   // function to add tv show to favorite
-  Future<void> addToFavorite(BuildContext context) async {
+  Future<void> addToFavorite() async {
     final favorite = Favorite(
       favoriteId: widget.tvShowId,
       title: _tvShow.title,
@@ -729,7 +729,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
   }
 
   // function to remove tv show from favorite
-  Future<void> removeFromFavorite(BuildContext context) async {
+  Future<void> removeFromFavorite() async {
     await FavoriteDatabase.instance.deleteFavorite(widget.tvShowId, 'tv_show');
 
     setState(() {

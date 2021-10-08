@@ -566,7 +566,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to fetch all movie data
-  Future<void> getAllMovieData({BuildContext context}) async {
+  Future<void> getAllMovieData() async {
     setState(() {
       _isErrorButtonDisabled = true;
       _errorButtonChild = Wrap(
@@ -650,7 +650,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to add movie to favorite
-  Future<void> addToFavorite(BuildContext context) async {
+  Future<void> addToFavorite() async {
     final favorite = Favorite(
       favoriteId: widget.movieId,
       title: _movie.title,
@@ -674,7 +674,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   }
 
   // function to remove movie from favorite
-  Future<void> removeFromFavorite(BuildContext context) async {
+  Future<void> removeFromFavorite() async {
     await FavoriteDatabase.instance.deleteFavorite(widget.movieId, 'movie');
 
     setState(() {

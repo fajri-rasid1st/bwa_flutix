@@ -37,7 +37,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
         if (metrics.atEdge) {
           if (metrics.pixels != 0) {
             setState(() => _isScrollPositionAtBottom = true);
-            loadMoreSearchedMovies(context);
+            loadMoreSearchedMovies();
           }
         }
 
@@ -71,7 +71,7 @@ class _MovieSearchPageState extends State<MovieSearchPage> {
     );
   }
 
-  Future<void> loadMoreSearchedMovies(BuildContext context) async {
+  Future<void> loadMoreSearchedMovies() async {
     await MovieServices.searchMovies(
       page: _page,
       query: widget.query,

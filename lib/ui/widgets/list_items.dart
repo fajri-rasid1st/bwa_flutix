@@ -9,8 +9,8 @@ import 'package:intl/intl.dart';
 
 class ListItems extends StatelessWidget {
   final List<Favorite> items;
-  final Future<void> Function(BuildContext context, Favorite item) onTap;
-  final Future<void> Function(BuildContext context, Favorite item) onLongPress;
+  final Future<void> Function(Favorite item) onTap;
+  final Future<void> Function(Favorite item) onLongPress;
 
   const ListItems({
     Key key,
@@ -26,7 +26,7 @@ class ListItems extends StatelessWidget {
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        return buildListItem(context, items[index]);
+        return buildListItem(items[index]);
       },
       separatorBuilder: (context, index) {
         return const SizedBox(height: 4);
@@ -35,7 +35,7 @@ class ListItems extends StatelessWidget {
     );
   }
 
-  Widget buildListItem(BuildContext context, Favorite item) {
+  Widget buildListItem(Favorite item) {
     final dateTime = DateTime.parse(item.createdAt.toString());
     final createdAt = DateFormat('MMM dd, y hh:mm a').format(dateTime);
 
@@ -124,8 +124,8 @@ class ListItems extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  onTap: () => onTap(context, item),
-                  onLongPress: () => onLongPress(context, item),
+                  onTap: () => onTap(item),
+                  onLongPress: () => onLongPress(item),
                 ),
               ),
             ),

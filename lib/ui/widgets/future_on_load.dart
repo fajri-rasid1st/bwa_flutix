@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class FutureOnLoad extends StatelessWidget {
   final String text;
   final bool isError;
-  final Future<void> Function({BuildContext context}) onPressedErrorButton;
+  final Future<void> Function() onPressedErrorButton;
   final Widget errorButtonChild;
 
   const FutureOnLoad({
@@ -40,7 +40,7 @@ class FutureOnLoad extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
-                  onPressed: () => onPressedErrorButton(context: context),
+                  onPressed: onPressedErrorButton,
                   child: errorButtonChild,
                 )
               ] else ...[

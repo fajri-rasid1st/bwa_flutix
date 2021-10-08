@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class PullToRefresh extends StatelessWidget {
   final Widget child;
-  final Future<void> Function({BuildContext context}) onRefresh;
+  final Future<void> Function() onRefresh;
 
   const PullToRefresh({
     Key key,
@@ -15,7 +15,7 @@ class PullToRefresh extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       child: child,
-      onRefresh: () => onRefresh(context: context),
+      onRefresh: onRefresh,
       color: primaryColor,
     );
   }

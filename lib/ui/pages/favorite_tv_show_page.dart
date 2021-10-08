@@ -53,10 +53,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     );
   }
 
-  Future<void> routeToTvShowDetailScreen(
-    BuildContext context,
-    Favorite item,
-  ) async {
+  Future<void> routeToTvShowDetailScreen(Favorite item) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -71,10 +68,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     });
   }
 
-  Future<void> showTvShowFavoriteDialog(
-    BuildContext context,
-    Favorite item,
-  ) async {
+  Future<void> showTvShowFavoriteDialog(Favorite item) async {
     showDialog(
       context: context,
       builder: (context) {

@@ -132,7 +132,7 @@ class _MoviePageState extends State<MoviePage> {
     });
   }
 
-  Future<void> refreshPopularMovies({BuildContext context}) async {
+  Future<void> refreshPopularMovies() async {
     if (_movies == null) {
       setState(() {
         _isErrorButtonDisabled = true;

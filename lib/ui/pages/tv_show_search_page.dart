@@ -37,7 +37,7 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
         if (metrics.atEdge) {
           if (metrics.pixels != 0) {
             setState(() => _isScrollPositionAtBottom = true);
-            loadMoreSearchedTvShows(context);
+            loadMoreSearchedTvShows();
           }
         }
 
@@ -71,7 +71,7 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
     );
   }
 
-  Future<void> loadMoreSearchedTvShows(BuildContext context) async {
+  Future<void> loadMoreSearchedTvShows() async {
     await TvShowServices.searchTvShows(
       page: _page,
       query: widget.query,
