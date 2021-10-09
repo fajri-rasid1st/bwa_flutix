@@ -17,14 +17,16 @@ class FavoriteTvShowPage extends StatefulWidget {
 }
 
 class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
+  // declaration attribute
   List<Favorite> _tvShowFavorites;
-  Favorite _deletedFavorite;
 
+  // initialization attribute
   bool _isLoading = true;
 
   @override
   void initState() {
-    getTvShowFavorites().then((favorites) {
+    // get all favorite tv shows from database
+    getFavoriteTvShows().then((favorites) {
       setState(() {
         _tvShowFavorites = favorites;
         _isLoading = false;
@@ -47,6 +49,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     }
   }
 
+  // function to build tv show favorite list items
   Widget buildTvShowFavoriteList(List<Favorite> tvShowFavorites) {
     return ListItems(
       items: tvShowFavorites,
@@ -55,22 +58,53 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     );
   }
 
-  Future<void> routeToTvShowDetailScreen(Favorite item) async {
+  // function to build dialog option
+  Widget buildDialogOption({
+    Favorite tvShow,
+    IconData icon,
+    String text,
+    Future<void> Function(Favorite tvShow) onTap,
+  }) {
+    return InkWell(
+      onTap: () => onTap(tvShow),
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                icon,
+                color: defaultTextColor,
+              ),
+              const SizedBox(height: 4),
+              Text(text)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // function to route to tv show detail screen, when tapped favorite tv show item
+  Future<void> routeToTvShowDetailScreen(Favorite tvShow) async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return TvShowDetailScreen(tvShowId: item.favoriteId);
+          return TvShowDetailScreen(tvShowId: tvShow.favoriteId);
         },
       ),
     ).then((_) {
-      getTvShowFavorites().then((favorites) {
+      getFavoriteTvShows().then((favorites) {
         setState(() => _tvShowFavorites = favorites);
       });
     });
   }
 
-  Future<void> showTvShowFavoriteDialog(Favorite item) async {
+  // function to show tv show favorite dialog, when on long pressed favorite tv show item
+  Future<void> showTvShowFavoriteDialog(Favorite tvShow) async {
     showGeneralDialog(
       context: context,
       barrierDismissible: true,
@@ -94,7 +128,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      item.title,
+                      tvShow.title,
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
@@ -105,14 +139,14 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         buildDialogOption(
-                          item: item,
+                          tvShow: tvShow,
                           icon: Icons.delete_outline,
                           text: 'Delete',
-                          onTap: removeFromFavorite,
+                          onTap: removeTvShowFromFavorite,
                         ),
                         const SizedBox(width: 20),
                         buildDialogOption(
-                          item: item,
+                          tvShow: tvShow,
                           icon: Icons.info_outlined,
                           text: 'Details',
                           onTap: routeToTvShowDetailScreen,
@@ -131,43 +165,17 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
     );
   }
 
-  Widget buildDialogOption({
-    Favorite item,
-    IconData icon,
-    String text,
-    Future<void> Function(Favorite item) onTap,
-  }) {
-    return GestureDetector(
-      onTap: () => onTap(item),
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Icon(
-                icon,
-                color: defaultTextColor,
-              ),
-              const SizedBox(height: 4),
-              Text(text)
-            ],
-          ),
-        ),
-      ),
-    );
+  // function to get all favorite tv show from database
+  Future<List<Favorite>> getFavoriteTvShows() async {
+    return FavoriteDatabase.instance.readFavorites('tv_show');
   }
 
-  Future<List<Favorite>> getTvShowFavorites() async {
-    return await FavoriteDatabase.instance.readFavorites('tv_show');
-  }
+  // function to remove tv show from favorite tv show list
+  Future<void> removeTvShowFromFavorite(Favorite tvShow) async {
+    final deletedTvShow = tvShow;
 
-  Future<void> removeFromFavorite(Favorite item) async {
-    await FavoriteDatabase.instance.deleteFavoriteById(item.id).then((_) {
-      _deletedFavorite = item;
-
-      getTvShowFavorites().then((favorites) {
+    FavoriteDatabase.instance.deleteFavoriteById(tvShow.id).then((_) {
+      getFavoriteTvShows().then((favorites) {
         setState(() {
           _tvShowFavorites = favorites;
         });
@@ -181,13 +189,14 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
       text: 'Successfully removed tv show from favorite',
       duration: 3000,
       showAction: true,
-      action: retrieveFavorite,
+      action: () => retrieveDeletedFavoriteTvShow(deletedTvShow),
     );
   }
 
-  Future<void> retrieveFavorite() async {
-    await FavoriteDatabase.instance.createFavorite(_deletedFavorite).then((_) {
-      getTvShowFavorites().then((favorites) {
+  // function to retrieve previously deleted tv show
+  Future<void> retrieveDeletedFavoriteTvShow(Favorite tvShow) async {
+    FavoriteDatabase.instance.createFavorite(tvShow).then((_) {
+      getFavoriteTvShows().then((favorites) {
         setState(() {
           _tvShowFavorites = favorites;
         });

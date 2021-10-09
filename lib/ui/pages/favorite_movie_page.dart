@@ -3,6 +3,7 @@ import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/widgets/favorite_empty.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
 import 'package:cick_movie_app/ui/widgets/list_items.dart';
@@ -16,13 +17,16 @@ class FavoriteMoviePage extends StatefulWidget {
 }
 
 class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
+  // declaration attribute
   List<Favorite> _movieFavorites;
 
+  // initialization attribute
   bool _isLoading = true;
 
   @override
   void initState() {
-    getMovieFavorites().then((favorites) {
+    // get all favorite movies from database
+    getFavoriteMovies().then((favorites) {
       setState(() {
         _movieFavorites = favorites;
         _isLoading = false;
@@ -45,6 +49,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
     }
   }
 
+  // function to build movie favorite list items
   Widget buildMovieFavoriteList(List<Favorite> movieFavorites) {
     return ListItems(
       items: movieFavorites,
@@ -53,77 +58,149 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
     );
   }
 
-  Future<void> routeToMovieDetailScreen(Favorite item) async {
+  // function to build dialog option
+  Widget buildDialogOption({
+    Favorite movie,
+    IconData icon,
+    String text,
+    Future<void> Function(Favorite movie) onTap,
+  }) {
+    return InkWell(
+      onTap: () => onTap(movie),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(
+                icon,
+                color: defaultTextColor,
+              ),
+              const SizedBox(height: 4),
+              Text(text)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // function to route to movie detail screen, when tapped favorite movie item
+  Future<void> routeToMovieDetailScreen(Favorite movie) async {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) {
-          return MovieDetailScreen(movieId: item.favoriteId);
+          return MovieDetailScreen(movieId: movie.favoriteId);
         },
       ),
     ).then((_) {
-      getMovieFavorites().then((favorites) {
+      getFavoriteMovies().then((favorites) {
         setState(() => _movieFavorites = favorites);
       });
     });
   }
 
-  Future<void> showMovieFavoriteDialog(Favorite item) async {
-    showDialog(
+  // function to show movie favorite dialog, when on long pressed favorite movie item
+  Future<void> showMovieFavoriteDialog(Favorite movie) async {
+    showGeneralDialog(
       context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  item.title,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: titleTextStyle,
-                ),
-                const SizedBox(height: 24),
-                Row(
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionBuilder: (context, animStart, animEnd, widget) {
+        final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
+
+        return Transform(
+          transform: Matrix4.translationValues(0, (curvedValue * -100), 0),
+          child: Opacity(
+            opacity: animStart.value,
+            child: Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    buildDialogOption(Icons.delete_outline, 'Delete'),
-                    const SizedBox(width: 24),
-                    buildDialogOption(Icons.info_outline, 'Detail'),
+                    Text(
+                      movie.title,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      style: titleTextStyle,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        buildDialogOption(
+                          movie: movie,
+                          icon: Icons.delete_outline,
+                          text: 'Delete',
+                          onTap: removeMovieFromFavorite,
+                        ),
+                        const SizedBox(width: 20),
+                        buildDialogOption(
+                          movie: movie,
+                          icon: Icons.info_outlined,
+                          text: 'Details',
+                          onTap: routeToMovieDetailScreen,
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-              ],
+              ),
             ),
           ),
         );
       },
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animStart, animEnd) => Container(),
     );
   }
 
-  Widget buildDialogOption(IconData icon, String text) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Icon(
-            icon,
-            color: defaultTextColor,
-          ),
-          const SizedBox(height: 4),
-          Text(text)
-        ],
-      ),
+  // function to get all favorite movies from database
+  Future<List<Favorite>> getFavoriteMovies() async {
+    return FavoriteDatabase.instance.readFavorites('movie');
+  }
+
+  // function to remove movie from favorite movie list
+  Future<void> removeMovieFromFavorite(Favorite movie) async {
+    final deletedMovie = movie;
+
+    FavoriteDatabase.instance.deleteFavoriteById(movie.id).then((_) {
+      getFavoriteMovies().then((favorites) {
+        setState(() {
+          _movieFavorites = favorites;
+        });
+      }).then((_) {
+        Navigator.pop(context);
+      });
+    });
+
+    Utils.showSnackBarMessage(
+      context: context,
+      text: 'Successfully removed movie from favorite',
+      duration: 3000,
+      showAction: true,
+      action: () => retrieveDeletedFavoriteMovie(deletedMovie),
     );
   }
 
-  Future<List<Favorite>> getMovieFavorites() async {
-    return await FavoriteDatabase.instance.readFavorites('movie');
+  // function to retrieve previously deleted movie
+  Future<void> retrieveDeletedFavoriteMovie(Favorite movie) async {
+    FavoriteDatabase.instance.createFavorite(movie).then((_) {
+      getFavoriteMovies().then((favorites) {
+        setState(() {
+          _movieFavorites = favorites;
+        });
+      });
+    });
   }
 }

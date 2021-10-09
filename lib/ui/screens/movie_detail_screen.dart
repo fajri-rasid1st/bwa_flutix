@@ -586,7 +586,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
       );
     });
 
-    await Future.wait([
+    Future.wait([
       MovieServices.getMovie(
         movieId: widget.movieId,
         onSuccess: (movie) => _movie = movie,

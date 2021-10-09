@@ -140,6 +140,7 @@ class MovieServices {
             (movieCastsResponse as Map<String, dynamic>)['cast'];
 
         if (results.isEmpty) {
+          // if results is empty, return failure
           onFailure('No credit(s) or cast(s) data');
         } else {
           // initialize empty Cast list
