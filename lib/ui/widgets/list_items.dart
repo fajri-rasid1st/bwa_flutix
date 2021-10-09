@@ -8,7 +8,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class ListItems extends StatelessWidget {
-  final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   final List<Favorite> items;
   final Future<void> Function(Favorite item) onTap;
   final Future<void> Function(Favorite item) onLongPress;
@@ -22,42 +21,21 @@ class ListItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return ListView.separated(
-    //   padding: const EdgeInsets.all(16),
-    //   physics: BouncingScrollPhysics(),
-    //   shrinkWrap: true,
-    //   itemBuilder: (context, index) {
-    //     return buildListItem(items[index]);
-    //   },
-    //   separatorBuilder: (context, index) {
-    //     return const SizedBox(height: 4);
-    //   },
-    //   itemCount: items.length,
-    // );
-
-    return AnimatedList(
-      key: listKey,
+    return ListView.separated(
       padding: const EdgeInsets.all(16),
       physics: BouncingScrollPhysics(),
       shrinkWrap: true,
-      itemBuilder: (context, index, animation) {
-        return SizeTransition(
-            sizeFactor: animation,
-            child: buildListItem(
-              index: index,
-              item: items[index],
-              animation: animation,
-            ));
+      itemBuilder: (context, index) {
+        return buildListItem(items[index]);
       },
-      initialItemCount: items.length,
+      separatorBuilder: (context, index) {
+        return const SizedBox(height: 4);
+      },
+      itemCount: items.length,
     );
   }
 
-  Widget buildListItem({
-    int index,
-    @required Favorite item,
-    @required Animation<double> animation,
-  }) {
+  Widget buildListItem(Favorite item) {
     final dateTime = DateTime.parse(item.createdAt.toString());
     final createdAt = DateFormat('MMM dd, y hh:mm a').format(dateTime);
 
@@ -144,46 +122,14 @@ class ListItems extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () {
-                  onTap(item).then((_) => removeItem(index));
-                },
-                onLongPress: () {
-                  onLongPress(item).then((_) => insertItem(item));
-                },
                 borderRadius: BorderRadius.circular(8),
+                onTap: () => onTap(item),
+                onLongPress: () => onLongPress(item),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  void removeItem(int index) {
-    final removedItem = items[index];
-
-    items.removeAt(index);
-
-    listKey.currentState.removeItem(
-      index,
-      (context, animation) {
-        return buildListItem(
-          item: removedItem,
-          animation: animation,
-        );
-      },
-      duration: const Duration(milliseconds: 500),
-    );
-  }
-
-  void insertItem(Favorite item) {
-    final newIndex = 1;
-
-    items.insert(newIndex, item);
-
-    listKey.currentState.insertItem(
-      newIndex,
-      duration: const Duration(milliseconds: 500),
     );
   }
 }
