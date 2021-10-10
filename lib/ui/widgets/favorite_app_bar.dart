@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 
 class FavoriteAppBar extends StatelessWidget {
   final String title;
+  final bool innerBoxIsScrolled;
   final TabController controller;
 
   const FavoriteAppBar({
     Key key,
     @required this.title,
+    @required this.innerBoxIsScrolled,
     @required this.controller,
   }) : super(key: key);
 
@@ -55,6 +57,7 @@ class FavoriteAppBar extends StatelessWidget {
           ),
         ],
       ),
+      forceElevated: innerBoxIsScrolled,
     );
   }
 }

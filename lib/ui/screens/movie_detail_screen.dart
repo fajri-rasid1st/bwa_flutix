@@ -109,6 +109,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
               favoriteIcon: _favoriteIcon,
               onPressedFavoriteIcon:
                   _isFavorite ? removeFromFavorite : addToFavorite,
+              innerBoxIsScrolled: innerBoxIsScrolled,
             )
           ];
         },

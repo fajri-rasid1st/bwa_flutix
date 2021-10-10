@@ -110,6 +110,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
               favoriteIcon: _favoriteIcon,
               onPressedFavoriteIcon:
                   _isFavorite ? removeFromFavorite : addToFavorite,
+              innerBoxIsScrolled: innerBoxIsScrolled,
             )
           ];
         },

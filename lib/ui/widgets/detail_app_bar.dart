@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 class DetailAppBar extends StatelessWidget {
   final String title;
+  final bool innerBoxIsScrolled;
   final Icon favoriteIcon;
   final Future<void> Function() onPressedFavoriteIcon;
 
   const DetailAppBar({
     Key key,
     @required this.title,
+    @required this.innerBoxIsScrolled,
     @required this.favoriteIcon,
     @required this.onPressedFavoriteIcon,
   }) : super(key: key);
@@ -20,7 +22,6 @@ class DetailAppBar extends StatelessWidget {
       floating: true,
       snap: true,
       pinned: true,
-      elevation: 0,
       backgroundColor: backgroundColor,
       centerTitle: true,
       title: Text(
@@ -43,6 +44,7 @@ class DetailAppBar extends StatelessWidget {
         ),
       ],
       bottom: DetailBottomAppBar(),
+      forceElevated: innerBoxIsScrolled,
     );
   }
 }

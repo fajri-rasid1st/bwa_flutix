@@ -106,11 +106,13 @@ class _MainScreenState extends State<MainScreen>
                   title: _isSearching ? buildSearchField() : buildTitle(_title),
                   leading: _isSearching ? buildLeading() : null,
                   actions: _isSearching ? null : buildActions(),
+                  innerBoxIsScrolled: innerBoxIsScrolled,
                 )
               ] else ...[
                 FavoriteAppBar(
                   title: _title,
                   controller: _tabController,
+                  innerBoxIsScrolled: innerBoxIsScrolled,
                 )
               ]
             ];
