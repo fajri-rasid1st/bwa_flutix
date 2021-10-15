@@ -279,10 +279,10 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                         height: 165,
                                         fit: BoxFit.cover,
                                         fadeInDuration: const Duration(
-                                          milliseconds: 500,
+                                          milliseconds: 200,
                                         ),
                                         fadeOutDuration: const Duration(
-                                          milliseconds: 500,
+                                          milliseconds: 200,
                                         ),
                                         placeholder: (context, url) {
                                           return Center(
@@ -374,8 +374,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 240,
-                  fadeInDuration: const Duration(milliseconds: 500),
-                  fadeOutDuration: const Duration(milliseconds: 500),
+                  fadeInDuration: const Duration(milliseconds: 200),
+                  fadeOutDuration: const Duration(milliseconds: 200),
                   placeholder: (context, url) {
                     return Center(
                       child: SpinKitThreeBounce(
@@ -446,8 +446,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180,
-                        fadeInDuration: const Duration(milliseconds: 500),
-                        fadeOutDuration: const Duration(milliseconds: 500),
+                        fadeInDuration: const Duration(milliseconds: 200),
+                        fadeOutDuration: const Duration(milliseconds: 200),
                         placeholder: (context, url) {
                           return Center(
                             child: SpinKitThreeBounce(

@@ -64,8 +64,8 @@ class GridItems extends StatelessWidget {
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 240,
-                    fadeInDuration: const Duration(milliseconds: 500),
-                    fadeOutDuration: const Duration(milliseconds: 500),
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    fadeOutDuration: const Duration(milliseconds: 200),
                     placeholder: (context, url) {
                       return Center(
                         child: SpinKitThreeBounce(

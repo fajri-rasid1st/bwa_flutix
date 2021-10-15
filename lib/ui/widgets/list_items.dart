@@ -55,8 +55,8 @@ class ListItems extends StatelessWidget {
                     imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
                     fit: BoxFit.cover,
                     width: double.infinity,
-                    fadeInDuration: const Duration(milliseconds: 500),
-                    fadeOutDuration: const Duration(milliseconds: 500),
+                    fadeInDuration: const Duration(milliseconds: 200),
+                    fadeOutDuration: const Duration(milliseconds: 200),
                     placeholder: (context, url) {
                       return Center(
                         child: SpinKitThreeBounce(

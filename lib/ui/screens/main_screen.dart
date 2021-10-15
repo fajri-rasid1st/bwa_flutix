@@ -39,7 +39,6 @@ class _MainScreenState extends State<MainScreen>
   // declaration controller attributes
   TabController _tabController;
   ScrollController _scrollController;
-  TextEditingController _searchController;
 
   // movies and tv shows
   MoviePage _moviePage;
@@ -56,7 +55,6 @@ class _MainScreenState extends State<MainScreen>
 
     _tabController = TabController(length: 2, vsync: this);
     _scrollController = ScrollController();
-    _searchController = TextEditingController();
 
     _moviePage = MoviePage();
     _tvShowPage = TvShowPage();
@@ -67,7 +65,7 @@ class _MainScreenState extends State<MainScreen>
       FavoritePage(controller: _tabController),
     ]);
 
-    _searchController.addListener(() => setState(() {}));
+    // _searchController.addListener(() => setState(() {}));
 
     super.initState();
   }
@@ -76,7 +74,6 @@ class _MainScreenState extends State<MainScreen>
   void dispose() {
     _tabController.dispose();
     _scrollController.dispose();
-    _searchController.dispose();
 
     if (_debouncer != null) _debouncer.cancel();
 
@@ -201,8 +198,6 @@ class _MainScreenState extends State<MainScreen>
                   break;
               }
             });
-
-            _searchController.clear();
           },
         ),
       ),
@@ -231,7 +226,6 @@ class _MainScreenState extends State<MainScreen>
     return SearchField(
       query: _query,
       hintText: _currentIndex == 0 ? 'Explore movie...' : 'Explore tv show...',
-      controller: _searchController,
       onChanged: searchContent,
     );
   }
@@ -362,7 +356,5 @@ class _MainScreenState extends State<MainScreen>
         _pages[_currentIndex] = _tvShowPage;
       }
     });
-
-    _searchController.clear();
   }
 }

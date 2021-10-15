@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 class SearchField extends StatefulWidget {
   final String query;
   final String hintText;
-  final TextEditingController controller;
   final ValueChanged<String> onChanged;
 
   const SearchField({
     Key key,
     @required this.query,
     @required this.hintText,
-    @required this.controller,
     @required this.onChanged,
   }) : super(key: key);
 
@@ -20,12 +18,28 @@ class SearchField extends StatefulWidget {
 }
 
 class _SearchFieldState extends State<SearchField> {
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    controller.addListener(() => setState(() {}));
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(() => setState(() {}));
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 40,
       child: TextField(
-        controller: widget.controller,
+        controller: controller,
         autofocus: true,
         autocorrect: false,
         enableSuggestions: false,
@@ -40,11 +54,11 @@ class _SearchFieldState extends State<SearchField> {
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(8),
           ),
-          suffixIcon: widget.controller.text.isEmpty
+          suffixIcon: controller.text.isEmpty
               ? Container(width: 0)
               : IconButton(
                   onPressed: () {
-                    widget.controller.clear();
+                    controller.clear();
                     widget.onChanged('');
                     // FocusScope.of(context).requestFocus(FocusNode());
                   },
