@@ -28,9 +28,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CickMovie',
       theme: ThemeData(
-        primarySwatch: primarySwatch,
-        accentColor: accentColor,
         fontFamily: 'Quicksand',
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: primarySwatch,
+        ).copyWith(secondary: accentColor),
       ),
       home: MainScreen(),
     );
