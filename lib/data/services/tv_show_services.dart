@@ -168,7 +168,7 @@ class TvShowServices {
   static Future<void> searchTvShows({
     int page = 1,
     @required String query,
-    @required void Function(List<TvShowPopular> tvShows) onSuccess,
+    @required void Function(List<TvShowPopular> tvShows, int results) onSuccess,
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
@@ -193,6 +193,9 @@ class TvShowServices {
         // get total_pages value
         final int totalPages = searchTvShowsMap['total_pages'];
 
+        // get total_results value
+        final int totalResults = searchTvShowsMap['total_results'];
+
         if (totalPages == 0) {
           // if no result(s) based inserted query, return failure
           onFailure('Tv show(s) not found');
@@ -207,7 +210,7 @@ class TvShowServices {
           // return tvShows
           return tvShows.length == 0
               ? onFailure('No more tv shows')
-              : onSuccess(tvShows);
+              : onSuccess(tvShows, totalResults);
         }
       } else {
         onFailure('Request failed');

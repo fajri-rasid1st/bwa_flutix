@@ -1,19 +1,19 @@
 import 'package:cick_movie_app/data/models/tv_show_popular.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
-import 'package:cick_movie_app/ui/styles/color_scheme.dart';
-import 'package:cick_movie_app/ui/utils.dart';
-import 'package:cick_movie_app/ui/widgets/grid_items.dart';
+import 'package:cick_movie_app/ui/widgets/grid_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class TvShowSearchPage extends StatefulWidget {
   final String query;
   final List<TvShowPopular> tvShows;
+  final int results;
 
   const TvShowSearchPage({
     Key key,
     @required this.query,
     @required this.tvShows,
+    @required this.results,
   }) : super(key: key);
 
   @override
@@ -23,51 +23,30 @@ class TvShowSearchPage extends StatefulWidget {
 class _TvShowSearchPageState extends State<TvShowSearchPage> {
   // initialize atribute
   int _page = 2;
-  bool _isScrollPositionAtBottom = false;
-
-  // declaration atribute
-  TvShowPopular _lastInsertedTvShow;
+  int _totalItems = 0;
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener<ScrollEndNotification>(
-      onNotification: (scrollEnd) {
-        final metrics = scrollEnd.metrics;
+    _totalItems = widget.tvShows.length;
 
-        if (metrics.atEdge) {
-          if (metrics.pixels != 0) {
-            setState(() => _isScrollPositionAtBottom = true);
+    return StaggeredGridView.extentBuilder(
+      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
+      physics: BouncingScrollPhysics(),
+      shrinkWrap: true,
+      maxCrossAxisExtent: 200,
+      staggeredTileBuilder: (index) {
+        return const StaggeredTile.extent(1, 320);
+      },
+      itemBuilder: (context, index) {
+        if (widget.results != _totalItems) {
+          if (index == _totalItems - 1) {
             loadMoreSearchedTvShows();
           }
         }
 
-        return true;
+        return GridItem(item: widget.tvShows[index]);
       },
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Stack(
-            children: <Widget>[
-              GridItems(items: widget.tvShows),
-              if (_isScrollPositionAtBottom) ...[
-                Positioned(
-                  left: 0,
-                  bottom: 12,
-                  child: Container(
-                    width: constraints.maxWidth,
-                    height: 32,
-                    child: Center(
-                      child: SpinKitThreeBounce(
-                        size: 20,
-                        color: secondaryColor,
-                      ),
-                    ),
-                  ),
-                )
-              ]
-            ],
-          );
-        },
-      ),
+      itemCount: _totalItems,
     );
   }
 
@@ -75,24 +54,14 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
     await TvShowServices.searchTvShows(
       page: _page,
       query: widget.query,
-      onSuccess: (tvShows) {
-        if (_lastInsertedTvShow == null) {
-          _lastInsertedTvShow = widget.tvShows.first;
-        }
-
-        if (_lastInsertedTvShow.toString() != tvShows.first.toString()) {
-          widget.tvShows.addAll(tvShows);
-
-          _lastInsertedTvShow = tvShows.first;
-
-          _page++;
-        }
+      onSuccess: (tvShows, _) {
+        widget.tvShows.addAll(tvShows);
+        _totalItems += tvShows.length;
+        _page++;
       },
-      onFailure: (message) {
-        Utils.showSnackBarMessage(context: context, text: message);
-      },
+      onFailure: (_) {},
     ).then((_) {
-      setState(() => _isScrollPositionAtBottom = false);
+      setState(() {});
     });
   }
 }

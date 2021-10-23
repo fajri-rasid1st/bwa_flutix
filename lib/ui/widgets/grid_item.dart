@@ -1,37 +1,21 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/models/movie_popular.dart';
+import 'package:cick_movie_app/data/models/popular.dart';
 import 'package:cick_movie_app/ui/screens/movie_detail_screen.dart';
 import 'package:cick_movie_app/ui/screens/tv_show_detail_screen.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class GridItems extends StatelessWidget {
-  final List<dynamic> items;
+class GridItem extends StatelessWidget {
+  final Popular item;
 
-  const GridItems({Key key, @required this.items}) : super(key: key);
+  const GridItem({Key key, @required this.item}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StaggeredGridView.extentBuilder(
-      padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-      physics: BouncingScrollPhysics(),
-      shrinkWrap: true,
-      maxCrossAxisExtent: 200,
-      staggeredTileBuilder: (index) {
-        return const StaggeredTile.extent(1, 320);
-      },
-      itemBuilder: (context, index) {
-        return buildGridItem(context, items[index]);
-      },
-      itemCount: items.length,
-    );
-  }
-
-  Widget buildGridItem(BuildContext context, dynamic item) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: GestureDetector(

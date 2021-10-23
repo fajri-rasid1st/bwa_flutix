@@ -168,7 +168,7 @@ class MovieServices {
   static Future<void> searchMovies({
     int page = 1,
     @required String query,
-    @required void Function(List<MoviePopular> movies) onSuccess,
+    @required void Function(List<MoviePopular> movies, int results) onSuccess,
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
@@ -192,6 +192,9 @@ class MovieServices {
         // get total_pages value
         final int totalPages = searchMoviesMap['total_pages'];
 
+        // get total_results value
+        final int totalResults = searchMoviesMap['total_results'];
+
         if (totalPages == 0) {
           // if no result(s) based inserted query, return failure
           onFailure('Movie(s) not found');
@@ -206,7 +209,7 @@ class MovieServices {
           // return movies
           return movies.length == 0
               ? onFailure('No more movies')
-              : onSuccess(movies);
+              : onSuccess(movies, totalResults);
         }
       } else {
         onFailure('Request failed');

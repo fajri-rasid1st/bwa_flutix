@@ -1,20 +1,21 @@
+import 'package:cick_movie_app/data/models/popular.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class MoviePopular {
-  int id;
-  String title;
-  String releaseDate;
-  num voteAverage;
-  String posterPath;
-
+class MoviePopular extends Popular {
   MoviePopular({
-    @required this.id,
-    @required this.title,
-    @required this.releaseDate,
-    @required this.voteAverage,
-    @required this.posterPath,
-  });
+    @required int id,
+    @required String title,
+    @required String releaseDate,
+    @required num voteAverage,
+    @required String posterPath,
+  }) : super(
+          id: id,
+          title: title,
+          releaseDate: releaseDate,
+          voteAverage: voteAverage,
+          posterPath: posterPath,
+        );
 
   factory MoviePopular.fromMap(Map<String, dynamic> moviePopular) {
     return MoviePopular(
@@ -26,6 +27,7 @@ class MoviePopular {
     );
   }
 
+  @override
   String get releaseDateParse {
     return releaseDate.isEmpty
         ? 'None'

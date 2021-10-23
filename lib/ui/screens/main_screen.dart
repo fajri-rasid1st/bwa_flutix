@@ -289,7 +289,7 @@ class _MainScreenState extends State<MainScreen>
           debounce(() async {
             await MovieServices.searchMovies(
               query: query,
-              onSuccess: (movies) {
+              onSuccess: (movies, results) {
                 if (!mounted) return;
 
                 _scrollController.jumpTo(0);
@@ -297,6 +297,12 @@ class _MainScreenState extends State<MainScreen>
                 _pages[_currentIndex] = MovieSearchPage(
                   query: query,
                   movies: movies,
+                  results: results,
+                );
+
+                Utils.showSnackBarMessage(
+                  context: context,
+                  text: 'found $results movie result(s).',
                 );
               },
               onFailure: (message) {
@@ -312,7 +318,7 @@ class _MainScreenState extends State<MainScreen>
           debounce(() async {
             await TvShowServices.searchTvShows(
               query: query,
-              onSuccess: (tvShows) {
+              onSuccess: (tvShows, results) {
                 if (!mounted) return;
 
                 _scrollController.jumpTo(0);
@@ -320,6 +326,12 @@ class _MainScreenState extends State<MainScreen>
                 _pages[_currentIndex] = TvShowSearchPage(
                   query: query,
                   tvShows: tvShows,
+                  results: results,
+                );
+
+                Utils.showSnackBarMessage(
+                  context: context,
+                  text: 'found $results tv show result(s).',
                 );
               },
               onFailure: (message) {
