@@ -503,7 +503,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              movie.voteAverage.toString(),
+                              '${movie.voteAverage}',
                               style: backgroundTextStyle,
                             ),
                           ],

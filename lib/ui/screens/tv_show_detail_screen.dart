@@ -558,7 +558,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              tvShow.voteAverage.toString(),
+                              '${tvShow.voteAverage}',
                               style: backgroundTextStyle,
                             ),
                           ],
