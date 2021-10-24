@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Quicksand',
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: primarySwatch,
+          accentColor: accentColor,
         ).copyWith(secondary: accentColor),
       ),
       home: MainScreen(),

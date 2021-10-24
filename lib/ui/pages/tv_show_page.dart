@@ -75,9 +75,9 @@ class _TvShowPageState extends State<TvShowPage> {
   }
 
   Future<void> initPopularTvShows() async {
-    setState(
-      () => _isLoading = true,
-    );
+    setState(() {
+      _isLoading = true;
+    });
 
     await TvShowServices.getPopularTvShows(
       onSuccess: (tvShow) {

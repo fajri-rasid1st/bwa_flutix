@@ -164,7 +164,7 @@ class MovieServices {
     }
   }
 
-  // function to search movies
+  // function to search movies from API
   static Future<void> searchMovies({
     int page = 1,
     @required String query,

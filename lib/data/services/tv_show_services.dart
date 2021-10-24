@@ -164,7 +164,7 @@ class TvShowServices {
     }
   }
 
-  // function to search movies
+  // function to search tv shows from API
   static Future<void> searchTvShows({
     int page = 1,
     @required String query,
