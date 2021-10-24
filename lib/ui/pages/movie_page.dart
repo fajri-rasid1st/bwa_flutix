@@ -59,8 +59,10 @@ class _MoviePageState extends State<MoviePage> {
               return const StaggeredTile.extent(1, 320);
             },
             itemBuilder: (context, index) {
-              if (index == _totalItems - 1) {
-                loadMorePopularMovies();
+              if (_failureMessage == null) {
+                if (index == _totalItems - 1) {
+                  loadMorePopularMovies();
+                }
               }
 
               return GridItem(item: _movies[index]);
@@ -101,7 +103,9 @@ class _MoviePageState extends State<MoviePage> {
         _totalItems += movies.length;
         _page++;
       },
-      onFailure: (_) {},
+      onFailure: (message) {
+        _failureMessage = message;
+      },
     ).then((_) {
       setState(() {});
     });
@@ -136,6 +140,7 @@ class _MoviePageState extends State<MoviePage> {
         _movies = movies;
         _totalItems = movies.length;
         _page = 2;
+        _failureMessage = null;
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);

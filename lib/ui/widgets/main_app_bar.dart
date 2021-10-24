@@ -20,7 +20,9 @@ class MainAppBar extends StatelessWidget {
     return SliverAppBar(
       floating: true,
       snap: true,
-      backgroundColor: backgroundColor, // Theme.of(context).scaffoldBackgroundColor
+      elevation: 2,
+      backgroundColor:
+          backgroundColor, // Theme.of(context).scaffoldBackgroundColor
       title: title,
       leading: leading,
       leadingWidth: 40,

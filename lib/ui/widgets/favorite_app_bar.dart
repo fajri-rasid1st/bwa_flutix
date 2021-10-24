@@ -20,6 +20,7 @@ class FavoriteAppBar extends StatelessWidget {
       floating: true,
       snap: true,
       pinned: true,
+      elevation: 2,
       backgroundColor: backgroundColor,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,

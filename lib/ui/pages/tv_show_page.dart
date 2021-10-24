@@ -59,8 +59,10 @@ class _TvShowPageState extends State<TvShowPage> {
               return const StaggeredTile.extent(1, 320);
             },
             itemBuilder: (context, index) {
-              if (index == _totalItems - 1) {
-                loadMorePopularTvShows();
+              if (_failureMessage == null) {
+                if (index == _totalItems - 1) {
+                  loadMorePopularTvShows();
+                }
               }
 
               return GridItem(item: _tvShows[index]);
@@ -101,7 +103,9 @@ class _TvShowPageState extends State<TvShowPage> {
         _totalItems += tvShows.length;
         _page++;
       },
-      onFailure: (_) {},
+      onFailure: (message) {
+        _failureMessage = message;
+      },
     ).then((_) {
       setState(() {});
     });
@@ -136,6 +140,7 @@ class _TvShowPageState extends State<TvShowPage> {
         _tvShows = tvShows;
         _totalItems = tvShows.length;
         _page = 2;
+        _failureMessage = null;
       },
       onFailure: (message) {
         Utils.showSnackBarMessage(context: context, text: message);

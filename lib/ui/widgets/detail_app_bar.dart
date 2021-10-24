@@ -22,6 +22,7 @@ class DetailAppBar extends StatelessWidget {
       floating: true,
       snap: true,
       pinned: true,
+      elevation: 2,
       backgroundColor: backgroundColor,
       centerTitle: true,
       title: Text(

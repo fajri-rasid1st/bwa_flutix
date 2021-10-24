@@ -302,7 +302,7 @@ class _MainScreenState extends State<MainScreen>
 
                 Utils.showSnackBarMessage(
                   context: context,
-                  text: 'found $results movie result(s).',
+                  text: 'Found $results result(s)',
                 );
               },
               onFailure: (message) {
@@ -331,7 +331,7 @@ class _MainScreenState extends State<MainScreen>
 
                 Utils.showSnackBarMessage(
                   context: context,
-                  text: 'found $results tv show result(s).',
+                  text: 'Found $results result(s)',
                 );
               },
               onFailure: (message) {

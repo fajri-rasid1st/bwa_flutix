@@ -167,14 +167,14 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
 
   // function to get all favorite movies from database
   Future<List<Favorite>> getFavoriteMovies() async {
-    return FavoriteDatabase.instance.readFavorites('movie');
+    return await FavoriteDatabase.instance.readFavorites('movie');
   }
 
   // function to remove movie from favorite movie list
   Future<void> removeMovieFromFavorite(Favorite movie) async {
     final deletedMovie = movie;
 
-    FavoriteDatabase.instance.deleteFavoriteById(movie.id).then((_) {
+    await FavoriteDatabase.instance.deleteFavoriteById(movie.id).then((_) {
       getFavoriteMovies().then((favorites) {
         setState(() {
           _movieFavorites = favorites;
@@ -195,7 +195,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
 
   // function to retrieve previously deleted movie
   Future<void> retrieveDeletedFavoriteMovie(Favorite movie) async {
-    FavoriteDatabase.instance.createFavorite(movie).then((_) {
+    await FavoriteDatabase.instance.createFavorite(movie).then((_) {
       getFavoriteMovies().then((favorites) {
         setState(() {
           _movieFavorites = favorites;

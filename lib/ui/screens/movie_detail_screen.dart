@@ -115,6 +115,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         },
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 24),
+          physics: BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[

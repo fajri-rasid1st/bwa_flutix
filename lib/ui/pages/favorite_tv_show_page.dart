@@ -167,14 +167,14 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
 
   // function to get all favorite tv show from database
   Future<List<Favorite>> getFavoriteTvShows() async {
-    return FavoriteDatabase.instance.readFavorites('tv_show');
+    return await FavoriteDatabase.instance.readFavorites('tv_show');
   }
 
   // function to remove tv show from favorite tv show list
   Future<void> removeTvShowFromFavorite(Favorite tvShow) async {
     final deletedTvShow = tvShow;
 
-    FavoriteDatabase.instance.deleteFavoriteById(tvShow.id).then((_) {
+    await FavoriteDatabase.instance.deleteFavoriteById(tvShow.id).then((_) {
       getFavoriteTvShows().then((favorites) {
         setState(() {
           _tvShowFavorites = favorites;
@@ -195,7 +195,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
 
   // function to retrieve previously deleted tv show
   Future<void> retrieveDeletedFavoriteTvShow(Favorite tvShow) async {
-    FavoriteDatabase.instance.createFavorite(tvShow).then((_) {
+    await FavoriteDatabase.instance.createFavorite(tvShow).then((_) {
       getFavoriteTvShows().then((favorites) {
         setState(() {
           _tvShowFavorites = favorites;
