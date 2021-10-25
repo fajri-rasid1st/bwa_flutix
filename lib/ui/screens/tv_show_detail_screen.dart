@@ -274,6 +274,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
+                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
@@ -312,6 +313,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
+                            physics: BouncingScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
@@ -588,7 +590,15 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
           const SizedBox(width: 12.0),
           CurrentPosition(),
           const SizedBox(width: 8.0),
-          ProgressBar(isExpanded: true),
+          ProgressBar(
+            isExpanded: true,
+            colors: ProgressBarColors(
+              backgroundColor: secondaryColor,
+              bufferedColor: accentColor.withOpacity(0.6),
+              handleColor: accentColor,
+              playedColor: accentColor,
+            ),
+          ),
           const SizedBox(width: 8.0),
           RemainingDuration(),
           const SizedBox(width: 12.0),
