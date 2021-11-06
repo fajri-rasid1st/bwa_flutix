@@ -143,14 +143,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
                           icon: Icons.delete_outline,
                           text: 'Delete',
                           onTap: removeMovieFromFavorite,
-                        ),
-                        const SizedBox(width: 20),
-                        buildDialogOption(
-                          movie: movie,
-                          icon: Icons.info_outlined,
-                          text: 'Details',
-                          onTap: routeToMovieDetailScreen,
-                        ),
+                        )
                       ],
                     ),
                   ],

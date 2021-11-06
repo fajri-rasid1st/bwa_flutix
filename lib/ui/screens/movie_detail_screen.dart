@@ -31,6 +31,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   // initialize atribute
   bool _isLoading = true;
   bool _isErrorButtonDisabled = false;
+  bool _isExpanded = false;
   Widget _errorButtonChild = const Text('Try again');
 
   // declaration attribute
@@ -115,7 +116,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         },
         body: SingleChildScrollView(
           padding: const EdgeInsets.only(bottom: 24),
-          physics: BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -219,7 +219,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      physics: BouncingScrollPhysics(),
                       shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
@@ -258,7 +257,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            physics: BouncingScrollPhysics(),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
@@ -347,11 +345,17 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     ReadMoreText(
                       movie.overview,
                       colorClickableText: primaryColor,
+                      delimiter: _isExpanded ? ' ' : '... ',
                       trimMode: TrimMode.Line,
                       trimCollapsedText: 'Show more',
                       trimExpandedText: 'Show less',
                       moreStyle: tvShowTextStyle2,
                       lessStyle: tvShowTextStyle2,
+                      callback: (isExpanded) {
+                        setState(() {
+                          _isExpanded = !isExpanded;
+                        });
+                      },
                     ),
                   ],
                 ),

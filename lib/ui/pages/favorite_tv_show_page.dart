@@ -143,14 +143,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
                           icon: Icons.delete_outline,
                           text: 'Delete',
                           onTap: removeTvShowFromFavorite,
-                        ),
-                        const SizedBox(width: 20),
-                        buildDialogOption(
-                          tvShow: tvShow,
-                          icon: Icons.info_outlined,
-                          text: 'Details',
-                          onTap: routeToTvShowDetailScreen,
-                        ),
+                        )
                       ],
                     ),
                   ],
