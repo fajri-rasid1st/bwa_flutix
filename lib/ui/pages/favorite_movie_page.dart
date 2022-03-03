@@ -188,6 +188,8 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
   Future<void> retrieveDeletedFavoriteMovie(Favorite movie) async {
     await FavoriteDatabase.instance.createFavorite(movie).then((_) {
       getFavoriteMovies().then((favorites) {
+        if (!mounted) return;
+
         setState(() {
           _movieFavorites = favorites;
         });

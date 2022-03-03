@@ -188,6 +188,8 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
   Future<void> retrieveDeletedFavoriteTvShow(Favorite tvShow) async {
     await FavoriteDatabase.instance.createFavorite(tvShow).then((_) {
       getFavoriteTvShows().then((favorites) {
+        if (!mounted) return;
+
         setState(() {
           _tvShowFavorites = favorites;
         });
