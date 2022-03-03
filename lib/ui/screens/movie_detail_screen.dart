@@ -1,4 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readmore/readmore.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/cast.dart';
@@ -6,22 +11,20 @@ import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/movie.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/movie_services.dart';
-import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
-import 'package:cick_movie_app/ui/widgets/detail_app_bar.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/widgets/custom_divider.dart';
+import 'package:cick_movie_app/ui/widgets/detail_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:readmore/readmore.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailScreen extends StatefulWidget {
   final int movieId;
 
-  const MovieDetailScreen({@required this.movieId});
+  const MovieDetailScreen({
+    Key key,
+    @required this.movieId,
+  }) : super(key: key);
 
   @override
   _MovieDetailScreenState createState() => _MovieDetailScreenState();
@@ -61,7 +64,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     // initialize declaration attribute
     _scrollController = ScrollController();
-    _buttonIcon = Icon(Icons.play_arrow_outlined);
+    _buttonIcon = const Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
 
@@ -215,7 +218,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                       style: detailTextStyle,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -235,7 +238,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ],
               ),
               // Divider
-              CustomDivider(),
+              const CustomDivider(),
               // Movie Casts
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,14 +256,14 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(_castsFailureMessage),
                         )
-                      : Container(
+                      : SizedBox(
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return Container(
+                              return SizedBox(
                                 width: 112,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -275,7 +278,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                                       ),
                                       child: CachedNetworkImage(
                                         imageUrl:
-                                            '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                            '${Const.imgUrl200}/${_casts[index].profilePath}',
                                         width: 112,
                                         height: 165,
                                         fit: BoxFit.cover,
@@ -330,7 +333,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ],
               ),
               // Divider
-              CustomDivider(),
+              const CustomDivider(),
               // Movie Overview
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -377,7 +380,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
             child: Stack(
               children: <Widget>[
                 CachedNetworkImage(
-                  imageUrl: '${Const.IMG_URL_500}/${movie.backdropPath}',
+                  imageUrl: '${Const.imgUrl500}/${movie.backdropPath}',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 240,
@@ -402,7 +405,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ),
                 Positioned.fill(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
@@ -416,7 +419,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 ),
                 Positioned.fill(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -449,7 +452,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: CachedNetworkImage(
-                        imageUrl: '${Const.IMG_URL_300}/${movie.posterPath}',
+                        imageUrl: '${Const.imgUrl300}/${movie.posterPath}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180,
@@ -567,11 +570,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         if (_isChanged) {
           _youtubePlayerController.play();
           _buttonText = 'Show Details';
-          _buttonIcon = Icon(Icons.info_outline);
+          _buttonIcon = const Icon(Icons.info_outline);
         } else {
           _youtubePlayerController.pause();
           _buttonText = 'Watch Trailer';
-          _buttonIcon = Icon(Icons.play_arrow_outlined);
+          _buttonIcon = const Icon(Icons.play_arrow_outlined);
         }
       } else {
         Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
@@ -630,7 +633,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
         if (_video != null) {
           _youtubePlayerController = YoutubePlayerController(
             initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
+            flags: const YoutubePlayerFlags(
               autoPlay: false,
               controlsVisibleAtStart: true,
               disableDragSeek: true,
@@ -654,7 +657,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
 
     if (isExist) {
       setState(() {
-        _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
+        _favoriteIcon = const Icon(Icons.favorite, color: Colors.red);
         _isFavorite = true;
       });
     } else {
@@ -679,7 +682,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     await FavoriteDatabase.instance.createFavorite(favorite);
 
     setState(() {
-      _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
+      _favoriteIcon = const Icon(Icons.favorite, color: Colors.red);
       _isFavorite = true;
     });
 

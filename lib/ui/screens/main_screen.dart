@@ -56,8 +56,8 @@ class _MainScreenState extends State<MainScreen>
     _tabController = TabController(length: 2, vsync: this);
     _scrollController = ScrollController();
 
-    _moviePage = MoviePage();
-    _tvShowPage = TvShowPage();
+    _moviePage = const MoviePage();
+    _tvShowPage = const TvShowPage();
 
     _pages.addAll([
       _moviePage,
@@ -135,7 +135,7 @@ class _MainScreenState extends State<MainScreen>
       floatingActionButton: _isFabVisible && _currentIndex != 2
           ? FloatingActionButton(
               onPressed: () => _scrollController.jumpTo(0),
-              child: Icon(Icons.arrow_upward_rounded),
+              child: const Icon(Icons.arrow_upward_rounded),
               foregroundColor: accentColor,
               backgroundColor: primaryTextColor,
               tooltip: 'Go to top',
@@ -158,7 +158,7 @@ class _MainScreenState extends State<MainScreen>
           selectedFontSize: 0, // fix bug when clicking bottom nav label
           unselectedFontSize: 0, // fix bug when clicking bottom nav label
           type: BottomNavigationBarType.fixed,
-          items: <BottomNavigationBarItem>[
+          items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.movie_creation_outlined),
               activeIcon: Icon(Icons.movie_creation),

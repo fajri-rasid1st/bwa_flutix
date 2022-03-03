@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-final String favoriteTable = 'favorite_table';
+const String favoriteTable = 'favorite_table';
 
 class FavoriteFields {
-  static final String id = '_id';
-  static final String favoriteId = 'favoriteId';
-  static final String title = 'title';
-  static final String posterPath = 'posterPath';
-  static final String overview = 'overview';
-  static final String type = 'type';
-  static final String createdAt = 'createdAt';
+  static const String id = '_id';
+  static const String favoriteId = 'favoriteId';
+  static const String title = 'title';
+  static const String posterPath = 'posterPath';
+  static const String overview = 'overview';
+  static const String type = 'type';
+  static const String createdAt = 'createdAt';
 }
 
 class Favorite {

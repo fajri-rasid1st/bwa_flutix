@@ -42,7 +42,7 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
       return const FutureOnLoad();
     } else {
       if (_movieFavorites.isEmpty) {
-        return FavoriteEmpty(text: 'Movie');
+        return const FavoriteEmpty(text: 'Movie');
       } else {
         return buildMovieFavoriteList(_movieFavorites);
       }
@@ -70,18 +70,16 @@ class _FavoriteMoviePageState extends State<FavoriteMoviePage> {
       borderRadius: BorderRadius.circular(8),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                icon,
-                color: defaultTextColor,
-              ),
-              const SizedBox(height: 4),
-              Text(text)
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              icon,
+              color: defaultTextColor,
+            ),
+            const SizedBox(height: 4),
+            Text(text)
+          ],
         ),
       ),
     );

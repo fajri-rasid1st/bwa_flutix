@@ -44,7 +44,7 @@ class DetailAppBar extends StatelessWidget {
           tooltip: 'Favorite',
         ),
       ],
-      bottom: DetailBottomAppBar(),
+      bottom: const DetailBottomAppBar(),
       forceElevated: innerBoxIsScrolled,
     );
   }
@@ -52,9 +52,10 @@ class DetailAppBar extends StatelessWidget {
 
 class DetailBottomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  final Size preferredSize = Size.fromHeight(40); // default is 56.0
+  @override
+  final Size preferredSize = const Size.fromHeight(40); // default is 56.0
 
-  DetailBottomAppBar({Key key}) : super(key: key);
+  const DetailBottomAppBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class DetailBottomAppBar extends StatelessWidget
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           height: 40,
-          child: Text(
+          child: const Text(
             'Detail',
             style: TextStyle(fontSize: 30),
           ),

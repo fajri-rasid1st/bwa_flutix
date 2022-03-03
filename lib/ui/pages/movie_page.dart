@@ -52,7 +52,7 @@ class _MoviePageState extends State<MoviePage> {
           onRefresh: refreshPopularMovies,
           child: StaggeredGridView.extentBuilder(
             padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             maxCrossAxisExtent: 200,
             staggeredTileBuilder: (index) {
@@ -133,7 +133,7 @@ class _MoviePageState extends State<MoviePage> {
       });
     }
 
-    await Future.delayed(Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     await MovieServices.getPopularMovies(
       onSuccess: (movies) {

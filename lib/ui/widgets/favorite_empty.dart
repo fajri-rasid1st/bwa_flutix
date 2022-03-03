@@ -23,7 +23,7 @@ class FavoriteEmpty extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 'Your Favorite $text Still Empty',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),

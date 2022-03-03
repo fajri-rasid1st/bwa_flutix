@@ -1,4 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:readmore/readmore.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:cick_movie_app/const.dart';
 import 'package:cick_movie_app/data/db/favorite_database.dart';
 import 'package:cick_movie_app/data/models/cast.dart';
@@ -6,22 +11,20 @@ import 'package:cick_movie_app/data/models/favorite.dart';
 import 'package:cick_movie_app/data/models/tv_show.dart';
 import 'package:cick_movie_app/data/models/video.dart';
 import 'package:cick_movie_app/data/services/tv_show_services.dart';
-import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/styles/color_scheme.dart';
 import 'package:cick_movie_app/ui/styles/text_style.dart';
-import 'package:cick_movie_app/ui/widgets/detail_app_bar.dart';
+import 'package:cick_movie_app/ui/utils.dart';
 import 'package:cick_movie_app/ui/widgets/custom_divider.dart';
+import 'package:cick_movie_app/ui/widgets/detail_app_bar.dart';
 import 'package:cick_movie_app/ui/widgets/future_on_load.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:readmore/readmore.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TvShowDetailScreen extends StatefulWidget {
   final int tvShowId;
 
-  const TvShowDetailScreen({@required this.tvShowId});
+  const TvShowDetailScreen({
+    Key key,
+    @required this.tvShowId,
+  }) : super(key: key);
 
   @override
   _TvShowDetailScreenState createState() => _TvShowDetailScreenState();
@@ -61,7 +64,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     // initialize declaration attribute
     _scrollController = ScrollController();
-    _buttonIcon = Icon(Icons.play_arrow_outlined);
+    _buttonIcon = const Icon(Icons.play_arrow_outlined);
     _buttonText = 'Watch Trailer';
     _isChanged = false;
 
@@ -205,12 +208,12 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         color: dividerColor,
                         boxShadow: <BoxShadow>[
                           BoxShadow(
-                            offset: Offset(0.25, 0),
+                            offset: const Offset(0.25, 0),
                             blurRadius: 0.5,
                             color: secondaryColor,
                           ),
                           BoxShadow(
-                            offset: Offset(-0.25, 0),
+                            offset: const Offset(-0.25, 0),
                             blurRadius: 0.5,
                             color: secondaryColor,
                           ),
@@ -270,7 +273,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                       style: detailTextStyle,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -290,7 +293,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 ],
               ),
               // Divider
-              CustomDivider(),
+              const CustomDivider(),
               // Tv Show Casts
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,14 +311,14 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(_castsFailureMessage),
                         )
-                      : Container(
+                      : SizedBox(
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-                              return Container(
+                              return SizedBox(
                                 width: 112,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -330,7 +333,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                                       ),
                                       child: CachedNetworkImage(
                                         imageUrl:
-                                            '${Const.IMG_URL_200}/${_casts[index].profilePath}',
+                                            '${Const.imgUrl200}/${_casts[index].profilePath}',
                                         width: 112,
                                         height: 165,
                                         fit: BoxFit.cover,
@@ -385,7 +388,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 ],
               ),
               // Divider
-              CustomDivider(),
+              const CustomDivider(),
               // Tv Show Overview
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -432,7 +435,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
             child: Stack(
               children: <Widget>[
                 CachedNetworkImage(
-                  imageUrl: '${Const.IMG_URL_500}/${tvShow.backdropPath}',
+                  imageUrl: '${Const.imgUrl500}/${tvShow.backdropPath}',
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 240,
@@ -457,7 +460,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 ),
                 Positioned.fill(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
@@ -471,7 +474,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                 ),
                 Positioned.fill(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -504,7 +507,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: CachedNetworkImage(
-                        imageUrl: '${Const.IMG_URL_300}/${tvShow.posterPath}',
+                        imageUrl: '${Const.imgUrl300}/${tvShow.posterPath}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 180,
@@ -622,11 +625,11 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         if (_isChanged) {
           _youtubePlayerController.play();
           _buttonText = 'Show Details';
-          _buttonIcon = Icon(Icons.info_outline);
+          _buttonIcon = const Icon(Icons.info_outline);
         } else {
           _youtubePlayerController.pause();
           _buttonText = 'Watch Trailer';
-          _buttonIcon = Icon(Icons.play_arrow_outlined);
+          _buttonIcon = const Icon(Icons.play_arrow_outlined);
         }
       } else {
         Utils.showSnackBarMessage(context: context, text: _videoFailureMessage);
@@ -685,7 +688,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
         if (_video != null) {
           _youtubePlayerController = YoutubePlayerController(
             initialVideoId: _video.videoId,
-            flags: YoutubePlayerFlags(
+            flags: const YoutubePlayerFlags(
               autoPlay: false,
               controlsVisibleAtStart: true,
               disableDragSeek: true,
@@ -709,7 +712,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
 
     if (isExist) {
       setState(() {
-        _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
+        _favoriteIcon = const Icon(Icons.favorite, color: Colors.red);
         _isFavorite = true;
       });
     } else {
@@ -734,7 +737,7 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
     await FavoriteDatabase.instance.createFavorite(favorite);
 
     setState(() {
-      _favoriteIcon = Icon(Icons.favorite, color: Colors.red);
+      _favoriteIcon = const Icon(Icons.favorite, color: Colors.red);
       _isFavorite = true;
     });
 

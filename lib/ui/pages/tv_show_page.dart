@@ -52,7 +52,7 @@ class _TvShowPageState extends State<TvShowPage> {
           onRefresh: refreshPopularTvShows,
           child: StaggeredGridView.extentBuilder(
             padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             shrinkWrap: true,
             maxCrossAxisExtent: 200,
             staggeredTileBuilder: (index) {
@@ -133,7 +133,7 @@ class _TvShowPageState extends State<TvShowPage> {
       });
     }
 
-    await Future.delayed(Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     await TvShowServices.getPopularTvShows(
       onSuccess: (tvShows) {

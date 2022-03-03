@@ -16,12 +16,12 @@ class CustomDivider extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: <BoxShadow>[
           BoxShadow(
-            offset: Offset(0, 0.5),
+            offset: const Offset(0, 0.5),
             blurRadius: 1,
             color: dividerColor,
           ),
           BoxShadow(
-            offset: Offset(0.5, 0),
+            offset: const Offset(0.5, 0),
             blurRadius: 1,
             color: dividerColor,
           ),

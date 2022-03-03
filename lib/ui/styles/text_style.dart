@@ -10,7 +10,7 @@ TextStyle appBarTitleTextStyle = TextStyle(
   color: defaultTextColor,
 );
 
-TextStyle titleTextStyle = TextStyle(
+TextStyle titleTextStyle = const TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w700,
 );
@@ -20,7 +20,7 @@ TextStyle subTitleTextStyle = TextStyle(
   color: primaryColor,
 );
 
-TextStyle detailMainTitleTextStyle = TextStyle(
+TextStyle detailMainTitleTextStyle = const TextStyle(
   fontSize: 20,
   fontWeight: FontWeight.w700,
 );
@@ -37,16 +37,16 @@ TextStyle detailTextStyle = TextStyle(
   color: primaryColor,
 );
 
-TextStyle buttonTextStyle = TextStyle(fontSize: 16);
+TextStyle buttonTextStyle = const TextStyle(fontSize: 16);
 
-TextStyle cardTitleTextStyle = TextStyle(fontWeight: FontWeight.w700);
+TextStyle cardTitleTextStyle = const TextStyle(fontWeight: FontWeight.w700);
 
 TextStyle cardSubTitleTextStyle = TextStyle(
   fontSize: 12,
   color: secondaryTextColor,
 );
 
-TextStyle tvShowTextStyle1 = TextStyle(fontSize: 28);
+TextStyle tvShowTextStyle1 = const TextStyle(fontSize: 28);
 
 TextStyle tvShowTextStyle2 = TextStyle(
   fontWeight: FontWeight.w700,

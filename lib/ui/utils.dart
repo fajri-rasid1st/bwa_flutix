@@ -27,7 +27,7 @@ class Utils {
 
   // function to scroll page to top
   static void scrollToTop({@required ScrollController controller}) {
-    final start = 0.0;
+    const start = 0.0;
     var duration = controller.position.pixels.toInt() * 5;
 
     if (duration != 0) {

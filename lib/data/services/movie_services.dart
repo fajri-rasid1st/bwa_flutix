@@ -16,7 +16,7 @@ class MovieServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/movie/popular?api_key=${Const.API_KEY}&page=$page';
+        '${Const.baseUrl}/movie/popular?api_key=${Const.apiKey}&page=$page';
 
     try {
       // send HTTP GET request
@@ -54,7 +54,7 @@ class MovieServices {
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
-    final url = '${Const.BASE_URL}/movie/$movieId?api_key=${Const.API_KEY}';
+    final url = '${Const.baseUrl}/movie/$movieId?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -88,7 +88,7 @@ class MovieServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/movie/$movieId/videos?api_key=${Const.API_KEY}';
+        '${Const.baseUrl}/movie/$movieId/videos?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -125,7 +125,7 @@ class MovieServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/movie/$movieId/credits?api_key=${Const.API_KEY}';
+        '${Const.baseUrl}/movie/$movieId/credits?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -173,7 +173,7 @@ class MovieServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/search/movie?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=false';
+        '${Const.baseUrl}/search/movie?api_key=${Const.apiKey}&page=$page&query=$query&include_adult=false';
 
     try {
       // send HTTP GET request
@@ -207,7 +207,7 @@ class MovieServices {
           );
 
           // return movies
-          return movies.length == 0
+          return movies.isEmpty
               ? onFailure('No more movies')
               : onSuccess(movies, totalResults);
         }

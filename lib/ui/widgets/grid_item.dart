@@ -44,7 +44,7 @@ class GridItem extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
+                    imageUrl: '${Const.imgUrl300}/${item.posterPath}',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 240,

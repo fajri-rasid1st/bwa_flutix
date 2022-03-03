@@ -16,7 +16,7 @@ class TvShowServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/tv/popular?api_key=${Const.API_KEY}&page=$page';
+        '${Const.baseUrl}/tv/popular?api_key=${Const.apiKey}&page=$page';
 
     try {
       // send HTTP GET request
@@ -54,7 +54,7 @@ class TvShowServices {
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
-    final url = '${Const.BASE_URL}/tv/$tvShowId?api_key=${Const.API_KEY}';
+    final url = '${Const.baseUrl}/tv/$tvShowId?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -87,8 +87,7 @@ class TvShowServices {
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
-    final url =
-        '${Const.BASE_URL}/tv/$tvShowId/videos?api_key=${Const.API_KEY}';
+    final url = '${Const.baseUrl}/tv/$tvShowId/videos?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -124,8 +123,7 @@ class TvShowServices {
     @required void Function(String message) onFailure,
   }) async {
     // define URL target
-    final url =
-        '${Const.BASE_URL}/tv/$tvShowId/credits?api_key=${Const.API_KEY}';
+    final url = '${Const.baseUrl}/tv/$tvShowId/credits?api_key=${Const.apiKey}';
 
     try {
       // send HTTP GET request
@@ -173,7 +171,7 @@ class TvShowServices {
   }) async {
     // define URL target
     final url =
-        '${Const.BASE_URL}/search/tv?api_key=${Const.API_KEY}&page=$page&query=$query&include_adult=false';
+        '${Const.baseUrl}/search/tv?api_key=${Const.apiKey}&page=$page&query=$query&include_adult=false';
 
     try {
       // send HTTP GET request
@@ -208,7 +206,7 @@ class TvShowServices {
           );
 
           // return tvShows
-          return tvShows.length == 0
+          return tvShows.isEmpty
               ? onFailure('No more tv shows')
               : onSuccess(tvShows, totalResults);
         }

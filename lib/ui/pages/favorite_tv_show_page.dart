@@ -42,7 +42,7 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
       return const FutureOnLoad();
     } else {
       if (_tvShowFavorites.isEmpty) {
-        return FavoriteEmpty(text: 'Tv Show');
+        return const FavoriteEmpty(text: 'Tv Show');
       } else {
         return buildTvShowFavoriteList(_tvShowFavorites);
       }
@@ -70,18 +70,16 @@ class _FavoriteTvShowPageState extends State<FavoriteTvShowPage> {
       borderRadius: BorderRadius.circular(16),
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Icon(
-                icon,
-                color: defaultTextColor,
-              ),
-              const SizedBox(height: 4),
-              Text(text)
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              icon,
+              color: defaultTextColor,
+            ),
+            const SizedBox(height: 4),
+            Text(text)
+          ],
         ),
       ),
     );

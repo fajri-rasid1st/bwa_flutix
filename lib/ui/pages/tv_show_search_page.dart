@@ -37,7 +37,7 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
     return PullToRefresh(
       child: StaggeredGridView.extentBuilder(
         padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         maxCrossAxisExtent: 200,
         staggeredTileBuilder: (index) {
@@ -78,7 +78,7 @@ class _TvShowSearchPageState extends State<TvShowSearchPage> {
   }
 
   Future<void> refreshSearchedTvShows() async {
-    await Future.delayed(Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 1500));
 
     await TvShowServices.searchTvShows(
       query: widget.query,

@@ -12,7 +12,7 @@ class ListItems extends StatelessWidget {
   final Future<void> Function(Favorite item) onTap;
   final Future<void> Function(Favorite item) onLongPress;
 
-  ListItems({
+  const ListItems({
     Key key,
     @required this.items,
     @required this.onTap,
@@ -23,7 +23,7 @@ class ListItems extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
         return buildListItem(items[index]);
@@ -52,7 +52,7 @@ class ListItems extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: CachedNetworkImage(
-                    imageUrl: '${Const.IMG_URL_300}/${item.posterPath}',
+                    imageUrl: '${Const.imgUrl300}/${item.posterPath}',
                     fit: BoxFit.cover,
                     width: double.infinity,
                     fadeInDuration: const Duration(milliseconds: 200),
