@@ -53,7 +53,6 @@ class _TvShowPageState extends State<TvShowPage> {
           child: StaggeredGridView.extentBuilder(
             padding: const EdgeInsets.fromLTRB(8, 16, 8, 24),
             physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
             maxCrossAxisExtent: 200,
             staggeredTileBuilder: (index) {
               return const StaggeredTile.extent(1, 320);

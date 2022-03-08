@@ -277,7 +277,6 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         final genres = tvShow.genres;
@@ -315,7 +314,6 @@ class _TvShowDetailScreenState extends State<TvShowDetailScreen> {
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return SizedBox(

@@ -24,7 +24,6 @@ class ListItems extends StatelessWidget {
     return ListView.separated(
       padding: const EdgeInsets.all(16),
       physics: const BouncingScrollPhysics(),
-      shrinkWrap: true,
       itemBuilder: (context, index) {
         return buildListItem(items[index]);
       },

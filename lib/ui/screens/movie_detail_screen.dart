@@ -222,7 +222,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                     height: 45,
                     child: ListView.separated(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      shrinkWrap: true,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         final genres = movie.genres;
@@ -260,7 +259,6 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           height: 228,
                           child: ListView.separated(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return SizedBox(
