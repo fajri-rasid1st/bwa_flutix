@@ -47,7 +47,7 @@ dependencies:
 
     readmore:
         git:
-            url: git://github.com/epynic/readmore
+            url: https://github.com/epynic/readmore
 
 dev_dependencies:
     flutter_test:
